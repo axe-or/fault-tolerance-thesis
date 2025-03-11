@@ -52,7 +52,18 @@ acesso maior à recursos, como equipamentos de rede e hardware aceleradores que 
 grandes quantias de poder computacional ou memória, mas os recursos do sistema continuam 
 estaticamente delimitados para cumprir sua função específica.
 
-**Critério Temporal**
+**Critério Temporal**:
+Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de 
+interrupção para a funcionalidade geral do contexto externo. A importância do tempo de execução de 
+uma tarefa de um sistema pode ser classificada em duas categorias:
+
+- *Soft Real Time*:
+
+- *Hard Real Time*:
+
+Importante notar que a distinção de Soft Real Time e Hard Real Time não é exclusiva de sistemas 
+embarcados, apesar de ser frequentemente tratada neste contexto.
+
 
 
 # Sistemas Operacionais de Tempo-Real (RTOS)
