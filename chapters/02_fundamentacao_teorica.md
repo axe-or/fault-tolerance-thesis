@@ -26,9 +26,25 @@ aceitável mesmo na presença de falhas são necessários 2 principais mecanismo
   mitigação. Falhas permanentes podem necessitar de um desligamento gracioso do sistema ou reorganização
   para manter o máximo de qualidade de serviço possível.
 
-Tanto a detecção quando ao tratamento podem ser implementados em hardware quanto em software,
-<<ELABORAR MAIS AQUI>>
+A detecção e o tratamento podem ser implementados em hardware ou em software, implementações em 
+hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redunância 
+implementada diretamente no circuito, e prover transparência de execução para o programador, a 
+desvantagem é custo elevado de espaço no silício possível degradação de performance geral e menor 
+flexibilidade. O processo de tornar o design e a implementação de um hardware com estas 
+características é chamado de *hardening*.
 
+Implementações em software não são capazes de fornecer todas as garantias fortes do hardware, em 
+contrapartida, não ocupam espaço extra no chip e são mais flexíveis, com software é possível 
+implementar lógica de detecção recuperação e estruturas de dados mais complexas, e até mesmo 
+realizar atualizações remotas com o sistema ativo (*live patching*).
+
+Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e software precisam 
+ser consideradas, é possível utilizar hardware com *hardening* para um núcleo que realiza atividades 
+críticas, e delegar núcleos menos protegidos para atividades em que o tratamento em software é 
+suficiente. Balancear a troca de espaço em chip, uso de memória, flexibilidade de implementação, 
+tempo de execução, vazão de dados e garantias de transparência é indispensável para a criação de um
+sistema que seja resiliente à falhas e que forneça uma boa qualidade de serviço pelo menor custo
+possível.
 
 ## Grafos tolerantes à falha
 (Mencionar isso apos o escalonador?)
@@ -63,8 +79,6 @@ uma tarefa de um sistema pode ser classificada em duas categorias:
 
 Importante notar que a distinção de Soft Real Time e Hard Real Time não é exclusiva de sistemas 
 embarcados, apesar de ser frequentemente tratada neste contexto.
-
-
 
 # Sistemas Operacionais de Tempo-Real (RTOS)
 
