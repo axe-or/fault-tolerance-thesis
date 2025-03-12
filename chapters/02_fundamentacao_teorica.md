@@ -119,7 +119,7 @@ Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, o
 operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real
 Time.
 
-Em contraste com sistemas operacionais focados em *timesharing* que são encontrados em servidores e
+Em contraste com sistemas operacionais focados em uso geral que são encontrados em servidores e
 computadores pessoais (como Windows, Linux e OSX), o objetivo do pimário de um RTOS não é dar ao
 usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, sistemas em tempo
 real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do
