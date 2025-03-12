@@ -96,7 +96,8 @@ Um sistema operacional é um conjunto conjunto de software que permitem o gerenc
 com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco
 central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho
 principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar
-as capacidades do hardware, especialmente tempo na CPU e memória.
+as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de 
+maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
 
 Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado,
 tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que
@@ -120,10 +121,10 @@ Time.
 
 Em contraste com sistemas operacionais focados em *timesharing* que são encontrados em servidores e
 computadores pessoais (como Windows, Linux e OSX), o objetivo do pimário de um RTOS não é dar ao
-usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, os sistemas em tempo
+usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, sistemas em tempo
 real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do
-sistema com um respeito estrito aos prazos de execução fornecidos, e que esteja preparado para
-situações onde seja necessário rápida troca de contexto de uma tarefa para a outra.
+sistema com um respeito estrito aos prazos de execução fornecidos e que faça de maneira resiliente à
+flutuações de tempo causadas por IO e outras interrupções.
 
 Drivers em RTOSes são adicionados previamente de maneira *ad-hoc*, não há necessidade de
 carregamento dinâmico de drivers ou de bibliotecas pois na maioria das aplicações que necessitam de
