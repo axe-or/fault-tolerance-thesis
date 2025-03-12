@@ -92,17 +92,46 @@ a distinção entre estas categorias é explicada na seção **Sistemas Operacio
 
 # Sistemas Operacionais de Tempo-Real
 
+Um sistema operacional é um conjunto conjunto de software que permitem o gerenciamento e interação
+com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco
+central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho
+principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar
+as capacidades do hardware, especialmente tempo na CPU e memória.
+
+Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado,
+tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que
+divide-se em 2 categorias:
+
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de
   maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time
   tipicamente operam na escala de milisegundos, isto é percepção humana. O atraso de uma tarefa em um
-  sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD, 
+  sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD,
   videogames, kiosks de atendimento.
 
 - *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma
-  tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com 
-  atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas 
-  hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para 
+  tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com
+  atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas
+  hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para
   sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
+
+Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, os sistemas
+operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real
+Time.
+
+Em contraste com sistemas operacionais focados em *timesharing* que são encontrados em servidores e
+computadores pessoais (como Windows, Linux e OSX), o objetivo do pimário de um RTOS não é dar ao
+usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, os sistemas em tempo
+real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do
+sistema com um respeito estrito aos prazos de execução fornecidos, e que esteja preparado para
+situações onde seja necessário rápida troca de contexto de uma tarefa para a outra.
+
+Drivers em RTOSes são adicionados previamente de maneira *ad-hoc*, não há necessidade de
+carregamento dinâmico de drivers ou de bibliotecas pois na maioria das aplicações que necessitam de
+um RTOS, o hardware ja é conhecido e definido de antemão.
+
+Devido à suas características de simplicidade, baixo custo e previsibilidade, os sistemas
+operacionais de tempo real são extensivamente usados em aplicações de sistemas embarcados e internet
+das coisas. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 ## Escalonador
 
