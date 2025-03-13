@@ -54,8 +54,22 @@ falar de bits de paridade e Hamming codes
 ### Hashes
 falar de validação com hash não criptográfica
 
-### *Heartbeats* e *Deadlines*
-falar das deteccao baseada em tempo
+### *Heartbeat signals*
+
+É possível determinar se uma falha ocorreu com um nó de execução através de um critério temporal, os
+sinais de *heartbeat* ("batimento cardíaco") são sinais períodicos para garantir se um nó
+computacional está ativo. Basta enviar um sinal simples e verificar se uma resposta correta chega em
+um tempo pré determinado. Sinais heartbeat são extremamente baratos porém não garantem um detecção
+ou correção de erro mais granular, portanto são usados como um complemento para detectar falhas de
+forma concorrente aos métodos mais robustos.
+
+O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o custo temporal de 
+tolerância limite no pior caso e o custo da viagem ida e volta no melhor caso. Este método é 
+aplicado em datacenters, também chamado de "health signal" ou "health check", o sinal e sua resposta
+ desejada podem conter outros metadados para análise de falhas, caso desejado.
+
+Também é possível usar os próprios prazos de execução como um mecanismo de detecção, porém isso pode
+não ser viável em sistema com prazos curtos, especialmente quando se opera em um contexto hard real time.
 
 ## Mecanismos de Tratamento
 
@@ -96,7 +110,7 @@ Um sistema operacional é um conjunto conjunto de software que permitem o gerenc
 com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco
 central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho
 principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar
-as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de 
+as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de
 maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
 
 Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado,
