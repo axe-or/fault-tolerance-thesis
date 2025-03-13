@@ -83,37 +83,19 @@ Sistemas embarcados são uma família vasta de sistemas computacionais, algumas 
 características de sistemas embarcados são:
 
 **Especificidade**:
-Diferente de um sistema de computação mais generalizado como um computador
-pessoal ou um servidor, sistemas embarcados são especializados para uma solução de escopo restrito.
-Um exemplo de um sistema embarcado são microcontroladores encontrados em dispositivos como mouses,
-teclados e eletrodomésticos.
+Diferente de um sistema de computação mais generalizado como um computador pessoal ou um servidor, sistemas embarcados são especializados para uma solução de escopo restrito. Um exemplo de um sistema embarcado são microcontroladores encontrados em dispositivos como mouses, teclados e eletrodomésticos.
 
 **Limitação de recursos**:
-Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são
-definidos previamente. No caso de microcontroladores tanto o poder computacional quanto a
-disponibilidade de memória são restritas. Importante notar que existem sistemas embarcados com
-acesso maior à recursos, como equipamentos de rede e hardware aceleradores que podem ter acesso a
-grandes quantias de poder computacional ou memória, mas os recursos do sistema continuam
-estaticamente delimitados para cumprir sua função específica.
+Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são definidos previamente. No caso de microcontroladores tanto o poder computacional quanto a disponibilidade de memória são restritas. Importante notar que existem sistemas embarcados com acesso maior à recursos, como equipamentos de rede e hardware aceleradores que podem ter acesso a grandes quantias de poder computacional ou memória, mas os recursos do sistema continuam estaticamente delimitados para cumprir sua função específica.
 
 **Critério Temporal**:
-Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de
-interrupção para a funcionalidade geral do contexto externo. A importância do tempo de execução de
-uma tarefa de um sistema pode ser classificada em duas categorias: Soft real time, e Hard real time,
-a distinção entre estas categorias é explicada na seção **Sistemas Operacionais de Tempo-Real**.
+Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de interrupção para a funcionalidade geral do contexto externo. A importância do tempo de execução de uma tarefa de um sistema pode ser classificada em duas categorias: Soft real time, e Hard real time, a distinção entre estas categorias é explicada na seção **Sistemas Operacionais de Tempo-Real**.
 
 # Sistemas Operacionais de Tempo-Real
 
-Um sistema operacional é um conjunto conjunto de software que permitem o gerenciamento e interação
-com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco
-central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho
-principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar
-as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de
-maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
+Um sistema operacional é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
 
-Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado,
-tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que
-divide-se em 2 categorias:
+Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
 
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de
   maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time
@@ -127,24 +109,13 @@ divide-se em 2 categorias:
   hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para
   sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
 
-Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, os sistemas
-operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real
-Time.
+Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, os sistemas operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real Time.
 
-Em contraste com sistemas operacionais focados em uso geral que são encontrados em servidores e
-computadores pessoais (como Windows, Linux e OSX), o objetivo do primário de um RTOS não é dar ao
-usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, sistemas em tempo
-real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do
-sistema com um respeito estrito aos prazos de execução fornecidos e que faça de maneira resiliente à
-flutuações de tempo causadas por IO e outras interrupções.
+Em contraste com sistemas operacionais focados em uso geral que são encontrados em servidores e computadores pessoais (como Windows, Linux e OSX), o objetivo do primário de um RTOS não é dar ao usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, sistemas em tempo real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do sistema com um respeito estrito aos prazos de execução fornecidos e que faça de maneira resiliente à flutuações de tempo causadas por IO e outras interrupções.
 
-Drivers em RTOSes são adicionados previamente de maneira *ad-hoc*, não há necessidade de
-carregamento dinâmico de drivers ou de bibliotecas pois na maioria das aplicações que necessitam de
-um RTOS, o hardware ja é conhecido e definido de antemão.
+Drivers em RTOSes são adicionados previamente de maneira *ad-hoc*, não há necessidade de carregamento dinâmico de drivers ou de bibliotecas pois na maioria das aplicações que necessitam de um RTOS, o hardware ja é conhecido e definido de antemão.
 
-Devido à suas características de simplicidade, baixo custo e previsibilidade, os sistemas
-operacionais de tempo real são extensivamente usados em aplicações de sistemas embarcados.
-Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
+Devido à suas características de simplicidade, baixo custo e previsibilidade, os sistemas operacionais de tempo real são extensivamente usados em aplicações de sistemas embarcados. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 ## Escalonador
 
