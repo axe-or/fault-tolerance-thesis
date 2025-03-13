@@ -6,13 +6,13 @@ Uma *falha* pode ser compreendida como um evento fora do controle do sistema que
 na sua qualidade de serviço, seja ao afetar a validade dos resultados ou com uma degradação na forma
 de aumento de latência. Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de ocorrência:
 
-- Falhas **Transientes**: Ocorrem aleatóriamente e possuem um impacto temporário.
+- Falhas **Transientes**: Ocorrem aleatoriamente e possuem um impacto temporário.
 
 - Falhas **Intermitentes**: Assim como as transientes possuem impacto temporário, porém re-ocorrem periodicamente.
 
 - Falhas **Permanentes**: Causam uma degradação permanente no sistema da qual não pode ser recuperada, potencialmente necessitando de intervenção externa.
 
-Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radição ionizante,
+Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante,
 Interferência Eletromagnética, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
 
 Para que o sistema possa ser *Tolerante à Falhas*, isto é, ser capaz de manter uma qualidade de serviço
@@ -27,7 +27,7 @@ aceitável mesmo na presença de falhas são necessários 2 principais mecanismo
   para manter o máximo de qualidade de serviço possível.
 
 A detecção e o tratamento podem ser implementados em hardware ou em software, implementações em
-hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redunância
+hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redundância
 implementada diretamente no circuito, e prover transparência de execução para o programador, a
 desvantagem é custo elevado de espaço no silício possível degradação de performance geral e menor
 flexibilidade. O processo de tornar o design e a implementação de um hardware com estas
@@ -48,35 +48,33 @@ possível.
 
 ## Mecanismos de Detecção
 
-### Bits de paridade, *Hamming codes* e *Arithmetic encoding*
-falar de bits de paridade e Hamming codes
+### Hashes e Checksums
 
-### Hashes
-falar de validação com hash não criptográfica
+Uma função de *hash*
+
+### ~~Bits de paridade e *Hamming codes*~~ (Tirar essa secao?)
+
+Bits de paridade consistem em utilizar 1 bit de um segmento de dados para ser o bit de *paridade*, isto é, a soma de todos os bits 1 do dado a ser transmitido o bit de paridade precisam resultar em um valor par (ou ímpar, contanto que o emissor e receptor concordem). A técnica de bit de paridade permite *detectar* 1 erro, por si só apenas 1 bit de paridade não é particularmente robusto dado que falhas transientes possuem uma chance alta de interferir com um conjunto de múltiplos bits próximos, apesar disso, bits de paridade ainda são utilizados como parte de técnicas mais robustas de detecção de erros
+
+*Hamming codes* são um mecanismo de detecção e correção de erros criado em 1950 por Richard W. Hamming, uma matriz de paridade é utilizada para o processo de verificação, este método é capaz de detectar e corrigir 1 bit de corrupção e detectar até 2 bits de erro quando pareados com 1 bit de paridade extra, propriedade conhecida como SECDEC (Single Error Correction, Double Error Detection). Hamming codes perderam parte de sua popularidade no século 21 em favor de mecanismos mais robustos que ainda mantém a propriedade SECDEC, mas o uso deste mecanismo ainda é presente em aplicações como FPGAs Xillinx.
 
 ### *Heartbeat signals*
 
-É possível determinar se uma falha ocorreu com um nó de execução através de um critério temporal, os
-sinais de *heartbeat* ("batimento cardíaco") são sinais períodicos para garantir se um nó
-computacional está ativo. Basta enviar um sinal simples e verificar se uma resposta correta chega em
-um tempo pré determinado. Sinais heartbeat são extremamente baratos porém não garantem um detecção
-ou correção de erro mais granular, portanto são usados como um complemento para detectar falhas de
-forma concorrente aos métodos mais robustos.
+É possível determinar se uma falha ocorreu com um nó de execução através de um critério temporal, os sinais de *heartbeat* ("batimento cardíaco") são sinais periódicos para garantir se um nó computacional está ativo. Basta enviar um sinal simples e verificar se uma resposta correta chega em um tempo pré determinado. Sinais heartbeat são extremamente baratos porém não garantem um detecção ou correção de erro mais granular, portanto são usados como um complemento para detectar falhas de forma concorrente aos métodos mais robustos.
 
-O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o custo temporal de 
-tolerância limite no pior caso e o custo da viagem ida e volta no melhor caso. Este método é 
-aplicado em datacenters, também chamado de "health signal" ou "health check", o sinal e sua resposta
- desejada podem conter outros metadados para análise de falhas, caso desejado.
+O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o custo temporal de tolerância limite no pior caso e o custo da viagem ida e volta no melhor caso. Este método é aplicado em datacenters, também chamado de "health signal" ou "health check", o sinal e sua resposta desejada podem conter outros metadados para análise de falhas, caso desejado.
 
-Também é possível usar os próprios prazos de execução como um mecanismo de detecção, porém isso pode
-não ser viável em sistema com prazos curtos, especialmente quando se opera em um contexto hard real time.
+Também é possível usar os próprios prazos de execução como um mecanismo de detecção, porém isso pode não ser viável em sistema com prazos curtos, especialmente quando se opera em um contexto hard real time.
 
 ## Mecanismos de Tratamento
 
-### Correção de Erro
-novamente, bits de paridade, hamming code, arithmetic encoding
+### Redundância
+tmr sistema de consenso etc.
 
-### Re-execução e Redundância
+### Correção de Erro
+bits de paridade, hamming code, arithmetic encoding ?
+
+### Re-execução
 falar da diferença e como combinar os 2
 
 # Sistemas embarcados
@@ -119,12 +117,12 @@ divide-se em 2 categorias:
 
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de
   maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time
-  tipicamente operam na escala de milisegundos, isto é percepção humana. O atraso de uma tarefa em um
+  tipicamente operam na escala de milissegundos, isto é percepção humana. O atraso de uma tarefa em um
   sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD,
   videogames, kiosks de atendimento.
 
 - *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma
-  tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com
+  tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com
   atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas
   hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para
   sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
@@ -134,7 +132,7 @@ operacionais de tempo real tem seu design orientado a serem capazes de cumprir o
 Time.
 
 Em contraste com sistemas operacionais focados em uso geral que são encontrados em servidores e
-computadores pessoais (como Windows, Linux e OSX), o objetivo do pimário de um RTOS não é dar ao
+computadores pessoais (como Windows, Linux e OSX), o objetivo do primário de um RTOS não é dar ao
 usuário a sensação de fluidez dinamicamente escalonando os recursos da máquina, sistemas em tempo
 real buscam ser simples, confiáveis e determinísticos. É essencial que um RTOS execute as tarefas do
 sistema com um respeito estrito aos prazos de execução fornecidos e que faça de maneira resiliente à
@@ -145,13 +143,13 @@ carregamento dinâmico de drivers ou de bibliotecas pois na maioria das aplicaç
 um RTOS, o hardware ja é conhecido e definido de antemão.
 
 Devido à suas características de simplicidade, baixo custo e previsibilidade, os sistemas
-operacionais de tempo real são extensivamente usados em aplicações de sistemas embarcados e internet
-das coisas. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
+operacionais de tempo real são extensivamente usados em aplicações de sistemas embarcados.
+Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 ## Escalonador
 
 ## Escalonamento tolerante à falhas
-falar dos grafo lá, e das coisas tipo transparencia e os tipos de overhead
+falar dos grafo lá, e das coisas tipo transparência e os tipos de overhead
 
 # Trabalhos Relacionados
 
