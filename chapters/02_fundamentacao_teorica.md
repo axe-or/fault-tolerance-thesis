@@ -48,15 +48,16 @@ possível.
 
 ## Mecanismos de Detecção
 
-### Hashes e Checksums
+Os mecanismos de *detecção*, permitem que um sistema detecte uma inconsistência em seus dados, causada por falha externa ou por erro lógico de outra parte no caso de sistemas distribuídos. Os mecanismos de detecção são essenciais para a tolerância à falhas. Ao detectar uma falha o sistema deve tomar uma ação corretiva para o tratamento da falha, mecanismos de tratamento serão abordados posteriormente.
 
-Uma função de *hash*
+### CRC (Cyclic Redundancy Check)
 
-### ~~Bits de paridade e *Hamming codes*~~ (Tirar essa secao?)
+Os CRCs são códigos de detecção de erro comumente utilizados em redes de computador e armazenamento não volátil para detectar falhas. Para cada segmento de dado é concatenado um valor (denominado *check value* ou simplesmente o valor CRC) que é calculado com base no resto da divisão de um polinômio previamente acordado entre remetente e destinatário (chamado de "polinômio gerador").
 
-Bits de paridade consistem em utilizar 1 bit de um segmento de dados para ser o bit de *paridade*, isto é, a soma de todos os bits 1 do dado a ser transmitido o bit de paridade precisam resultar em um valor par (ou ímpar, contanto que o emissor e receptor concordem). A técnica de bit de paridade permite *detectar* 1 erro, por si só apenas 1 bit de paridade não é particularmente robusto dado que falhas transientes possuem uma chance alta de interferir com um conjunto de múltiplos bits próximos, apesar disso, bits de paridade ainda são utilizados como parte de técnicas mais robustas de detecção de erros
+Ao receber o segmento, o receptor calcula seu próprio valor CRC com base nos dados do segmento (sem incluir o CRC do destinatário), caso ocorra diferença entre os CRCs isso indica a ocorrência de um erro. CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "*burst errors*", falhas transientes que alteram uma região de bits próximos.
 
-*Hamming codes* são um mecanismo de detecção e correção de erros criado em 1950 por Richard W. Hamming, uma matriz de paridade é utilizada para o processo de verificação, este método é capaz de detectar e corrigir 1 bit de corrupção e detectar até 2 bits de erro quando pareados com 1 bit de paridade extra, propriedade conhecida como SECDEC (Single Error Correction, Double Error Detection). Hamming codes perderam parte de sua popularidade no século 21 em favor de mecanismos mais robustos que ainda mantém a propriedade SECDEC, mas o uso deste mecanismo ainda é presente em aplicações como FPGAs Xillinx.
+### Códigos Reed-Solomon
+Faço isso?
 
 ### *Heartbeat signals*
 
@@ -68,8 +69,15 @@ Também é possível usar os próprios prazos de execução como um mecanismo de
 
 ## Mecanismos de Tratamento
 
+Uma vez que uma falha tenha sido detectada o sistema precisa *tratar* a falha o mais rápido possível para manter a qualidade de serviço, alguns mecanismos de detecção também fornecem a possibilidade de correção dos dados, como é o caso dos códigos Reed-Solomon, nestes casos, fica à critério da aplicação se a correção deve ser tentada ou outro tratamento deve ser usado.
+
 ### Redundância
-tmr sistema de consenso etc.
+
+Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de N falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha.
+
+Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy) <<FALAR MAIS>>
+
+Sistemas distribuídos também podem aproveitar de sua redundância natural por serem sistemas com múltiplos nós computacionais, falhas transientes em um nó podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem suplantar a execução de suas tarefas mantendo a qualidade média de serviço, o uso de sistemas capazes de auto reparo é vital para a existência de telecomunicação em larga escala e computação em nuvem.
 
 ### Correção de Erro
 bits de paridade, hamming code, arithmetic encoding ?
@@ -86,7 +94,7 @@ características de sistemas embarcados são:
 Diferente de um sistema de computação mais generalizado como um computador pessoal ou um servidor, sistemas embarcados são especializados para uma solução de escopo restrito. Um exemplo de um sistema embarcado são microcontroladores encontrados em dispositivos como mouses, teclados e eletrodomésticos.
 
 **Limitação de recursos**:
-Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são definidos previamente. No caso de microcontroladores tanto o poder computacional quanto a disponibilidade de memória são restritas. Importante notar que existem sistemas embarcados com acesso maior à recursos, como equipamentos de rede e hardware aceleradores que podem ter acesso a grandes quantias de poder computacional ou memória, mas os recursos do sistema continuam estaticamente delimitados para cumprir sua função específica.
+Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são definidos previamente. No caso de microcontroladores tanto o poder computacional quanto a disponibilidade de memória são restritas. Importante notar que existem sistemas embarcados com acesso maior à recursos, como equipamentos de rede e hardware aceleradores que podem ter acesso a  quantias maiores de poder computacional ou memória, mas os recursos do sistema continuam estaticamente delimitados para cumprir sua função específica.
 
 **Critério Temporal**:
 Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de interrupção para a funcionalidade geral do contexto externo. A importância do tempo de execução de uma tarefa de um sistema pode ser classificada em duas categorias: Soft real time, e Hard real time, a distinção entre estas categorias é explicada na seção **Sistemas Operacionais de Tempo-Real**.
@@ -97,17 +105,9 @@ Um sistema operacional é um conjunto conjunto de software que permitem o gerenc
 
 Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
 
-- *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de
-  maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time
-  tipicamente operam na escala de milissegundos, isto é percepção humana. O atraso de uma tarefa em um
-  sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD,
-  videogames, kiosks de atendimento.
+- *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time tipicamente operam na escala de milissegundos, isto é, percepção humana. O atraso de uma tarefa em um sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD, videogames, kiosks de atendimento.
 
-- *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma
-  tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com
-  atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas
-  hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para
-  sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
+- *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
 
 Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, os sistemas operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real Time.
 
