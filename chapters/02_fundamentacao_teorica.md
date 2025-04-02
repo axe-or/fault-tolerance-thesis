@@ -128,7 +128,16 @@ O escalonador (*scheduler*) é o componente do sistema operacional responsável 
 Sistemas operacionais de tempo-real são comumente executados no modo totalmente preemptivo, mas o uso cooperativo também é viável e possui vantagem de possuir o controle mais previsível e não necessitar de tantas interrupções de timer, mas é importante que seja tomado o cuidado adequado para que nenhum prazo de execução hard real time seja violado por uma tarefa inadvertidamente utilizando a CPU por uma fatia longa de tempo.
 
 ## Escalonamento tolerante à falhas
-falar dos grafo lá, e das coisas tipo transparência e os tipos de overhead
+
+Durante a execução de um sistema tolerante à falhas, existem alguns tipos principais de overheads que independente da presença de uma falha vão ocorrer e precisam ser considerados pelo escalonador.
+
+1. *Mudança de contexto*: Trocar entre tarefas possui um custo inerente pois é necessário salvar o estado da máquina e fazer alterações no TCB (*Task control block*) da tarefa.
+
+2. *Envio de mensagems*: Para comunicar entre tasks ou entre componentes fisicamente distintos do sistema, seja por bus ou por mecanismo de rede, existe um custo inerente à serialização e ao meio de transmissão da mensagem.
+
+3. *Detecção de Erro*: É necessário um overhead fixo para detectar a presença de falhas, um bom algoritmo de detecção possui um equilibrío entre minimizar esse custo e conseguir detectar falhas com uma alta taxa de acerto, sem presença de falsos positivos.
+
+Na ocorrência de uma falha com uma política de re-execução, existe um overhead extra, similar à de uma mudança de contexto, para restaurar o estado anterior da tarefa.
 
 # Trabalhos Relacionados
 
