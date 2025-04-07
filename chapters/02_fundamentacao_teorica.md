@@ -56,9 +56,6 @@ Os CRCs são códigos de detecção de erro comumente utilizados em redes de com
 
 Ao receber o segmento, o receptor calcula seu próprio valor CRC com base nos dados do segmento (sem incluir o CRC do destinatário), caso ocorra diferença entre os CRCs isso indica a ocorrência de um erro. CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "*burst errors*", falhas transientes que alteram uma região de bits próximos.
 
-### Códigos Reed-Solomon
-Faço isso?
-
 ### *Heartbeat signals*
 
 É possível determinar se uma falha ocorreu com um nó de execução através de um critério temporal, os sinais de *heartbeat* ("batimento cardíaco") são sinais periódicos para garantir se um nó computacional está ativo. Basta enviar um sinal simples e verificar se uma resposta correta chega em um tempo pré determinado. Sinais heartbeat são extremamente baratos porém não garantem um detecção ou correção de erro mais granular, portanto são usados como um complemento para detectar falhas de forma concorrente aos métodos mais robustos.
@@ -139,5 +136,20 @@ Durante a execução de um sistema tolerante à falhas, existem alguns tipos pri
 
 Na ocorrência de uma falha com uma política de re-execução, existe um overhead extra, similar à de uma mudança de contexto, para restaurar o estado anterior da tarefa.
 
+Para melhor visualização de um fluxo de execução com falhas, é possível utilizar de um mecanismo de diagramação denominado *grafos resilientes à falhas*, que descrevem o comportamento do sistema na presença de falhas. Neste contexto, a distinção entre processo, thread e tarefa não é importante, os termos processo e tarefa serão utilizados de forma intercambiável, e correspondem simplesmente a uma unidade de execução com um espaço de pilha dedicado.
+
+# >> **Falar de transparência/freezing** <<
+
+Para um processo qualquer, será utilizado a notação `PX (N)`, onde X é o número identificador do processo, e N corresponde à sua N-ésima re-execução, por exemplo `P2 (1)` indica a primeira execução do processo P2, enquanto `P1 (3)` indica a terceira reexecução do processo P1. Uma notação similar será utilizada para mensagens entre processos, `mX (N)`, mensagens, assim como processos, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens podem ser re-enviadas ou restauradas na presença de algoritmos de recuperação de erro.
+
+No representação de grafo, nós são processos, que podem estar rodando na mesma CPU ou não, arestas indicam o fluxo de execução, uma aresta não marcada indica execução incondicional, já arestas demarcadas com notação de mensagem, representam execução que depende de uma transmissão de mensagem. Mensagens e processos indicados com um símbolo circular representam pontos ordinários no grafo, já pontos com símbolos quadrados indicam as condições de transparência.
+
+# >> Grafo simples aqui <<
+
+# >> Grafo com múltiplas mensagens aqui <<
+
 # Trabalhos Relacionados
+
+- Isosimov, principal referência
+- Alguns outros
 
