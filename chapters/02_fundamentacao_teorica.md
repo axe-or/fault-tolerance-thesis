@@ -2,9 +2,7 @@
 
 # Falhas e Tolerância
 
-Uma *falha* pode ser compreendida como um evento fora do controle do sistema que provoca uma degradação
-na sua qualidade de serviço, seja ao afetar a validade dos resultados ou com uma degradação na forma
-de aumento de latência. Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de ocorrência:
+Uma *falha* pode ser compreendida como um evento fora do controle do sistema que provoca uma degradação na sua qualidade de serviço, seja ao afetar a validade dos resultados ou com uma degradação na forma de aumento de latência. Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de ocorrência:
 
 - Falhas **Transientes**: Ocorrem aleatoriamente e possuem um impacto temporário.
 
@@ -12,39 +10,19 @@ de aumento de latência. Falhas podem ser classificadas em 3 grupos referentes a
 
 - Falhas **Permanentes**: Causam uma degradação permanente no sistema da qual não pode ser recuperada, potencialmente necessitando de intervenção externa.
 
-Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante,
-Interferência Eletromagnética, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
+Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante, Interferência Eletromagnética, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
 
-Para que o sistema possa ser *Tolerante à Falhas*, isto é, ser capaz de manter uma qualidade de serviço
-aceitável mesmo na presença de falhas são necessários 2 principais mecanismos:
+Para que o sistema possa ser *Tolerante à Falhas*, isto é, ser capaz de manter uma qualidade de serviço aceitável mesmo na presença de falhas são necessários 2 principais mecanismos:
 
-1. **Detecção de Falhas**: Capacidade de perceber a ocorrência de uma falha e executar a rotina de
-  tratamento. Métodos comuns de detecção incluem: Bits de paridade, Funções hash, Sinais heartbeat e
-  Limites de tempo (*timeouts* ou *deadlines*).
+1. **Detecção de Falhas**: Capacidade de perceber a ocorrência de uma falha e executar a rotina de tratamento. Métodos comuns de detecção incluem: Bits de paridade, Funções hash, Sinais heartbeat e Limites de tempo (*timeouts* ou *deadlines*).
 
-2. **Tratamento de Falhas**: Capacidade de reagir as falhas, com uma correção, re-execução ou rotina de
-  mitigação. Falhas permanentes podem necessitar de um desligamento gracioso do sistema ou reorganização
-  para manter o máximo de qualidade de serviço possível.
+2. **Tratamento de Falhas**: Capacidade de reagir as falhas, com uma correção, re-execução ou rotina de mitigação. Falhas permanentes podem necessitar de um desligamento gracioso do sistema ou reorganização para manter o máximo de qualidade de serviço possível.
 
-A detecção e o tratamento podem ser implementados em hardware ou em software, implementações em
-hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redundância
-implementada diretamente no circuito, e prover transparência de execução para o programador, a
-desvantagem é custo elevado de espaço no silício possível degradação de performance geral e menor
-flexibilidade. O processo de tornar o design e a implementação de um hardware com estas
-características é chamado de *hardening*.
+A detecção e o tratamento podem ser implementados em hardware ou em software, implementações em hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redundância implementada diretamente no circuito, e prover transparência de execução para o programador, a desvantagem é custo elevado de espaço no silício possível degradação de performance geral e menor flexibilidade. O processo de tornar o design e a implementação de um hardware com estas características é chamado de *hardening*.
 
-Implementações em software não são capazes de fornecer todas as garantias fortes do hardware, em
-contrapartida, não ocupam espaço extra no chip e são mais flexíveis, com software é possível
-implementar lógica de detecção recuperação e estruturas de dados mais complexas, e até mesmo
-realizar atualizações remotas com o sistema ativo (*live patching*).
+Implementações em software não são capazes de fornecer todas as garantias fortes do hardware, em contrapartida, não ocupam espaço extra no chip e são mais flexíveis, com software é possível implementar lógica de detecção recuperação e estruturas de dados mais complexas, e até mesmo realizar atualizações remotas com o sistema ativo (*live patching*).
 
-Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e software precisam
-ser consideradas, é possível utilizar hardware com *hardening* para um núcleo que realiza atividades
-críticas, e delegar núcleos menos protegidos para atividades em que o tratamento em software é
-suficiente. Balancear a troca de espaço em chip, uso de memória, flexibilidade de implementação,
-tempo de execução, vazão de dados e garantias de transparência é indispensável para a criação de um
-sistema que seja resiliente à falhas e que forneça uma boa qualidade de serviço pelo menor custo
-possível.
+Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e software precisam ser consideradas, é possível utilizar hardware com *hardening* para um núcleo que realiza atividades críticas, e delegar núcleos menos protegidos para atividades em que o tratamento em software é suficiente. Balancear a troca de espaço em chip, uso de memória, flexibilidade de implementação, tempo de execução, vazão de dados e garantias de transparência é indispensável para a criação de um sistema que seja resiliente à falhas e que forneça uma boa qualidade de serviço pelo menor custo possível.
 
 ## Mecanismos de Detecção
 
@@ -136,11 +114,15 @@ Durante a execução de um sistema tolerante à falhas, existem alguns tipos pri
 
 Na ocorrência de uma falha com uma política de re-execução, existe um overhead extra, similar à de uma mudança de contexto, para restaurar o estado anterior da tarefa.
 
+Uma consequência natural de possuir diversos processos se comunicando com até *k* falhas, é uma explosão combinatória de possíveis caminhos de execução e reexecução, além de drasticamente aumentar o tempo de execução de algoritmos de escalonamento (seja online ou offline), o sistema se torna excessivamente complicado, afetando negativamente duas das características desejáveis de sistemas de tempo real, como o determinismo e as fortes garantias de prazo de execução.
+
+Pode-se reduzir o grau de possíveis combinações e garantir maior previsibilidade do sistema utilizando-se de pontos de *transparência*, também chamados de *freezing*. Para uma tarefa qualquer, considera-se que a tarefa é transparente se para uma deadline especificada e dado um limite de até *k* falhas, a execução é finalizada no prazo independente do número de falhas que ocorreram. Para o caso onde nenhuma falha ocorra, existe a introdução de um tempo extra onde a tarefa está "congelada", irrespectivamente da presença de falhas, pontos de transparência podem ser estrategicamente escolhidos para garantir o tempo de execução entre as principais macro etapas sem a necessidade de redundância de replicação. É importante ressaltar que a troca fundamental que ocorre na inserção de um ponto de transparência é a troca de maior gasto *temporal* para o caso sem falhas de uma tarefa, em troca de uma garantia sistêmica de sua compleção, outras tarefas ou nós no sistema são capazes de confiar na compleção de uma tarefa transparente dado que seu prazo esteja cumprido.
+
+### Grafos de execução tolerantes à falha
+
 Para melhor visualização de um fluxo de execução com falhas, é possível utilizar de um mecanismo de diagramação denominado *grafos resilientes à falhas*, que descrevem o comportamento do sistema na presença de falhas. Neste contexto, a distinção entre processo, thread e tarefa não é importante, os termos processo e tarefa serão utilizados de forma intercambiável, e correspondem simplesmente a uma unidade de execução com um espaço de pilha dedicado.
 
-# >> **Falar de transparência/freezing** <<
-
-Para um processo qualquer, será utilizado a notação `PX (N)`, onde X é o número identificador do processo, e N corresponde à sua N-ésima re-execução, por exemplo `P2 (1)` indica a primeira execução do processo P2, enquanto `P1 (3)` indica a terceira reexecução do processo P1. Uma notação similar será utilizada para mensagens entre processos, `mX (N)`, mensagens, assim como processos, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens podem ser re-enviadas ou restauradas na presença de algoritmos de recuperação de erro.
+Dado um processo qualquer, será utilizado a notação `PX (N)`, onde X é o número identificador do processo, e N corresponde à sua N-ésima re-execução, por exemplo `P2 (1)` indica a primeira execução do processo P2, enquanto `P1 (3)` indica a terceira reexecução do processo P1. Uma notação similar será utilizada para mensagens entre processos, `mX (N)`, mensagens, assim como processos, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas ou restauradas na caso algoritmos de recuperação de erro estejam disponíveis.
 
 No representação de grafo, nós são processos, que podem estar rodando na mesma CPU ou não, arestas indicam o fluxo de execução, uma aresta não marcada indica execução incondicional, já arestas demarcadas com notação de mensagem, representam execução que depende de uma transmissão de mensagem. Mensagens e processos indicados com um símbolo circular representam pontos ordinários no grafo, já pontos com símbolos quadrados indicam as condições de transparência.
 
