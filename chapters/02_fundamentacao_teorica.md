@@ -50,15 +50,19 @@ Uma vez que uma falha tenha sido detectada o sistema precisa *tratar* a falha o 
 
 Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de N falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha.
 
-Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy) <<FALAR MAIS>>
+Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy) onde essencialmente a tarefa é executada 3 vezes em paralelo, e uma porta de consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar a superfície.
 
 Sistemas distribuídos também podem aproveitar de sua redundância natural por serem sistemas com múltiplos nós computacionais, falhas transientes em um nó podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem suplantar a execução de suas tarefas mantendo a qualidade média de serviço, o uso de sistemas capazes de auto reparo é vital para a existência de telecomunicação em larga escala e computação em nuvem.
 
-### Correção de Erro
-bits de paridade, hamming code, arithmetic encoding ?
-
 ### Re-execução
-falar da diferença e como combinar os 2
+Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, a probabilidade de *k* falhas intermitentes ocorrem em sequência é menor do que a probabilidade de apenas ocorrer *k - 1* vezes no intervalo de execução. Ao re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa.
+
+Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a re-execução depende de uma resiliência "temporal" (É improvável que múltiplas falhas ocorram repetidamente em *N* execuções)
+
+### Correção de Erro
+Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção <<<ASJDLKAJSDLKJ>>>
+
+Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução), mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes.
 
 # Sistemas embarcados
 
