@@ -80,9 +80,9 @@ Sistemas embarcados, por serem parte de um todo maior, devem realizar sua funç�
 
 # Sistemas Operacionais de Tempo-Real
 
-Um sistema operacional é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
+Um *sistema operacional*(SO) é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
 
-Um sistema  *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
+Já um *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
 
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time tipicamente operam na escala de milissegundos, isto é, percepção humana. O atraso de uma tarefa em um sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD, videogames, kiosks de atendimento.
 
@@ -108,6 +108,7 @@ Sistemas operacionais de tempo-real são comumente executados no modo totalmente
 
 ## Escalonamento tolerante à falhas
 
+<<<<<<< HEAD
 Durante a execução de um sistema tolerante à falhas, existem alguns tipos principais de overheads que independente da presença de uma falha vão ocorrer e precisam ser considerados pelo escalonador.
 
 1. *Mudança de contexto*: Trocar entre tarefas possui um custo inerente pois é necessário salvar o estado da máquina e fazer alterações no TCB (*Task control block*) da tarefa.
@@ -133,6 +134,8 @@ No representação de grafo, nós são processos, que podem estar rodando na mes
 # >> Grafo simples aqui <<
 
 # >> Grafo com múltiplas mensagens aqui <<
+O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fortes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
+
 
 # Trabalhos Relacionados
 

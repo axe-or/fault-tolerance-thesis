@@ -1,0 +1,22 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 0c23b000-b1c9-4d0f-a035-71f29aaf0a3e
+  title: Exploração de Técnicas no Escalonador para Tolerância à Falhas
+  keywords: [Operating System, Scheduling Algorithms, Fault Tolerance, Embedded Systems, Computer Networks]
+  authors: [Marcos Augusto Fehlauer Pereira]
+  # To autogenerate a Table of Contents, run "myst init --write-toc"
+  toc:
+    - file: chapters/01_introducao.md
+    - title: Capítulos
+      children:
+        - file: chapters/02_fundamentacao_teorica.md
+        - file: chapters/03_projeto.md
+        - file: chapters/04_desenvolvimento.md
+        - file: chapters/05_resultado.md
+        - file: chapters/06_conclusao.md
+        - file: chapters/bibliografia.md
+    
+site:
+  template: book-theme
+
