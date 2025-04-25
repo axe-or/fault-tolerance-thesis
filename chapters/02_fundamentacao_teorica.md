@@ -62,7 +62,7 @@ Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, 
 Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a re-execução depende de uma resiliência "temporal" (É improvável que múltiplas falhas ocorram repetidamente em *N* execuções)
 
 ### Correção de Erro
-Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção, dentre os mais famosos encontram-se Turbo Codes, Reed-Solomon Codes e LDPCs (Low Density Parity Checks).
+Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção, dentro da família de algoritmos que possibilitam detecção e correção, são encontrados os códigos como os de: Reed-Solomon, Turbo Codes, LDPCs.
 
 Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução), mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes particularmente no processo de envio e recebimento de mensagens.
 
