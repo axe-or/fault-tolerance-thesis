@@ -1,0 +1,14 @@
+
+Comparar:
+- Reexecucao com diferentes pontos de transparencia e checkpoints (manuais)
+- Deteccao nas mensagens
+- Comparar deteccao nas mensagens 
+
+Cenario:
+- Sensores distribuidos com 2 nos "mestres" que fazem alguma computacao (gerir
+  um datacenter ou uma industria talvez) (primario e fallback)
+- Comparar transparencia total (100% de tolerancia) com pontos de transparencia
+- Gerar tabela de escalonamento
+- Minimizar memoria
+
+
