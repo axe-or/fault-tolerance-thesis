@@ -5,4 +5,6 @@
 | Abraham, Silberschatz; Galvin, Peter Baer; Gagne, Greg | Operating System Concepts 10th Edition |
 | PERSYA, A. C.; NAIR, T. R. G. | Fault Tolerant Real Time Systems, International Conference on Managing Next Generation Software Application |
 | YIN, J.; GU, G. | A Real-time Fault-tolerant Scheduling Algorithm for Multiple Processor Faults.
+| NASA
+| Tigerbeetle
 

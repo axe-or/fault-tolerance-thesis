@@ -42,12 +42,14 @@ O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o c
 
 Também é possível usar os próprios prazos de execução como um mecanismo de detecção, porém isso pode não ser viável em sistema com prazos curtos, especialmente quando se opera em um contexto hard real time.
 
+### Pré e Pós condições e asserts
+A utilização de asserts é um mecanismo simples que é particularmente útil, um assert trata-se de checar se uma condição é verdadeira, caso não seja, o programa é interrompido e entra um estado de pânico. Utilizar asserts automáticos na entrada e saída de funções é denominado pré/pós-condições. Asserts não previnem erros do hardware ou geram reexecuções, mas tratam-se de um mecanismo de uso extremamente fácil que pode ser inserido pelos desenvolvedores para detectar falhas de design cedo, o uso de asserts podem detectar um defeito externo, mas por serem mecanismos exclusivamente de fluxo de controle, não são muito robustos em suas garantias, mas ainda assim, seu custo baixo e fácil inserção/deleção os fazem um mecanismo que não deve ser ignorado.
+
 ## Mecanismos de Tratamento
 
 Uma vez que uma falha tenha sido detectada o sistema precisa *tratar* a falha o mais rápido possível para manter a qualidade de serviço, alguns mecanismos de detecção também fornecem a possibilidade de correção dos dados, como é o caso dos códigos Reed-Solomon, nestes casos, fica à critério da aplicação se a correção deve ser tentada ou outro tratamento deve ser usado.
 
 ### Redundância
-
 Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de N falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha.
 
 Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy) onde essencialmente a tarefa é executada 3 vezes em paralelo, e uma porta de consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar a superfície.
@@ -60,9 +62,9 @@ Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, 
 Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a re-execução depende de uma resiliência "temporal" (É improvável que múltiplas falhas ocorram repetidamente em *N* execuções)
 
 ### Correção de Erro
-Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção <<<ASJDLKAJSDLKJ>>>
+Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção, dentre os mais famosos encontram-se Turbo Codes, Reed-Solomon Codes e LDPCs (Low Density Parity Checks).
 
-Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução), mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes.
+Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução), mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes particularmente no processo de envio e recebimento de mensagens.
 
 # Sistemas embarcados
 
@@ -108,20 +110,19 @@ Sistemas operacionais de tempo-real são comumente executados no modo totalmente
 
 ## Escalonamento tolerante à falhas
 
-<<<<<<< HEAD
 Durante a execução de um sistema tolerante à falhas, existem alguns tipos principais de overheads que independente da presença de uma falha vão ocorrer e precisam ser considerados pelo escalonador.
 
 1. *Mudança de contexto*: Trocar entre tarefas possui um custo inerente pois é necessário salvar o estado da máquina e fazer alterações no TCB (*Task control block*) da tarefa.
 
-2. *Envio de mensagems*: Para comunicar entre tasks ou entre componentes fisicamente distintos do sistema, seja por bus ou por mecanismo de rede, existe um custo inerente à serialização e ao meio de transmissão da mensagem.
+2. *Envio de mensagens*: Para comunicar entre tasks ou entre componentes fisicamente distintos do sistema, seja por bus ou por mecanismo de rede, existe um custo inerente à serialização e ao meio de transmissão da mensagem.
 
-3. *Detecção de Erro*: É necessário um overhead fixo para detectar a presença de falhas, um bom algoritmo de detecção possui um equilibrío entre minimizar esse custo e conseguir detectar falhas com uma alta taxa de acerto, sem presença de falsos positivos.
+3. *Detecção de Erro*: É necessário um overhead fixo para detectar a presença de falhas, um bom algoritmo de detecção possui um equilíbrio entre minimizar esse custo e conseguir detectar falhas com uma alta taxa de acerto, sem presença de falsos positivos.
 
 Na ocorrência de uma falha com uma política de re-execução, existe um overhead extra, similar à de uma mudança de contexto, para restaurar o estado anterior da tarefa.
 
 Uma consequência natural de possuir diversos processos se comunicando com até *k* falhas, é uma explosão combinatória de possíveis caminhos de execução e reexecução, além de drasticamente aumentar o tempo de execução de algoritmos de escalonamento (seja online ou offline), o sistema se torna excessivamente complicado, afetando negativamente duas das características desejáveis de sistemas de tempo real, como o determinismo e as fortes garantias de prazo de execução.
 
-Pode-se reduzir o grau de possíveis combinações e garantir maior previsibilidade do sistema utilizando-se de pontos de *transparência*, também chamados de *freezing*. Para uma tarefa qualquer, considera-se que a tarefa é transparente se para uma deadline especificada e dado um limite de até *k* falhas, a execução é finalizada no prazo independente do número de falhas que ocorreram. Para o caso onde nenhuma falha ocorra, existe a introdução de um tempo extra onde a tarefa está "congelada", irrespectivamente da presença de falhas, pontos de transparência podem ser estrategicamente escolhidos para garantir o tempo de execução entre as principais macro etapas sem a necessidade de redundância de replicação. É importante ressaltar que a troca fundamental que ocorre na inserção de um ponto de transparência é a troca de maior gasto *temporal* para o caso sem falhas de uma tarefa, em troca de uma garantia sistêmica de sua compleção, outras tarefas ou nós no sistema são capazes de confiar na compleção de uma tarefa transparente dado que seu prazo esteja cumprido.
+Pode-se reduzir o grau de possíveis combinações e garantir maior previsibilidade do sistema utilizando-se de pontos de *transparência*, também chamados de *freezing*. Para uma tarefa qualquer, considera-se que a tarefa é transparente se para uma deadline especificada e dado um limite de até *k* falhas, a execução é finalizada no prazo independente do número de falhas que ocorreram. Para o caso onde nenhuma falha ocorra, existe a introdução de um tempo extra onde a tarefa está "congelada", independentemente da presença de falhas, pontos de transparência podem ser estrategicamente escolhidos para garantir o tempo de execução entre as principais macro etapas sem a necessidade de redundância de replicação. É importante ressaltar que a troca fundamental que ocorre na inserção de um ponto de transparência é a troca de maior gasto *temporal* para o caso sem falhas de uma tarefa, em troca de uma garantia sistêmica de sua conclusão, outras tarefas ou nós no sistema são capazes de confiar na conclusão de uma tarefa transparente dado que seu prazo esteja cumprido.
 
 ### Grafos de execução tolerantes à falha
 
