@@ -13,23 +13,9 @@ desses fenômenos necessitam que dispositivos estejam preparados, especialmente
 em aplicações aero-espaciais(que necessitam ser confiáveis e tolerar seu
 ambiente volátil).
 
-Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
-soluções em hardware e software necessitam ser abordadas para garantir a
-qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional
-ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo
-então um candidato interessante para aprimorar sua resiliência com foco em
-reduzir desperdício dos nós computacionais.
+Tornar um sistema tolerante à falhas é um problema multi facetado, ambas soluções em hardware e software necessitam ser abordadas para garantir a qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo então um candidato interessante para aprimorar sua resiliência com foco em reduzir desperdício dos nós computacionais. O processo de detecção das falhas e seu impacto no grafo de execução assim como nas métricas quantitativas de tempo de CPU e uso de memória portanto deve ser considerado, particularmente no contexto de escalonamento, pois a reação rápida e correta às falhas requer previamente a detecção e elaboração das rotinas de escalonamento de forma adequada.
 
-Dentre as técnicas para escalonamento resiliente se encontra a criação de
-grafos resilientes à falhas que podem ser utilizados para construir tabelas de
-transição, para que na presença de uma falha detectada, seja possível reexecutar
-ou resumir uma rotina de tratamento do erro, em sistemas com requisitos
-estritos de tempo é possível balancear um tempo de execução maior com garantia
-de transparência que permitam que para um observador externo, o sistema opera
-como se não tivesse ocorrido falhas dado um limite superior de até *k* falhas
-por bloco de tempo.
-
-Com a presença de sistemas embarcados em contextos críticos como na exploração
+A presença de sistemas embarcados em contextos críticos como na exploração
 espacial, automobilística e tecnologia médica, assim como a ubiquidade de
 dispositivos móveis e de baixo consumo energético no mercado consumidor
 (Celulares, Notebooks, equipamentos IoT) e a existência do mercado de cloud e
@@ -50,13 +36,20 @@ particularmente evidentes.
 
 ## Solução Proposta
 
-Implementar e comparar técnicas de escalonamento com tolerância a falhas, com o objetivo de esclarecer o impacto de performance em relação ao ganho de resiliência do sistema, particularmente no contexto de sistemas de tempo real, dado que algortimos que consigam satisfazer a restrição de tempo real também podem ser utilizados em outros contextos com restrições temporais mais relaxadas.
+Implementar e comparar técnicas de escalonamento com detecção de erros, com o objetivo de esclarecer o impacto de performance em relação ao ganho de resiliência do sistema, particularmente no contexto de sistemas de tempo real, dado que algoritmos que consigam satisfazer a restrição de tempo real também podem ser utilizados em outros contextos com restrições temporais mais relaxadas.
 
 ## Objetivos
 
 ### Objetivo Geral
 
+Explorar o uso de técnicas de escalonamento de tempo real com detecção de erros.
+
 ### Objetivos Específicos
+
+- Selecionar métodos de detecção de erros
+- Implementar prova de conceito dos métodos para pré avaliação
+- Implementar e mensurar técnicas em aplicação real
+- Avaliar o impacto das técnicas
 
 ### Justificativa
 

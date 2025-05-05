@@ -64,7 +64,7 @@ Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em tr
 ### Correção de Erro
 Existem também algoritmos que permitem detectar e corrigir erros dentro de um payload, em troca de um custo de espaço e tempo para a detecção, dentro da família de algoritmos que possibilitam detecção e correção, são encontrados os códigos como os de: Reed-Solomon, Turbo Codes, LDPCs.
 
-Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução), mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes particularmente no processo de envio e recebimento de mensagens.
+Este trabalho não abordará algoritmos de correção de forma aprofundada pois foge do escopo de foco nas técnicas de escalonamento (execução) e detecção, mas se trata de um tópico importante que complementa qualquer implementação de sistemas resilientes particularmente no processo de envio e recebimento de mensagens.
 
 # Sistemas embarcados
 
@@ -82,13 +82,13 @@ Sistemas embarcados, por serem parte de um todo maior, devem realizar sua funç�
 
 # Sistemas Operacionais de Tempo-Real
 
-Um *sistema operacional*(SO) é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o foco central é o *kernel*, o componente do sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
+Um *sistema operacional*(SO) é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a parte sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
 
 Já um *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
 
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas soft real-time tipicamente operam na escala de milissegundos, isto é, percepção humana. O atraso de uma tarefa em um sistema soft real-time não é desejável, mas não constitui um erro. **Exemplos**: Player de DVD, videogames, kiosks de atendimento.
 
-- *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais
+- *Hard Real Time*: Precisam garantir as propriedades de soft real time, além disso, o atraso de uma tarefa de seu prazo (*deadline*), é inaceitável, para um sistema hard real time uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard real time, pois muitas vezes aparacem em contextos críticos. **Exemplos**: Software para sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais, software de trading de alta frequência, broker de mensagens de alta performance.
 
 Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time, os sistemas operacionais de tempo real tem seu design orientado a serem capazes de cumprir o critério Hard Real Time.
 
@@ -122,7 +122,7 @@ Na ocorrência de uma falha com uma política de re-execução, existe um overhe
 
 Uma consequência natural de possuir diversos processos se comunicando com até *k* falhas, é uma explosão combinatória de possíveis caminhos de execução e reexecução, além de drasticamente aumentar o tempo de execução de algoritmos de escalonamento (seja online ou offline), o sistema se torna excessivamente complicado, afetando negativamente duas das características desejáveis de sistemas de tempo real, como o determinismo e as fortes garantias de prazo de execução.
 
-Pode-se reduzir o grau de possíveis combinações e garantir maior previsibilidade do sistema utilizando-se de pontos de *transparência*, também chamados de *freezing*. Para uma tarefa qualquer, considera-se que a tarefa é transparente se para uma deadline especificada e dado um limite de até *k* falhas, a execução é finalizada no prazo independente do número de falhas que ocorreram. Para o caso onde nenhuma falha ocorra, existe a introdução de um tempo extra onde a tarefa está "congelada", independentemente da presença de falhas, pontos de transparência podem ser estrategicamente escolhidos para garantir o tempo de execução entre as principais macro etapas sem a necessidade de redundância de replicação. É importante ressaltar que a troca fundamental que ocorre na inserção de um ponto de transparência é a troca de maior gasto *temporal* para o caso sem falhas de uma tarefa, em troca de uma garantia sistêmica de sua conclusão, outras tarefas ou nós no sistema são capazes de confiar na conclusão de uma tarefa transparente dado que seu prazo esteja cumprido.
+Pode-se reduzir o grau de possíveis combinações e garantir maior previsibilidade do sistema utilizando-se de pontos de *transparência*, também chamados de *freezing*. Para uma tarefa qualquer, considera-se que a tarefa é transparente se para uma deadline especificada e dado um limite de até *k* falhas, se sua execução é finalizada no prazo independente do número de falhas que ocorreram. Para o caso onde nenhuma falha ocorra, existe a presença de um tempo (potencialmente ocioso) extra onde a tarefa está "congelada". Pontos de transparência podem ser estrategicamente escolhidos para garantir o tempo de execução entre as principais macro etapas sem a necessidade de redundância de replicação. É importante ressaltar que a troca fundamental que ocorre na inserção de um ponto de transparência é a troca de maior gasto *temporal* para o caso sem falhas de uma tarefa, em troca de uma garantia sistêmica de sua conclusão, outras tarefas ou nós no sistema são capazes de confiar na conclusão de uma tarefa transparente dado que seu prazo esteja cumprido.
 
 ### Grafos de execução tolerantes à falha
 
@@ -135,6 +135,7 @@ No representação de grafo, nós são processos, que podem estar rodando na mes
 # >> Grafo simples aqui <<
 
 # >> Grafo com múltiplas mensagens aqui <<
+
 O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fortes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
 
 
