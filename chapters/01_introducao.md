@@ -41,15 +41,16 @@ aplicações críticas.
 
 # Problematização
 
+## Formulação do Problema
+
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação
 e ao nível de tolerância desejado, para desenvolvedores de software o custo e
 as limitações impostas para que o sistema seja mais resiliente não são
-particularmente evidentes, 
+particularmente evidentes.
 
-### Formulação do Problema
+## Solução Proposta
 
-
-### Solução Proposta
+Implementar e comparar técnicas de escalonamento com tolerância a falhas, com o objetivo de esclarecer o impacto de performance em relação ao ganho de resiliência do sistema, particularmente no contexto de sistemas de tempo real, dado que algortimos que consigam satisfazer a restrição de tempo real também podem ser utilizados em outros contextos com restrições temporais mais relaxadas.
 
 ## Objetivos
 
