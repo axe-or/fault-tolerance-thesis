@@ -28,6 +28,7 @@ static_assert(sizeof(void*) == sizeof( void*(*)(void*)), "Mismatched function/da
 #elif defined(COMPILER_CLANG) || defined(COMPILER_GCC)
 	#define force_inline __attribute__((always_inline)) inline
 #else
+	#warning "Could not find compiler's force_inline attribute"
 	#define force_inline
 #endif
 
@@ -99,6 +100,26 @@ void bounds_check_ex(bool predicate, char const* msg, char const* file, int line
 	#define bounds_check(Pred, Msg)
 #endif
 
+//// Defer
+namespace defer_detail {
+    template<typename F>
+    struct deferred_call {
+        F f;
+        force_inline constexpr deferred_call(F&& f) noexcept : f{static_cast<F&&>(f)}  {}
+        force_inline ~deferred_call() noexcept { f(); }
+    };
+
+    template<typename F> static force_inline 
+    auto make_deferred_call(F&& f){
+        return deferred_call<F>(static_cast<F&&>(f));
+    }
+
+    #define defer_detail_glue0(X, Y) X##Y
+    #define defer_detail_glue1(X, Y) defer_detail_glue0(X, Y)
+    #define defer_detail_glue_counter(X) defer_detail_glue1(X, __COUNTER__)
+    #define defer(Stmt) auto defer_detail_glue_counter(_deferred_) = ::defer_detail::make_deferred_call([&]() force_inline { Stmt ; })
+}
+
 //// Slice
 template<typename T>
 struct Slice {
@@ -153,9 +174,30 @@ void slice_copy(Slice<T> dest, Slice<T> src){
 	}
 }
 
-template<typename T>
-Slice<T> slice_make(usize n){
-	T* p = new T[n];
-	return Slice(p, p ? n : 0);
-}
+template<typename T, usize N>
+struct Array {
+	T _data[N];
+
+	Slice<T> slice(){
+		return Slice(&_data[0], N);
+	}
+
+	Slice<T> slice(usize start, usize end){
+		bounds_check(end >= start && end <= _length, "Improper slice range");
+		return Slice(&_data[0] + start, N - end);
+	}
+
+	T& operator[](usize idx){
+		bounds_check(idx < _length, "Out of bounds index");
+		return _data[idx];
+	}
+
+	T const& operator[](usize idx) const {
+		bounds_check(idx < _length, "Out of bounds index");
+		return _data[idx];
+	}
+
+	constexpr force_inline auto len() const { return N; }
+	constexpr force_inline auto raw_data() const { return &_data[0]; }
+};
 

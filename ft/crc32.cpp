@@ -24,6 +24,7 @@ std::ostream& operator<<(std::ostream& os, Slice<T> s){
 }
 
 int main(){
-	auto s = slice_make<u64>(5).fill(69).take(3);
+	auto s = Array<u64, 200>{}.slice().fill(69).take(3);
 	print(5, 6, "Hello", s, 8);
 }
+
