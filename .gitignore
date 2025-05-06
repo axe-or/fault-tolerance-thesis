@@ -1,2 +1,4 @@
-# MyST build outputs
+*.exe
+*.o
+*.bin
 _build

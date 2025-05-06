@@ -36,7 +36,12 @@ particularmente evidentes.
 
 ## Solução Proposta
 
-Implementar e comparar técnicas de escalonamento com detecção de erros, com o objetivo de esclarecer o impacto de performance em relação ao ganho de resiliência do sistema, particularmente no contexto de sistemas de tempo real, dado que algoritmos que consigam satisfazer a restrição de tempo real também podem ser utilizados em outros contextos com restrições temporais mais relaxadas.
+Implementar e comparar técnicas de escalonamento com detecção de erros, com o
+objetivo de esclarecer o impacto de performance em relação ao ganho de
+resiliência do sistema, particularmente no contexto de sistemas de tempo real,
+dado que algoritmos que consigam satisfazer a restrição de tempo real também
+podem ser utilizados em outros contextos com restrições temporais mais
+relaxadas.
 
 ## Objetivos
 
