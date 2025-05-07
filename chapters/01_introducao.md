@@ -64,7 +64,7 @@ aplicações críticas.
 
 O objetivo do trabalho é descritivo e exploratório, as métricas coletadas são de caráter quantitativo e conclusões e observações derivadas do trabalho serão realizadas de maneira indutiva baseadas nas métricas de performance coletadas e comparadas.
 
-Uma implementação dos algoritmos na forma de uma prova de conceito será realizada dentro de um contexto com um host para facilitar prototipação e realizar uma pré análise do overhead.
+Uma implementação dos algoritmos na forma de uma prova de conceito será realizada dentro de um contexto com um host para facilitar prototipação e realizar uma pré análise e validar se a implementação está correta.
 
 ## Estrutura do Trabalho
 
