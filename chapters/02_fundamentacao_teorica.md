@@ -138,7 +138,6 @@ No representação de grafo, nós são processos, que podem estar rodando na mes
 
 O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fortes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
 
-
 # Trabalhos Relacionados
 
 - Isosimov, principal referência
