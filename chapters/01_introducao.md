@@ -43,10 +43,15 @@ Explorar o uso de técnicas de escalonamento de tempo real com detecção de err
 
 ### Objetivos Específicos
 
-- Selecionar métodos de detecção de erros
+- Selecionar métodos de detecção de erros:
+  - CRCs para mensagens
+  - Watchdog enviando heartbeat simples (timer)
+  - Heartbeat com Proof of Work
+  - Replicação
+  - Asserts*
 - Implementar prova de conceito dos métodos para pré avaliação
-- Implementar e mensurar técnicas em aplicação real
-- Avaliar o impacto das técnicas
+- Implementar e mensurar as técnicas em um RTOS
+- Avaliar o impacto das técnicas no tempo de execução e uso de memória
 
 ### Justificativa
 
@@ -67,4 +72,5 @@ O objetivo do trabalho é descritivo e exploratório, as métricas coletadas sã
 Uma implementação dos algoritmos na forma de uma prova de conceito será realizada dentro de um contexto com um host para facilitar prototipação e realizar uma pré análise e validar se a implementação está correta.
 
 ## Estrutura do Trabalho
+
 
