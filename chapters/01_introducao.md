@@ -13,7 +13,17 @@ desses fenômenos necessitam que dispositivos estejam preparados, especialmente
 em aplicações aero-espaciais(que necessitam ser confiáveis e tolerar seu
 ambiente volátil).
 
-Tornar um sistema tolerante à falhas é um problema multi facetado, ambas soluções em hardware e software necessitam ser abordadas para garantir a qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo então um candidato interessante para aprimorar sua resiliência com foco em reduzir desperdício dos nós computacionais. O processo de detecção das falhas e seu impacto no grafo de execução assim como nas métricas quantitativas de tempo de CPU e uso de memória portanto deve ser considerado, particularmente no contexto de escalonamento, pois a reação rápida e correta às falhas requer previamente a detecção e elaboração das rotinas de escalonamento de forma adequada.
+Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
+soluções em hardware e software necessitam ser abordadas para garantir a
+qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional
+ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo
+então um candidato interessante para aprimorar sua resiliência com foco em
+reduzir desperdício dos nós computacionais. O processo de detecção das falhas e
+seu impacto no grafo de execução assim como nas métricas quantitativas de tempo
+de CPU e uso de memória portanto deve ser considerado, particularmente no
+contexto de escalonamento, pois a reação rápida e correta às falhas requer
+previamente a detecção e elaboração das rotinas de escalonamento de forma
+adequada.
 
 Este trabalho visa portanto fazer uma análise do impacto de diferentes técnicas de detecção durante o escalonamento de tarefas e seu impacto na performance e no fluxo de execução do sistema, para que se possa melhor compreender e evidenciar os custos e benefícios ao tornar um sistema mais resiliente. 
 
