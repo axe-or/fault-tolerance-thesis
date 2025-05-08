@@ -141,5 +141,22 @@ O escalonamento tolerante à falhas é a combinação de métodos que permitem q
 # Trabalhos Relacionados
 
 - Isosimov, principal referência
-- Alguns outros
 
+## Application-Level Fault Tolerance in Real-Time Embedded Systems
+- Framework de execução
+- Foca mais em fornecer técnicas e protocolos
+- Exemplo de sistema de filtragem de radar
+- Utiliza dynamic dispatch com classes
+
+- Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
+
+- Bringing Fault-Tolerant GigaHertz-Computing to Space
+- Enabling Failure-resilient Intermittent Systems Without Runtime Checkpointing
+- An Investigation into Soft Error Detection Efficiency at Operating System Level
+ https://pmc.ncbi.nlm.nih.gov/articles/PMC3916032/
+- Design and Evaluation of Hybrid Fault-Detection Systems
+
+https://ieeexplore.ieee.org/abstract/document/4145119
+https://link.springer.com/article/10.1023/B:JETT.0000039610.30724.b2
+https://ieeexplore.ieee.org/abstract/document/6312823
+Early and cost-effective software fault detection: measurement and implementation in an industrial setting: https://www.diva-portal.org/smash/record.jsf?pid=diva2:837057
