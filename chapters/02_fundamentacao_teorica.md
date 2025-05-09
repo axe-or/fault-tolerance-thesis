@@ -136,17 +136,19 @@ No representação de grafo, nós são processos, que podem estar rodando na mes
 
 # >> Grafo com múltiplas mensagens aqui <<
 
-O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fortes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
+O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fo  rtes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
 
 # Trabalhos Relacionados
 
 - Isosimov, principal referência
 
-## Application-Level Fault Tolerance in Real-Time Embedded Systems
-- Framework de execução
-- Foca mais em fornecer técnicas e protocolos
-- Exemplo de sistema de filtragem de radar
-- Utiliza dynamic dispatch com classes
+## Application-Level Fault Tolerance in Real-Time Embedded System
+
+No artigo de Afonso, Silva, Tavares e Montenegro um framework de execução na para o sistema operacional BOSS é criado, o trabalho apresenta técnicas de escalonamento mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando *threads* resilientes. O trabalho possui um caso de estudo com sistema de filtragem de radar, o trabalho demonstra resultados favoráveis para uma forma híbrida de tolerância com menor uso de CPU em relação à redundância tripla utilizando de técnicas em software combinado com um par de processadores com auto checagem (PSP).
+
+![Comparação de Performance](../assets/related_works_psp_perf.png)
+
+O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos, os pesquisadores realizam uso amplo de herança e padrões orientados à objetos com chamadas virtuais. Uma possível otimização em termos de memória e coerência do cachê da CPU é reduzir o uso de despache dinâmico em favor de técnicas de despache em tempo de compilação, como *typeclasses* (CITE: haskell docs) que podem ser emuladas em C++ com o sistema de `concepts`.
 
 - Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
 

@@ -12,7 +12,6 @@
 - é possível estimar a complexidade no limite com uma implementação emulada
 - falhas são raras, mas ainda é necessário que o pior caso seja considerado
 
-
 # Análise de Requisitos
 
 # Delimitação de Escopo
