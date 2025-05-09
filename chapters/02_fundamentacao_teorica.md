@@ -158,6 +158,8 @@ Esse trabalho relacionado possui similaridade na avaliação da troca de overhea
 
 #
 
+
+
 - Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
 
 - Bringing Fault-Tolerant GigaHertz-Computing to Space
