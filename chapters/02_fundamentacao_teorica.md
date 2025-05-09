@@ -150,6 +150,14 @@ No artigo de Afonso, Silva, Tavares e Montenegro um framework de execução na p
 
 O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos, os pesquisadores realizam uso amplo de herança e padrões orientados à objetos com chamadas virtuais. Uma possível otimização em termos de memória e coerência do cachê da CPU é reduzir o uso de despache dinâmico em favor de técnicas de despache em tempo de compilação, como *typeclasses* (CITE: haskell docs) que podem ser emuladas em C++ com o sistema de `concepts`.
 
+## A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems
+
+No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propoem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos.
+
+Esse trabalho relacionado possui similaridade na avaliação da troca de overhead em relação à resiliência com o que será proposto neste artigo, com a principal diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O trabalho de Asghari et. al serve como um exemplo de uma possível extensão futura da pesquisa aprensentada aqui, servindo como uma fonte compreensiva de diversas técnicas de análise e detecção de fluxo defeituoso.
+
+#
+
 - Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
 
 - Bringing Fault-Tolerant GigaHertz-Computing to Space
@@ -157,6 +165,7 @@ O trabalho demonstra também a viabilidade de prover interfaces mais abstratas q
 - An Investigation into Soft Error Detection Efficiency at Operating System Level
  https://pmc.ncbi.nlm.nih.gov/articles/PMC3916032/
 - Design and Evaluation of Hybrid Fault-Detection Systems
+- Enhancing Transient Fault Tolerance in Embedded Systems through an OS Task Level Redundancy Approach https://doi.org/10.1016/j.future.2018.04.049
 
 https://ieeexplore.ieee.org/abstract/document/4145119
 https://link.springer.com/article/10.1023/B:JETT.0000039610.30724.b2
