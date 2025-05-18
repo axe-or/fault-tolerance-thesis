@@ -136,11 +136,10 @@ No representação de grafo, nós são processos, que podem estar rodando na mes
 
 # >> Grafo com múltiplas mensagens aqui <<
 
-O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fo  rtes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
+O escalonamento tolerante à falhas é a combinação de métodos que permitem que o escalonador reaja à ocorrência de falhas e agende as tarefas de forma a minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de escalonamento pode ser executada *online*, onde existe a possibilidade de criar e suspender tarefas dinamicamente ou *offline*, onde o número e prazos das tarefas são determinados previamente. Este trabalho será focado na execução *offline*, pois fornece garantias mais fortes de transparência e previsibilidade, é importante mencionar que um método *offline* de boa qualidade também pode ser adaptado para um contexto *online*.
 
 # Trabalhos Relacionados
 
-- Isosimov, principal referência
 
 ## Application-Level Fault Tolerance in Real-Time Embedded System
 
@@ -154,11 +153,12 @@ O trabalho demonstra também a viabilidade de prover interfaces mais abstratas q
 
 No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propoem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos.
 
-Esse trabalho relacionado possui similaridade na avaliação da troca de overhead em relação à resiliência com o que será proposto neste artigo, com a principal diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O trabalho de Asghari et. al serve como um exemplo de uma possível extensão futura da pesquisa aprensentada aqui, servindo como uma fonte compreensiva de diversas técnicas de análise e detecção de fluxo defeituoso.
+Esse trabalho relacionado possui similaridade na avaliação da troca de overhead em relação à resiliência com o que será proposto neste artigo, com a principal diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O trabalho de Asghari et. al serve como um exemplo de uma possível extensão futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de diversas técnicas de análise e detecção de fluxo defeituoso.
 
 #
 
 
+- Isosimov, principal referência
 
 - Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
 
@@ -173,3 +173,6 @@ https://ieeexplore.ieee.org/abstract/document/4145119
 https://link.springer.com/article/10.1023/B:JETT.0000039610.30724.b2
 https://ieeexplore.ieee.org/abstract/document/6312823
 Early and cost-effective software fault detection: measurement and implementation in an industrial setting: https://www.diva-portal.org/smash/record.jsf?pid=diva2:837057
+
+
+https://ieeexplore.ieee.org/abstract/document/9684525

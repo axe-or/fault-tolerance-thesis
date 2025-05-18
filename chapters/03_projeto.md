@@ -5,24 +5,20 @@
 - Criar teste sintetico (stress alto, fault rate alta)
 - Implementar gerador de tabela de escalonemento ?
 
-# Visão Geral e Premissas
-
-## Premissas
 - testes sinteticos podem aproximar um grau razoavel de stress no sistema
 - é possível estimar a complexidade no limite com uma implementação emulada
 - falhas são raras, mas ainda é necessário que o pior caso seja considerado
 
+# Visão Geral e Premissas
+
+## Premissas
+- especificar mais o contexto
+- quais pontos de partida?
+
 # Análise de Requisitos
+- requisitos & regra de negocio
 
 # Delimitação de Escopo
 
 # Plano de Verificação
-
-# Metodologia
-
-## Materiais
-
-## Métodos
-
-
 
