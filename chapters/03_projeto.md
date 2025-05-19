@@ -49,6 +49,10 @@ Create := procedure (stackData: []byte, body: TaskProc) -> Bool;
 
 Será partido do ponto que ao menos o processador *watchdog* terá registradores que sejam capazes de mascarar falhas, apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e redundância de registradores, isso adiciona uma quantia significativa de overhead e foge do escopo do trabalho, portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do hardware para operação consistente da CPU. Tendo o foco em detecção de falhas externas como na passagem de mensagem e resultados dos co-processadores.
 
+Outra necessidade indutiva para a realização do trabalho é que testes sintéticos possam ao menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de falhas pode ser utilizada para verificar as tendências e overheads relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
+
+Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração pequena do tempo de operação do sistema <CITAR O TRECO LA DE IMPACTO E TALS>, a maioria das operações ocorrem em um estado correto. Portanto, pode-se testar um sistema em uma situação de falhas elevadas, de tal forma que consiga o grau necessário de confiabilidade mesmo em uma situação adversa, no caso de sistemas que possuem um impacto crítico ou catastrófico (Segundo definição <AQUELA LA>), é melhor optar por ter um excesso de resiliência.
+
 # Análise de Requisitos
 - requisitos & regra de negocio
 
