@@ -5,15 +5,20 @@ A etapa mais fundamental do projeto é a implementação dos algoritmos e da API
 A arquitetura será primariamente orientada à passagem de mensagens, pois permite uma generalização para mecanismos de I/O assíncrono e distribuição da arquitetura, permite também um desacoplamento mais entre a lógica de detecção e transporte das mensagens, potencialmente permitindo otimizações na diminiuição da ociosidade dos núcleos. O estilo de implementação orientado à mensagens naturalmente oferece um certo overhead em termos de latência, apesar de poder ser amortizado com a utilização de filas concorrentes bem implementadas, talvez não seja adequeado para aplicações com deadlines muito pequenas.
 
 ## Algoritmos
-- CRC: ...
+- CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
 
-- Checksum: ...
+- Checksum: Similarmente ao CRC, será comparado o uso de checksum para payload de mensagem.
 
-- Heartbeat Signal (simples): ...
+- Heartbeat Signal (simples): Um sinal periódico será enviado para a tarefa em paralelo, apenas uma resposta sequencial será necessária.
 
-- Heartbeat Signal (com proof of work): ...
+- Heartbeat Signal (com proof of work): Um sinal periódico juntamente com um payload com um comando a ser executado e devolvido, para garantir não somente a presença da task mas seu funcionamento esperado.
 
-- Replicação: ...
+- Replicação espacial: Uma mesma task será disparada diversas vezes, em sua conclusão, será realizado um consenso. A replicação tripla servirá como um controle.
+
+- Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N respostas catalogadas, a resposta correta será decidida por consenso.
+
+- Asserts: Não é um algoritmo propriamente dito, mas pré e pós condições de função serão inseridas e checadas, espera-se que esse seja um método barato (porém menos robusto) de detectar estados inconsistents.
+
 
 ## Interface
 
@@ -58,5 +63,7 @@ Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração
 
 # Delimitação de Escopo
 
+
 # Plano de Verificação
 
+Inicialmente será utilizado um sistema virtualizado 
