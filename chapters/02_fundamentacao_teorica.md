@@ -10,7 +10,7 @@ Uma *falha* pode ser compreendida como um evento fora do controle do sistema que
 
 - Falhas **Permanentes**: Causam uma degradação permanente no sistema da qual não pode ser recuperada, potencialmente necessitando de intervenção externa.
 
-Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante, Interferência Eletromagnética, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
+Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante, Interferência Eletromagnética, Harmônicas, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
 
 Para que o sistema possa ser *Tolerante à Falhas*, isto é, ser capaz de manter uma qualidade de serviço aceitável mesmo na presença de falhas são necessários 2 principais mecanismos:
 
