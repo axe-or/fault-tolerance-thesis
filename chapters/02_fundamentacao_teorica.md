@@ -140,6 +140,11 @@ O escalonamento tolerante à falhas é a combinação de métodos que permitem q
 
 # Trabalhos Relacionados
 
+## Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection
+
+Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Os autores foram capazes de detectar metade das falhas funcionais apenas com técnicas de software no banco de registradores.
+
+Dentre as conclusões extraídas foram que com o uso de técnicas de software foi possível reduzir a quantia de falhas funcionais em mais de 50%, outra questão observada foi que a quantia de falhas injetadas para ocasionar um erro de funcionalidade é 2 ordens de magnitude maior ao comparar registradores em relação à memória, indicando que existe uma necessidade real de poder detectar e mitigar erros de memória mais rapidamente.
 
 ## Application-Level Fault Tolerance in Real-Time Embedded System
 
@@ -147,18 +152,14 @@ No artigo de Afonso, Silva, Tavares e Montenegro um framework de execução na p
 
 ![Comparação de Performance](../assets/related_works_psp_perf.png)
 
-O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos, os pesquisadores realizam uso amplo de herança e padrões orientados à objetos com chamadas virtuais. Uma possível otimização em termos de memória e coerência do cachê da CPU é reduzir o uso de despache dinâmico em favor de técnicas de despache em tempo de compilação, como *typeclasses* (CITE: haskell docs) que podem ser emuladas em C++ com o sistema de `concepts`.
+O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos, os pesquisadores realizam uso amplo de herança e padrões orientados à objetos com chamadas virtuais. Uma possível otimização em termos de memória e coerência do cachê da CPU é reduzir o uso de despache dinâmico em favor de técnicas de despache em tempo de compilação, como *typeclasses* (Presentes em linguagens como Haskell e Rust) que podem ser também emuladas em C++ com o sistema de `concepts`.
 
 ## A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems
 
-No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propoem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos.
+No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propõem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos.
 
 Esse trabalho relacionado possui similaridade na avaliação da troca de overhead em relação à resiliência com o que será proposto neste artigo, com a principal diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O trabalho de Asghari et. al serve como um exemplo de uma possível extensão futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de diversas técnicas de análise e detecção de fluxo defeituoso.
 
-#
-
-
-- Isosimov, principal referência
 
 - Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
 
