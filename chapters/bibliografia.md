@@ -12,3 +12,20 @@
 
 
 Kim, “ROAFTS: A Middleware Architecture for Real-Time Object oriented Adaptive Fault Tolerance Support,” in Proceedings of the 3rd IEEE International High-Assurance Systems Engineering Symposium, pp. 50-57, Washington, D.C., 1998. 
+
+- Aiguo Li and Bingrong Hong. 2007. Software implemented transient fault detection in space computer. Aerospace science and technology 11, 2-3 (2007), 245–252
+
+- Bringing Fault-Tolerant GigaHertz-Computing to Space
+- Enabling Failure-resilient Intermittent Systems Without Runtime Checkpointing
+- An Investigation into Soft Error Detection Efficiency at Operating System Level
+ https://pmc.ncbi.nlm.nih.gov/articles/PMC3916032/
+- Design and Evaluation of Hybrid Fault-Detection Systems
+- Enhancing Transient Fault Tolerance in Embedded Systems through an OS Task Level Redundancy Approach https://doi.org/10.1016/j.future.2018.04.049
+
+https://ieeexplore.ieee.org/abstract/document/4145119
+https://link.springer.com/article/10.1023/B:JETT.0000039610.30724.b2
+https://ieeexplore.ieee.org/abstract/document/6312823
+Early and cost-effective software fault detection: measurement and implementation in an industrial setting: https://www.diva-portal.org/smash/record.jsf?pid=diva2:837057
+
+
+https://ieeexplore.ieee.org/abstract/document/9684525

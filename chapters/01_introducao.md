@@ -36,6 +36,8 @@ e ao nível de tolerância desejado, para desenvolvedores de software o custo e
 as limitações impostas para que o sistema seja mais resiliente não são
 particularmente evidentes.
 
+> Um fator político que dificulta a aquisição de dispositivos com tolerância é a regulação ITAR (International Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a exportação de diversos tipos de tecnologia de cunho potencialmente militar. Neste caso, o impedimento da exportação certos tipos tecnologias de PCBs aumenta mais ainda a necessidade de compradores de outros países adquirirem alternativas comerciais mais comuns (COTS).
+
 ## Solução Proposta
 
 Implementar e comparar técnicas de escalonamento com detecção de erros, com o

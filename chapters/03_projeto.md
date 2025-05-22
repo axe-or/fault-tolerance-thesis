@@ -1,13 +1,17 @@
 # Projeto
+
+A etapa mais fundamental do projeto é a implementação dos algoritmos e da API de resiliência, dado o contexto de real time, cuidados devem ser tomados no quesito da performance e uso de memória (que pode indiretamente degradar a CPU na presença de erros de cachê @muratori). Dado estas restrições, o uso de despache dinânmico será mantido baixo, para reduzir o tamanho do executável, não será utilizado mecanismo de exceção com *stack unwinding*, ao invés, erros de validação devem ser cuidados explicitamente ou através de *callbacks*. Será também assumido que o sistema tenha ao menos uma quantia de memória tolerante (ROM ou não) para guardar os dados necessários para disparar o tratamento de falhas.
+
+A arquitetura será primariamente orientada à passagem de mensagens, pois permite uma generalização para mecanismos de I/O assíncrono e distribuição da arquitetura, permite também um desacoplamento  entre a lógica de detecção e transporte das mensagens, potencialmente permitindo otimizações na diminuição da ociosidade dos núcleos. O estilo de implementação orientado à mensagens naturalmente oferece um custo adicional em termos de latência quando comparado à alternativas puramente baseadas em compartilhamento de memória, apesar deste custo poder ser amortizado com a utilização de filas concorrentes bem implementadas e com a criação de um perfil de uso para melhor *tuning* do sistema.
+
+> NOTE: Mencionar que sistemas como o QNX usam isso tbm?
+
 - Criar teste sintetico (stress alto, fault rate alta)
 
 - ? Implementar gerador de tabela de escalonemento ?
 
-A etapa mais fundamental do projeto é a implementação dos algoritmos e da API de resiliência, dado o contexto de real time, cuidados devem ser tomados no quesito da performance e uso de memória (que pode indiretamente degradar a CPU na presença de erros de cachê @muratori). Dado estas restrições, o uso de despache dinânmico será mantido baixo, para reduzir o tamanho do executável, não será utilizado mecanismo de exceção com *stack unwinding*, ao invés, erros de validação devem ser cuidados explicitamente ou através de *callbacks*. Será também assumido que o sistema tenha ao menos uma quantia de memória tolerante (ROM ou não) para guardar os dados necessários para disparar o tratamento de falhas.
+## Algoritmos e Técnicas
 
-A arquitetura será primariamente orientada à passagem de mensagens, pois permite uma generalização para mecanismos de I/O assíncrono e distribuição da arquitetura, permite também um desacoplamento mais entre a lógica de detecção e transporte das mensagens, potencialmente permitindo otimizações na diminuição da ociosidade dos núcleos. O estilo de implementação orientado à mensagens naturalmente oferece um certo overhead em termos de latência, apesar de poder ser amortizado com a utilização de filas concorrentes bem implementadas, talvez não seja adequado para aplicações com deadlines muito pequenas.
-
-## Algoritmos
 - CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
 
 - Checksum: Similarmente ao CRC, será comparado o uso de checksum para payload de mensagem.
@@ -28,7 +32,21 @@ Uma tarefa é uma unidade de trabalho com espaço de stack dedicado e uma deadli
 
 O "corpo" de um tarefa é simplesmente a função que executa após a task ter sido inicializada. Será utilizado uma assinatura simples permitindo a passagem de um parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial da task ou um contexto de execução.
 
-
+```
+FT_Task :: struct {
+	id: uint,
+	body: func(parameter: address),
+	param: address,
+	stack_base: address,
+	stack_size: uint,
+	fault_policy: Policy, // Re-exec, Replication, None..
+	fault_handlers: []FT_Handler,
+	pre_execution: ?Task_Hook,
+	post_execution: ?Task_Hook,
+	
+	injectors: []Fault_Injector, // Apenas para testes sinteticos
+}
+```
 - Implementar as rotinas para a interface de resiliencia (spawn_watchdog, check_crc, attach_handler, reexec)
 
 
@@ -45,13 +63,16 @@ Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração
 Será assumido que os resultados extraídos de injeção de falhas emuladas, apesar de menos condizentes com os valores absolutos da aplicação e não sendo substitutos adequados na fase de aprovação de um produto real, são ao menos capazes para realizar uma análise quanto ao overhead proporcional introduzido, devido à sua facilidade de realização e poder extrair diversas métricas em paralelo, serão priorizados inicialmente neste projeto.
 
 # Análise de Requisitos
-- requisitos & regra de negocio
 
-O projeto deve ser capaz de executar em um kernel RTOS, se o componente será acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um detalhe de implementação. Além disso, deve ser possível utilizar em um sistema COTS (Commercial off the shelf), isto é, não deve estar associado à um hardware particular e deve ser portável na medida em que necessita apenas de uma camada HAL para poder realizar a funcionalidade adequada.
+O projeto deve ser capaz de executar em um kernel RTOS, se o componente será acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um detalhe de implementação. Além disso, deve ser possível utilizar em um sistema COTS, isto é, não deve estar associado à um hardware particular e deve ser portável na medida em que necessita apenas de uma camada HAL para poder realizar a funcionalidade adequada.
+
+- Realiability minima?
+- Deve ser observavel (mensuravel)
+- 
 
 # Delimitação de Escopo 
 
-
 # Plano de Verificação
 
-Inicialmente será utilizado um sistema virtualizado 
+- Teste inicial virtualizado -> Provar corretude e overhead medio dos algoritmos
+
