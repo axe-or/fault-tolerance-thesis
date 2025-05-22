@@ -35,23 +35,21 @@ O "corpo" de um tarefa é simplesmente a função que executa após a task ter s
 # Visão Geral e Premissas
 
 ## Premissas
-- especificar mais o contexto
-- testes sinteticos podem aproximar um grau razoavel de stress no sistema
-- é possível estimar a complexidade no limite com uma implementação emulada
-- falhas são raras, mas ainda é necessário que o pior caso seja considerado
 
-Será partido do ponto que ao menos o processador *watchdog* terá registradores que sejam capazes de mascarar falhas, apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e redundância de registradores, isso adiciona uma quantia significativa de overhead e foge do escopo do trabalho, portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do hardware para operação consistente da CPU. Tendo o foco em detecção de falhas externas como na passagem de mensagem e resultados dos co-processadores.
+Será partido do ponto que ao menos o processador *watchdog* terá registradores que sejam capazes de mascarar falhas, apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e redundância de registradores, isso adiciona uma extra de overhead e como mencionado na seção de trabalhos relacionados, a memória fora do banco de registradores pode ser 2 ordens de magnitude mais sensível à eventos disruptivos, portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do núcelo monitor. Ao invés focando em detecção de falhas de memória, I/O (passagem de mensagem) e resultados dos co-processadores.
 
 Outra necessidade indutiva para a realização do trabalho é que testes sintéticos possam ao menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de falhas pode ser utilizada para verificar as tendências e overheads relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
 
-Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração pequena do tempo de operação do sistema <CITAR O TRECO LA DE IMPACTO E TALS>, a maioria das operações ocorrem em um estado correto. Portanto, pode-se testar um sistema em uma situação de falhas elevadas, de tal forma que consiga o grau necessário de confiabilidade mesmo em uma situação adversa, no caso de sistemas que possuem um impacto crítico ou catastrófico (Segundo definição <AQUELA LA>), é melhor optar por ter um excesso de resiliência.
+Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração pequena do tempo de operação do sistema, a maioria das operações ocorrem em um estado correto. Portanto, pode-se testar um sistema em uma situação de falhas elevadas, de tal forma que consiga o grau necessário de confiabilidade mesmo em uma situação adversa, no caso de sistemas que possuem um impacto crítico ou catastrófico, é melhor optar por ter um excesso de resiliência.
+
+Será assumido que os resultados extraídos de injeção de falhas emuladas, apesar de menos condizentes com os valores absolutos da aplicação e não sendo substitutos adequados na fase de aprovação de um produto real, são ao menos capazes para realizar uma análise quanto ao overhead proporcional introduzido, devido à sua facilidade de realização e poder extrair diversas métricas em paralelo, serão priorizados inicialmente neste projeto.
 
 # Análise de Requisitos
 - requisitos & regra de negocio
 
 O projeto deve ser capaz de executar em um kernel RTOS, se o componente será acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um detalhe de implementação. Além disso, deve ser possível utilizar em um sistema COTS (Commercial off the shelf), isto é, não deve estar associado à um hardware particular e deve ser portável na medida em que necessita apenas de uma camada HAL para poder realizar a funcionalidade adequada.
 
-# Delimitação de Escopo em
+# Delimitação de Escopo 
 
 
 # Plano de Verificação
