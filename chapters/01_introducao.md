@@ -57,7 +57,7 @@ Explorar o uso de técnicas de escalonamento de tempo real com detecção de err
 
 - Identificar métodos de detecção de erro de execução em nível de software:
   - CRCs para mensagens
-  - Watchdog enviando heartbeat simples (timer)
+  - Heartbeat simples (timer)
   - Heartbeat com Proof of Work
   - Replicação
   - Asserts*
