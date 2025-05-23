@@ -6,6 +6,8 @@ project:
   keywords: [Operating System, Scheduling Algorithms, Fault Tolerance, Embedded Systems, Distributed Computing]
   authors: [Marcos Augusto Fehlauer Pereira]
   # To autogenerate a Table of Contents, run "myst init --write-toc"
+  bibliography:
+    - bibliografia.bib
   toc:
     - file: chapters/01_introducao.md
     - title: Capítulos
@@ -15,7 +17,7 @@ project:
         - file: chapters/04_desenvolvimento.md
         - file: chapters/05_resultado.md
         - file: chapters/06_conclusao.md
-        - file: chapters/bibliografia.md
+        # - file: chapters/bibliografia.md
     
 site:
   template: book-theme

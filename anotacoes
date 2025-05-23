@@ -1,3 +1,22 @@
 - inlining & loop unrolling para reduzir pulos na memoria
 - proibição do ITAR aumenta demanda por COTS e técnicas de tolerancia
 - faltas causadas por harmonicas (eletricas)
+
+dar um olhada demanda
+
+coisa do COTS eh regra de negocio
+
+Requisitos:
+- functional e nao funcional
+- 
+
+nao funcionais:
+- chip
+- linguagem
+
+delimitacao de escopo:
+- nao tera outros tipo de placa
+
+
+
+Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br

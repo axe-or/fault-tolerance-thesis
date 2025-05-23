@@ -85,7 +85,7 @@ Uma implementação dos algoritmos na forma de uma prova de conceito será reali
 
 ### Métodos
 
-### Material
+### Materiais
 
 ## Estrutura do Trabalho
 

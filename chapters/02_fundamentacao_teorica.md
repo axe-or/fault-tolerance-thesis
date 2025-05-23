@@ -82,7 +82,7 @@ Sistemas embarcados, por serem parte de um todo maior, devem realizar sua funç�
 
 # Sistemas Operacionais de Tempo-Real
 
-Um *sistema operacional*(SO) é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a parte sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware).
+Um *sistema operacional* é um conjunto conjunto de software que permitem o gerenciamento e interação com os recursos da máquina através de uma camada de abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a parte sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação(software) e os recursos físicos(hardware). @OperatingSystemConcepts
 
 Já um *sistema operacional de tempo real* (RTOS) é um tipo de SO mais especializado, tipicamente pequeno, que possui como característica central cumprir o requisito temporal, que divide-se em 2 categorias:
 
@@ -100,7 +100,7 @@ Devido à suas características de simplicidade, baixo custo e previsibilidade, 
 
 ## Escalonador
 
-O escalonador (*scheduler*) é o componente do sistema operacional responsável por gerenciar múltiplas tarefas que desejam executar, sendo um componente extramente crucial, a implementação do escalonador deve garantir que tarefas de alta prioridade executem antes e que a troca entre tarefas (*context switching*) seja o mais rápido possível, o algoritmo de escalonamento é o fator central para o comportamento do escalonador, sendo categorizados em 2 grandes grupos:
+O escalonador (*scheduler*) é o componente do sistema operacional responsável por gerenciar múltiplas tarefas que desejam executar @OperatingSystemConcepts, sendo um componente extramente crucial, a implementação do escalonador deve garantir que tarefas de alta prioridade executem antes e que a troca entre tarefas (*context switching*) seja o mais rápido possível, o algoritmo de escalonamento é o fator central para o comportamento do escalonador, sendo categorizados em 2 grandes grupos:
 
 - *Cooperativos*: Tarefas precisam voluntariamente devolver o controle da CPU (com exceção de certas interrupções de hardware) para que as outras tarefas possam executar, isso pode ser feito explicitamente por uma função de "largar" (*yield*) ou implicitamente ao utilizar uma rotina assíncrona do sistema, como ler arquivo, receber pacotes de rede ou aguardar uma variável de condição.
 
@@ -156,7 +156,7 @@ O trabalho demonstra também a viabilidade de prover interfaces mais abstratas q
 
 ## A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems
 
-No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propõem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos.
+No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab propõem um método de detecção e reação à erros de controle fluxo juntamente com correção de payloads de dados, o trabalho demonstra resultados positivos e conclui que a aplicação de técnicas de software podem aprimorar drasticamente a tolerância de um sistema. O trabalho possui um foco na análise do grafo de execução do programa, utilizando de IDs para a detecção de jumps errôneos entre blocos básicos. @SoftwareImplementedSoftErrorDetection
 
 Esse trabalho relacionado possui similaridade na avaliação da troca de overhead em relação à resiliência com o que será proposto neste artigo, com a principal diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O trabalho de Asghari et. al serve como um exemplo de uma possível extensão futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de diversas técnicas de análise e detecção de fluxo defeituoso.
 
