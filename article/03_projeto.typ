@@ -6,7 +6,7 @@ quesito da performance e uso de memória (que pode indiretamente degradar a CPU
 na presença de erros de cachê). Dado estas restrições, o uso de despache
 dinâmico será mantido baixo, para reduzir o tamanho do executável, não será
 utilizado mecanismo de exceção com stack unwinding, ao invés, erros de
-validação devem ser cuidados explicitamente ou através de *callbacks*. Será
+validação devem ser cuidados explicitamente ou através de callbacks. Será
 também assumido que o sistema tenha ao menos uma quantia de memória tolerante
 (ROM ou não) para guardar os dados necessários para disparar o tratamento de
 falhas.
@@ -19,7 +19,7 @@ da ociosidade dos núcleos. O estilo de implementação orientado à mensagens
 naturalmente oferece um custo adicional em termos de latência quando comparado
 à alternativas puramente baseadas em compartilhamento de memória, apesar deste
 custo poder ser amortizado com a utilização de filas concorrentes bem
-implementadas e com a criação de um perfil de uso para melhor *tuning* do
+implementadas e com a criação de um perfil de uso para melhor ajuste do
 sistema.
 
 > NOTE: Mencionar que sistemas como o QNX usam isso tbm?

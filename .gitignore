@@ -1,4 +1,5 @@
 *.exe
+*.pdf
 *.o
 *.bin
 _build
