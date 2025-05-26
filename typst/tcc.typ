@@ -6,6 +6,5 @@
 
 #include "02_fundamentacao_teorica.typ"
 
-// #include "03_projeto.typ"
-
+#include "03_projeto.typ"
 
