@@ -5,7 +5,7 @@ de resiliência, dado o contexto de real time, cuidados devem ser tomados no
 quesito da performance e uso de memória (que pode indiretamente degradar a CPU
 na presença de erros de cachê). Dado estas restrições, o uso de despache
 dinâmico será mantido baixo, para reduzir o tamanho do executável, não será
-utilizado mecanismo de exceção com *stack unwinding*, ao invés, erros de
+utilizado mecanismo de exceção com stack unwinding, ao invés, erros de
 validação devem ser cuidados explicitamente ou através de *callbacks*. Será
 também assumido que o sistema tenha ao menos uma quantia de memória tolerante
 (ROM ou não) para guardar os dados necessários para disparar o tratamento de
@@ -91,7 +91,7 @@ registradores, isso adiciona uma extra de overhead e como mencionado na seção
 de trabalhos relacionados, a memória fora do banco de registradores pode ser 2
 ordens de magnitude mais sensível à eventos disruptivos, portanto, todos os
 testes subsequentes assumirão ao menos uma quantia mínima de tolerância do
-núcelo monitor. Ao invés focando em detecção de falhas de memória, I/O
+núcleo monitor. Ao invés focando em detecção de falhas de memória, I/O
 (passagem de mensagem) e resultados dos co-processadores.
 
 Outra necessidade indutiva para a realização do trabalho é que testes

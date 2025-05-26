@@ -10,7 +10,7 @@
 	)
 
 	set text(
-		font: "Times New Roman",	
+		font: ("Times New Roman", "Nimbus Roman"),	
 	)
 
 	set par(
@@ -30,4 +30,12 @@
 
 	// Main content
 	doc
+
+	// Bibliography
+	heading("Bibliografia")
+	bibliography(
+    	"bibliografia.bib",
+		title: none,
+		style: "assets/ufrj-abnt.csl",
+	)
 }
