@@ -1,4 +1,4 @@
-= Projeto
+= PROJETO
 
 A etapa mais fundamental do projeto é a implementação dos algoritmos e da API
 de resiliência, dado o contexto de real time, cuidados devem ser tomados no

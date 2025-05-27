@@ -26,13 +26,14 @@
 	show heading.where(level: 1): set text(size: 16pt)
 	show heading.where(level: 2): set text(size: 14pt)
 	show heading.where(level: 3): set text(size: 14pt)
+	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
 	// Main content
 	doc
 
 	// Bibliography
-	heading("Bibliografia")
+	heading("BIBLIOGRAFIA")
 	bibliography(
     	"bibliografia.bib",
 		title: none,
