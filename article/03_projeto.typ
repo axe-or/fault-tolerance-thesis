@@ -62,17 +62,23 @@ inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
 parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
 da task ou um contexto de execução.
 
-```
+```pascal
+type FT_Policy = (
+	None,
+	ReExec,
+	Replicate
+);
+
 type FT_Task = record
 	id: uint,
-	body: func(parameter: address),
+	body: func(parameter: Address),
 	param: address,
 	stack_base: address,
 	stack_size: uint,
-	fault_policy: Policy, // Re-exec, Replication, None..
+	fault_policy: FT_Policy,
 	fault_handler: FT_Handler,
 	
-	injectors: []Fault_Injector, /* Apenas para testes sinteticos
+	injectors: []Fault_Injector, // Apenas para testes sinteticos
 end
 ```
 

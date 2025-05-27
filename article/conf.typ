@@ -11,6 +11,7 @@
 
 	set text(
 		font: ("Times New Roman", "Nimbus Roman"),	
+		lang: "br",
 	)
 
 	set par(

@@ -4,7 +4,8 @@
 
 #outline(
 	title: "Sumário",
-	target: heading.where(depth: 1).or(heading.where(depth: 2))
+	target: heading,
+	depth: 2,
 )
 
 #pagebreak()
