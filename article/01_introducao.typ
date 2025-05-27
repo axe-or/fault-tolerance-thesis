@@ -32,7 +32,7 @@ benefícios ao tornar um sistema mais resiliente.
 
 == Problematização
 
-A presença de sistemas embarcados em contextos críticos como na exploração
+Dada a presença de sistemas embarcados em contextos críticos como na exploração
 espacial, automobilística e tecnologia médica, assim como a ubiquidade de
 dispositivos móveis e de baixo consumo energético no mercado consumidor
 (Celulares, Notebooks, equipamentos IoT) e a existência do mercado de cloud e
@@ -42,15 +42,30 @@ ou energético), pode prover uma vantagem econômica para fabricantes e
 provedores assim como um benefício social na maior confiabilidade no caso de
 aplicações críticas.
 
+Ademais, ocorreu nos últimos anos uma maior adoção de sistemas COTS (Commercial
+off the shelf), dado que estes sistemas podem ser mais baratos e fornecem uma
+solução "genérica" para problemas que anteriormente necessitariam de hardware
+com um design mais especializado. Mesmo no caso em que se deseja utilizar um
+design especializado para o produto final, estes sistemas são excelentes para a
+fase de prototipação e validação do projeto, dado sua facilidade de acesso e
+flexibilidade.
 
-== Formulação do Problema
+Um outro fator que influencia na adoção do uso de COTS para certas aplicações
+que necessitam de tolerância à falhas são as regulações ITAR (International
+Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a
+exportação de diversos tipos de tecnologia de cunho potencialmente militar.
+Neste caso, o impedimento da exportação certos tipos tecnologias de PCBs
+aumenta mais ainda a necessidade de compradores de outros países adquirirem
+alternativas comerciais mais comuns.
 
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação
-e ao nível de tolerância desejado, para desenvolvedores de software o custo e
-as limitações impostas para que o sistema seja mais resiliente não são
-imediatamente evidentes, a criação de software resiliente se torna uma tarefa potencialmente mais difícil do que o necessário.
-
-> Um fator político que dificulta a aquisição de dispositivos com tolerância é a regulação ITAR (International Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a exportação de diversos tipos de tecnologia de cunho potencialmente militar. Neste caso, o impedimento da exportação certos tipos tecnologias de PCBs aumenta mais ainda a necessidade de compradores de outros países adquirirem alternativas comerciais mais comuns (COTS).
+e ao nível de tolerância desejado, e no caso dos sistemas COTS, técnicas
+robustas de resilência em hardware nem sempre estão disponíveis, sendo
+necessário delegar tal funcionalidade para a aplicação. Dentre uma multitude de
+técnicas de detecção e reação à falhas, é necessário escolher a mais adequada,
+e para que a escolha seja informada, é essencial que os tradeoffs em termos de
+performance e grau de confiabilidade adquiridos sejam compreendidos, para que
+se minimize o custo relativo para manter uma qualidade de serviço desejada.
 
 == Solução Proposta
 
@@ -79,12 +94,16 @@ Explorar o uso de técnicas de escalonamento de tempo real com detecção de err
 - Avaliar por meio de métricas a técnica durante a execução em um RTOS
 - Avaliar por meio de métricas a técnica em nível de memória em um RTOS
 
-
 == Metodologia
 
-O objetivo do trabalho é descritivo e exploratório, as métricas coletadas são de caráter quantitativo e conclusões e observações derivadas do trabalho serão realizadas de maneira indutiva baseadas nas métricas de performance coletadas e comparadas.
+O objetivo do trabalho é descritivo e exploratório, as métricas coletadas são
+de caráter quantitativo e conclusões e observações derivadas do trabalho serão
+realizadas de maneira indutiva baseadas nas métricas de performance coletadas e
+comparadas.
 
-Uma implementação dos algoritmos na forma de uma prova de conceito será realizada dentro de um contexto com um host para facilitar prototipação e realizar uma pré análise e validar se a implementação está correta.
+Uma implementação dos algoritmos na forma de uma prova de conceito será
+realizada dentro de um contexto com um host para facilitar prototipação e
+realizar uma pré análise e validar se a implementação está correta.
 
 === Métodos
 

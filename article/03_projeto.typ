@@ -49,7 +49,8 @@ sistema.
 - Asserts: Não é um algoritmo propriamente dito, mas sim a checagem de algum
   invarante necessária dentro do código, que caso seja falsa, é tratada como
   uma falha crítica, espera-se que esse seja um método barato (porém menos
-  robusto) de detectar estados inconsistentes.
+  robusto) de detectar estados inconsistentes. Serão utilizados asserts para
+  checar certas invariantes.
 
 == Interface
 
@@ -69,16 +70,11 @@ type FT_Task = record
 	stack_base: address,
 	stack_size: uint,
 	fault_policy: Policy, // Re-exec, Replication, None..
-	fault_handlers: []FT_Handler,
-	pre_execution: ?Task_Hook,
-	post_execution: ?Task_Hook,
+	fault_handler: FT_Handler,
 	
 	injectors: []Fault_Injector, /* Apenas para testes sinteticos
 end
 ```
-
-- Implementar as rotinas para a interface de resiliencia (spawn_watchdog,
-  check_crc, attach_handler, reexec)
 
 == Visão Geral e Premissas
 
@@ -127,6 +123,7 @@ portável na medida em que necessita apenas de uma camada HAL para poder
 realizar a funcionalidade adequada.
 
 === Requisitos Funcionais
+
 === Requisitos Não-Funcionais
 
 == Delimitação de Escopo 
