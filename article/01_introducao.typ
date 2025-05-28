@@ -1,5 +1,6 @@
 = INTRODUÇÃO
 
+// TODO: 2 Citar livros aqui, sobre TF
 Tolerância à falhas (TF) é a capacidade de um sistema computacional continuar
 oferecendo qualidade de serviço mesmo na presença de defeitos e interferências
 inesperadas, falhas podem ser encontradas comumente nos contextos de sistemas
@@ -13,6 +14,7 @@ desses fenômenos necessitam que dispositivos estejam preparados, especialmente
 em aplicações aero-espaciais(que necessitam ser confiáveis e tolerar seu
 ambiente volátil).
 
+// TODO: Citar um survey (artigo) e operating sys concepts e modern operating systems
 Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
 soluções em hardware e software necessitam ser abordadas para garantir a
 qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional
@@ -32,6 +34,7 @@ benefícios ao tornar um sistema mais resiliente.
 
 == Problematização
 
+// TODO: Citar livro de tf aqui e um artigo (isosimov?)
 Dada a presença de sistemas embarcados em contextos críticos como na exploração
 espacial, automobilística e tecnologia médica, assim como a ubiquidade de
 dispositivos móveis e de baixo consumo energético no mercado consumidor
@@ -42,6 +45,7 @@ ou energético), pode prover uma vantagem econômica para fabricantes e
 provedores assim como um benefício social na maior confiabilidade no caso de
 aplicações críticas.
 
+// TODO: Fonte aqui eh mto importante, citar!
 Ademais, ocorreu nos últimos anos uma maior adoção de sistemas COTS (Commercial
 off the shelf), dado que estes sistemas podem ser mais baratos e fornecem uma
 solução "genérica" para problemas que anteriormente necessitariam de hardware
@@ -50,6 +54,7 @@ design especializado para o produto final, estes sistemas são excelentes para a
 fase de prototipação e validação do projeto, dado sua facilidade de acesso e
 flexibilidade.
 
+// TODO: Citar o site & regulamento
 Um outro fator que influencia na adoção do uso de COTS para certas aplicações
 que necessitam de tolerância à falhas são as regulações ITAR (International
 Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a
@@ -58,6 +63,7 @@ Neste caso, o impedimento da exportação certos tipos tecnologias de PCBs
 aumenta mais ainda a necessidade de compradores de outros países adquirirem
 alternativas comerciais mais comuns.
 
+// TODO: Citar 1 coisa aqui
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação
 e ao nível de tolerância desejado, e no caso dos sistemas COTS, técnicas
 robustas de resilência em hardware nem sempre estão disponíveis, sendo
