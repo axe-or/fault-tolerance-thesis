@@ -49,7 +49,7 @@ sistema.
   respostas catalogadas, a resposta correta será decidida por consenso.
 
 - Asserts: Não é um algoritmo propriamente dito, mas sim a checagem de algum
-  invarante necessária dentro do código, que caso seja falsa, é tratada como
+  invariante necessária dentro do código, que caso seja falsa, é tratada como
   uma falha crítica, espera-se que esse seja um método barato (porém menos
   robusto) de detectar estados inconsistentes. Serão utilizados asserts para
   checar certas invariantes.
@@ -80,7 +80,7 @@ type FT_Task = record
 	fault_policy: FT_Policy,
 	fault_handler: FT_Handler,
 	
-	injectors: []Fault_Injector, // Apenas para testes sinteticos
+	injectors: []Fault_Injector, // Apenas para testes sintéticos
 end
 ```
 

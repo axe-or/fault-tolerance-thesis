@@ -109,7 +109,7 @@ outros metadados para análise de falhas, caso desejado.
 Também é possível usar os próprios prazos de execução como um mecanismo de
 detecção, porém isso pode não ser viável em sistema com prazos curtos,
 especialmente quando se opera em um contexto hard real time onde não concluir
-dentro do tempo esperado já consititui um erro por si só.
+dentro do tempo esperado já constitui um erro por si só.
 
 === Asserts
 
@@ -211,8 +211,7 @@ Sistemas embarcados, por serem parte de um todo maior, devem realizar sua
 função com o mínimo de interrupção para a funcionalidade geral do contexto
 externo. A importância do tempo de execução de uma tarefa de um sistema pode
 ser classificada em duas categorias: Soft real time, e Hard real time, a
-distinção entre estas categorias é explicada na seção *Sistemas Operacionais de
-Tempo-Real*.
+distinção entre estas categorias é explicada na seção seguinte.
 
 == Sistemas Operacionais de Tempo-Real
 
@@ -224,30 +223,27 @@ parte sistema operacional que sempre está executando, o trabalho principal do
 kernel é permitir a coexistência de diferentes tarefas no sistema que precisam
 acessar as capacidades do hardware, especialmente tempo na CPU e memória, o
 kernel pode ser descrito de maneira simplificada como a "cola" entre a
-aplicação(software) e os recursos físicos(hardware).
-#cite(<OperatingSystemConcepts>, form: "normal")
+aplicação e os recursos do hardware @OperatingSystemConcepts.
 
 Já um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional
 mais especializado, tipicamente pequeno, que possui como característica central
 cumprir o requisito temporal, que divide-se em 2 categorias:
 
-// TODO: ISOSIMOV NELES
-
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre
   garantir que tarefas de  maior importância tenham prioridade sobre as de
   menor importância. Sistemas soft real-time tipicamente operam na escala de
-  milissegundos, isto é, percepção humana. O atraso de uma tarefa em um sistema
-  soft real-time não é desejável, mas não constitui um erro. *Exemplos*: Player
-  de DVD, videogames, kiosks de atendimento.
+  milissegundos, isto é, percepção humana @SchedAndOptOfDistributedFT.
+  O atraso de uma tarefa em um sistema soft real-time não é desejável,
+  mas não constitui um erro. _Exemplos_: Player de DVD, videogames, kiosks de atendimento.
 
 - *Hard Real Time*: Precisam garantir as propriedades de soft real time, além
-  disso, o atraso de uma tarefa de seu prazo (*deadline*), é inaceitável, para
+  disso, o atraso de uma tarefa de seu prazo (deadline), é inaceitável, para
   um sistema hard real time uma resposta com atraso é o mesmo que resposta
   nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard real
-  time, pois muitas vezes aparacem em contextos críticos. *Exemplos*: Software
+  time, pois muitas vezes aparacem em contextos críticos. _Exemplos_: Software
   para sistema de frenagem, Sistemas de navegação em aplicações aeroespaciais,
   software de trading de alta frequência, broker de mensagens de alta
-  performance.
+  performance. @ModernOperatingSystems
 
 Como sistemas Hard Real Time cumprem os requisitos de sistemas Soft Real Time,
 os sistemas operacionais de tempo real tem seu design orientado a serem capazes
@@ -262,7 +258,7 @@ tarefas do sistema com um respeito estrito aos prazos de execução
 fornecidos e que faça de maneira resiliente à flutuações de tempo causadas
 por IO e outras interrupções.
 
-Drivers em RTOSes são tipicamente adicionados previamente de maneira *ad-hoc*,
+Drivers em RTOSes são tipicamente adicionados previamente de maneira _ad-hoc_,
 não havendo necessidade de carregamento dinâmico de drivers ou de bibliotecas
 pois muitas aplicações que necessitam de um RTOS, o hardware ja é conhecido e
 definido de antemão.
@@ -273,36 +269,29 @@ de sistemas embarcados. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 == Escalonador
 
-// TODO: OS concepts, ta nem bao
-O escalonador (*scheduler*) é o componente do sistema operacional responsável
+O escalonador (scheduler) é o componente do sistema operacional responsável
 por gerenciar múltiplas tarefas que desejam executar @OperatingSystemConcepts,
 sendo um componente extramente crucial, a implementação do escalonador deve
 garantir que tarefas de alta prioridade executem antes e que a troca entre
-tarefas (*context switching*) seja o mais rápido possível, o algoritmo de
+tarefas (context switching) seja o mais rápido possível, o algoritmo de
 escalonamento é o fator central para o comportamento do escalonador, sendo
 categorizados em 2 grandes grupos:
 
 - *Cooperativos*: Tarefas precisam voluntariamente devolver o controle da CPU
   (com exceção de certas interrupções de hardware) para que as outras tarefas
   possam executar, isso pode ser feito explicitamente por uma função de
-  "largar" (*yield*) ou implicitamente ao utilizar uma rotina assíncrona do
-  sistema, como ler arquivo, receber pacotes de rede ou aguardar uma variável
-  de condição.
+  "largar" (yield) ou implicitamente ao utilizar uma rotina assíncrona do
+  sistema, como ler arquivos, receber pacotes de rede ou aguardar um evento
+  @OperatingSystemConcepts
 
-- *Preemptivos*: Além de poderem transferir a CPU manualmente, o escalonador
-  forçará trocas de contexto caso a tarefa exceda um limite de tempo definido
-  para sua execução, o processo de interromper e trocar de tarefa forçadamente
-  chama-se *preempção*, e a quantia de tempo máximo alocada para execução
-  contínua da tarefa é tipicamente denominada como *time slice* ("Fatia de
-  tempo"). Tarefas ainda podem possuir relações de prioridade, e *time slices*
-  podem também serem alteradas.
+- *Preemptivos*: Além de poderem transferir a CPU manualmente, o escalonador forçará trocas de contexto caso uma condição para a troca seja satisfeita. O algoritmo mais comum que serve de base para diversos escalonadores preemptivos é o _Round-Robin_ onde tarefas possuem uma quantia de tempo máximo alocada para sua execução contínua, nomeada "time slice" ou "quantum" @ModernOperatingSystems. Tarefas ainda podem possuir relações de prioridade, alterando a ordem que o escalonador realiza seu despache assim como o tamanho de sua time slice.
 
-Sistemas operacionais de tempo-real são comumente executados no modo totalmente
-preemptivo, mas o uso cooperativo também é viável e possui vantagem de possuir
-o controle mais previsível e não necessitar de tantas interrupções de timer,
+Sistemas operacionais de tempo-real são tipicamente executados no modo totalmente
+preemptivo, mas o uso cooperativo também é viável e possui a vantagem de possuir
+o controle mais previsível e menos suporte de runtime para o gerenciamento de tarefas,
 mas é importante que seja tomado o cuidado adequado para que nenhum prazo de
 execução hard real time seja violado por uma tarefa inadvertidamente utilizando
-a CPU por uma fatia longa de tempo.
+a CPU por uma quantidade longa de tempo.
 
 == Escalonamento tolerante à falhas
 
