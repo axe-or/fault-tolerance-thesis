@@ -11,6 +11,8 @@ também assumido que o sistema tenha ao menos uma quantia de memória tolerante
 (ROM ou não) para guardar os dados necessários para disparar o tratamento de
 falhas.
 
+// TODO: Citar sobre coisa orientada a mensagem, pode ser ate documetation de outro RTOS
+
 A arquitetura será primariamente orientada à passagem de mensagens, pois
 permite uma generalização para mecanismos de I/O assíncrono e distribuição da
 arquitetura, permite também um desacoplamento  entre a lógica de detecção e

@@ -2,7 +2,12 @@
 
 == Falhas e Tolerância
 
-Uma _falha_ pode ser compreendida como um evento fora do controle do sistema que provoca uma degradação na sua qualidade de serviço, seja ao afetar a validade dos resultados ou com uma degradação na forma de aumento de latência. Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de ocorrência:
+// TODO: Citar livro aqui, talvez definicao IEEE
+Uma _falha_ pode ser compreendida como um evento fora do controle do sistema
+que provoca uma degradação na sua qualidade de serviço, seja ao afetar a
+validade dos resultados ou com uma degradação na forma de aumento de latência.
+Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de
+ocorrência:
 
 - Falhas *Transientes*: Ocorrem aleatoriamente e possuem um impacto temporário.
 
@@ -30,6 +35,7 @@ uma qualidade de serviço aceitável mesmo na presença de falhas são necessár
   desligamento gracioso do sistema ou reorganização para manter o máximo de
   qualidade de serviço possível.
 
+// TODO: Citar mais algum livro aqui?
 A detecção e o tratamento podem ser implementados em hardware ou em software,
 implementações em hardware conseguem fazer garantias físicas mais fortes com
 melhor revestimento e redundância implementada diretamente no circuito, e
@@ -38,12 +44,14 @@ elevado de espaço no silício possível degradação de performance geral e men
 flexibilidade. O processo de tornar o design e a implementação de um hardware
 com estas características é chamado de hardening.
 
+// TODO: Mencionar NASA fazendo live patching
 Implementações em software não são capazes de fornecer todas as garantias
 fortes do hardware, em contrapartida, não ocupam espaço extra no chip e são
 mais flexíveis, com software é possível implementar lógica de detecção
 recuperação e estruturas de dados mais complexas, e até mesmo realizar
 atualizações remotas com o sistema ativo (live patching).
 
+// TODO: Citar paper de solucoes hybridas
 Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e
 software precisam ser consideradas, é possível utilizar hardware com
 hardening para um núcleo que realiza atividades críticas, e delegar núcleos
@@ -55,6 +63,7 @@ forneça uma boa qualidade de serviço pelo menor custo possível.
 
 == Mecanismos de Detecção
 
+// TODO: Ctiar livro, wikipedia etc.
 Os mecanismos de detecção, permitem que um sistema detecte uma inconsistência
 em seus dados, causada por falha externa ou por erro lógico de outra parte no
 caso de sistemas distribuídos. Os mecanismos de detecção são essenciais para a
@@ -64,6 +73,7 @@ posteriormente.
 
 === CRC (Cyclic Redundancy Check)
 
+// TODO: Citar livro
 Os CRCs são códigos de detecção de erro comumente utilizados em redes de
 computador e armazenamento não volátil para detectar falhas. Para cada segmento
 de dado é concatenado um valor (denominado "check value" ou simplesmente o
@@ -80,6 +90,7 @@ transientes que alteram uma região de bits próximos.
 
 === Heartbeat signals
 
+// TODO: Citar livro e talvez aquele artigo de survey
 É possível determinar se uma falha ocorreu com um nó de execução através de um
 critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais
 periódicos para garantir se um nó computacional está ativo. Basta enviar um
@@ -97,10 +108,12 @@ outros metadados para análise de falhas, caso desejado.
 
 Também é possível usar os próprios prazos de execução como um mecanismo de
 detecção, porém isso pode não ser viável em sistema com prazos curtos,
-especialmente quando se opera em um contexto hard real time.
+especialmente quando se opera em um contexto hard real time onde não concluir
+dentro do tempo esperado já consititui um erro por si só.
 
 === Asserts
 
+// TODO: citar nasa (10 rules) e o artigo da tigerbeetle ou algo da documentacao AdaCore
 A utilização de asserts é um mecanismo simples que é particularmente útil, um
 assert trata-se de checar se uma condição é verdadeira, caso não seja, o
 programa é interrompido e entra um estado de pânico. Utilizar asserts
@@ -123,6 +136,7 @@ correção deve ser tentada ou outro tratamento deve ser usado.
 
 === Redundância
 
+// TODO: Citar survey e alguma coisa do isosimov
 Adicionar redundância ao sistema é uma das formas mais intuitivas e mais
 antigas de aumentar a tolerância à falhas, a probabilidade de N falhas
 transientes ocorrendo simultaneamente em um sistema é mais baixa do que a
@@ -143,6 +157,7 @@ telecomunicação em larga escala e computação em nuvem.
 
 === Re-execução
 
+// TODO: Citar isosimov ou outro
 Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha,
 a probabilidade de *k* falhas intermitentes ocorrem em sequência é menor do que
 a probabilidade de apenas ocorrer *k - 1* vezes no intervalo de execução. Ao
@@ -158,6 +173,7 @@ falhas ocorram repetidamente em *N* execuções)
 
 === Correção de Erro
 
+// TODO: Citar alguem aqui
 Existem também algoritmos que permitem detectar e corrigir erros dentro de um
 payload, em troca de um custo de espaço e tempo para a detecção, dentro da
 família de algoritmos que possibilitam detecção e correção, são encontrados os
@@ -171,6 +187,7 @@ mensagens.
 
 == Sistemas embarcados
 
+// TODO: citar livro aqui, tanembaum ou algo de embeededede
 Sistemas embarcados são uma família vasta de sistemas computacionais, algumas
 das principais características de sistemas embarcados são:
 
@@ -199,6 +216,7 @@ Tempo-Real*.
 
 == Sistemas Operacionais de Tempo-Real
 
+// TODO: OS Concepts & ta nem bao
 Um sistema operacional é um conjunto conjunto de software que permitem o
 gerenciamento e interação com os recursos da máquina através de uma camada de
 abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a
@@ -212,6 +230,8 @@ aplicação(software) e os recursos físicos(hardware).
 Já um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional
 mais especializado, tipicamente pequeno, que possui como característica central
 cumprir o requisito temporal, que divide-se em 2 categorias:
+
+// TODO: ISOSIMOV NELES
 
 - *Soft Real Time*: Um sistema que garante essa propriedade precisa sempre
   garantir que tarefas de  maior importância tenham prioridade sobre as de
@@ -242,9 +262,9 @@ tarefas do sistema com um respeito estrito aos prazos de execução
 fornecidos e que faça de maneira resiliente à flutuações de tempo causadas
 por IO e outras interrupções.
 
-Drivers em RTOSes são adicionados previamente de maneira *ad-hoc*, não há
-necessidade de carregamento dinâmico de drivers ou de bibliotecas pois na
-maioria das aplicações que necessitam de um RTOS, o hardware ja é conhecido e
+Drivers em RTOSes são tipicamente adicionados previamente de maneira *ad-hoc*,
+não havendo necessidade de carregamento dinâmico de drivers ou de bibliotecas
+pois muitas aplicações que necessitam de um RTOS, o hardware ja é conhecido e
 definido de antemão.
 
 Devido à suas características de simplicidade, baixo custo e previsibilidade,
@@ -253,6 +273,7 @@ de sistemas embarcados. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 == Escalonador
 
+// TODO: OS concepts, ta nem bao
 O escalonador (*scheduler*) é o componente do sistema operacional responsável
 por gerenciar múltiplas tarefas que desejam executar @OperatingSystemConcepts,
 sendo um componente extramente crucial, a implementação do escalonador deve
@@ -285,6 +306,7 @@ a CPU por uma fatia longa de tempo.
 
 == Escalonamento tolerante à falhas
 
+// TODO: Isosimov e mais algunm survey
 Durante a execução de um sistema tolerante à falhas, existem alguns tipos
 principais de overheads que independente da presença de uma falha vão ocorrer e
 precisam ser considerados pelo escalonador.
@@ -352,9 +374,9 @@ mas ao invés de re-execução, mensagens são re-enviadas ou restauradas no cas
 algoritmos de recuperação de erro estejam disponíveis.
 @SchedFTWithSoftAndHardConstraints
 
-- >> Grafo simples aqui <<
+- *TODO*: >> Grafo simples aqui <<
 
-- >> Grafo com múltiplas mensagens aqui <<
+- *TODO*:>> Grafo com múltiplas mensagens aqui <<
 
 O escalonamento tolerante à falhas é a combinação de métodos que permitem que o
 escalonador reaja à ocorrência de falhas e agende as tarefas de forma a
@@ -373,22 +395,21 @@ adaptado para um contexto online.
 Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema
 COTS e criam um perfil de falhas com exposição a íons pesados assim como
 injeção artificial de falhas para posteriormente realizar uma adição de formas
-de detecção de falhas para melhorar a confiabilidade do sistema. Os autores
-foram capazes de detectar metade das falhas funcionais apenas com técnicas de
-software no banco de registradores.
+de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível
+detectar mais da metade das falhas funcionais apenas com técnicas de software
+no banco de registradores. @ReliabilityArmCortexUnderHeavyIons.
 
 #image("assets/related_works_heavy_ion_reliability.png")
 
-Dentre as conclusões extraídas foram que com o uso de técnicas de software foi
-possível reduzir a quantia de falhas funcionais em mais de 50%, outra questão
-observada foi que a quantia de falhas injetadas para ocasionar um erro de
-funcionalidade é 2 ordens de magnitude maior ao comparar registradores em
-relação à memória, indicando que existe uma necessidade real de poder detectar
-e mitigar erros de memória mais rapidamente
+Uma outra observação foi que a quantia de falhas injetadas para ocasionar um
+erro de funcionalidade é 2 ordens de magnitude maior na memória em relação ao
+banco de registradores, indicando que existe uma necessidade real de poder
+detectar e mitigar erros de memória mais rapidamente
 @ReliabilityArmCortexUnderHeavyIons.
 
 === Application-Level Fault Tolerance in Real-Time Embedded System
 
+// TODO: citar o arigo, acho que nao precisa botar o nome dos sujeitos
 No artigo de Afonso, Silva, Tavares e Montenegro um framework de execução na
 para o sistema operacional BOSS é criado, o trabalho apresenta técnicas de
 escalonamento mas não entra em detalhamento profundo na parte de detecção, mas
@@ -411,6 +432,8 @@ Haskell e Rust) que podem ser também emuladas em C++ com o sistema de
 `concepts`.
 
 === A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems
+
+// TODO: citar o arigo, acho que nao precisa botar o nome dos sujeitos, botar imagem?
 
 No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab
 propõem um método de detecção e reação à erros de controle fluxo juntamente com
