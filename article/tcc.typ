@@ -13,3 +13,5 @@
 
 #include "03_projeto.typ"
 
+#include "04_consideracoes_finais.typ"
+

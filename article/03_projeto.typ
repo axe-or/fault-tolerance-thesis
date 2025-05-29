@@ -24,35 +24,7 @@ custo poder ser amortizado com a utilização de filas concorrentes bem
 implementadas e com a criação de um perfil de uso para melhor ajuste do
 sistema.
 
-> NOTE: Mencionar que sistemas como o QNX usam isso tbm?
-
-- Criar teste sintetico (stress alto, fault rate alta)
-
-- ? Implementar gerador de tabela de escalonemento ?
-
-== Algoritmos e Técnicas
-
-- CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
-
-- Heartbeat Signal (simples): Um sinal periódico será enviado para a tarefa em
-  paralelo, apenas uma resposta sequencial será necessária.
-
-- Heartbeat Signal (com proof of work): Um sinal periódico juntamente com um
-  payload com um comando a ser executado e devolvido, para garantir não somente
-  a presença da task mas seu funcionamento esperado.
-
-- Replicação espacial: Uma mesma task será disparada diversas vezes, em sua
-  conclusão, será realizado um consenso. A replicação tripla servirá como um
-  controle.
-
-- Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N
-  respostas catalogadas, a resposta correta será decidida por consenso.
-
-- Asserts: Não é um algoritmo propriamente dito, mas sim a checagem de algum
-  invariante necessária dentro do código, que caso seja falsa, é tratada como
-  uma falha crítica, espera-se que esse seja um método barato (porém menos
-  robusto) de detectar estados inconsistentes. Serão utilizados asserts para
-  checar certas invariantes.
+// TODO: Mencionar que sistemas como o QNX usam isso tbm?
 
 == Interface
 
@@ -65,21 +37,14 @@ parâmetro opaco por referência. Este parâmetro pode ser o argumento primordia
 da task ou um contexto de execução.
 
 ```pascal
-type FT_Policy = (
-	None,
-	ReExec,
-	Replicate
-);
-
 type FT_Task = record
 	id: uint,
 	body: func(parameter: Address),
 	param: address,
 	stack_base: address,
 	stack_size: uint,
-	fault_policy: FT_Policy,
 	fault_handler: FT_Handler,
-	
+
 	injectors: []Fault_Injector, // Apenas para testes sintéticos
 end
 ```
@@ -122,24 +87,70 @@ paralelo, serão priorizados inicialmente neste projeto.
 
 == Análise de Requisitos
 
-> NOTE: Isso aqui é regra de negocio?
-O projeto deve ser capaz de executar em um kernel RTOS, se o componente será
-acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um
-detalhe de implementação. Além disso, deve ser possível utilizar em um sistema
-COTS, isto é, não deve estar associado à um hardware particular e deve ser
-portável na medida em que necessita apenas de uma camada HAL para poder
-realizar a funcionalidade adequada.
+=== Algoritmos e Técnicas
+
+- CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
+
+- Heartbeat Signal (simples): Um sinal periódico será enviado para a tarefa em
+  paralelo, apenas uma resposta sequencial será necessária.
+
+- Heartbeat Signal (com proof of work): Um sinal periódico juntamente com um
+  payload com um comando a ser executado e devolvido, para garantir não somente
+  a presença da task mas seu funcionamento esperado.
+
+- Replicação espacial: Uma mesma task será disparada diversas vezes, em sua
+  conclusão, será realizado um consenso. A replicação tripla servirá como um
+  controle.
+
+- Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N
+  respostas catalogadas, a resposta correta será decidida por consenso.
+
+- Asserts: Não é um algoritmo propriamente dito, mas sim a checagem de algum
+  invariante necessária dentro do código, que caso seja falsa, é tratada como
+  uma falha crítica, espera-se que esse seja um método barato (porém menos
+  robusto) de detectar estados inconsistentes. Serão utilizados asserts para
+  checar invariantes específicas ao algoritmo.
 
 === Requisitos Funcionais
 
++ Interface de tolerância com os algoritmos da seção *Algoritmos e Técnicas* implementados
++ Pontos para injeção de falhas sintéticas
++ Criar tarefas com uma estratégia de tolerância
++ Funções de medição e observabilidade das métricas: uso de CPU, uso de
+  memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas e
+  cache hit rate (caso presente).
+
 === Requisitos Não-Funcionais
 
-== Delimitação de Escopo 
++ Implementação deve ser realizada em uma linguagem que não necessite da
+  presença de uma MMU, alocação dinâmica (sem limite superior), ou suporte à
+  floats em hardware (C, C++, Rust)
++ Deve ser compatível arquitetura ARMv7-M ou ARMv8-M
 
 == Plano de Verificação
 
-- Teste inicial virtualizado -> Provar corretude e projetar overhead dos algoritmos
++ Teste inicial virtualizado
++ Provar corretude e projetar overhead dos algoritmos
++ Teste final em placa (ESP32?) rodando um RTOS com injeção de falhas e coleta das métricas
++ Análise das métricas e comparação com as projeções dos testes virtuais
 
-- Teste final em placa (ESP32?) rodando um RTOS com injeção de falhas
+#pad(left: 5%)[
+	NOTE: Isso aqui é regra de negocio?
+
+	O projeto deve ser capaz de executar em um kernel RTOS, se o componente será
+	acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um
+	detalhe de implementação. Além disso, deve ser possível utilizar em um sistema
+	COTS, isto é, não deve estar associado à um hardware particular e deve ser
+	portável na medida em que necessita apenas de uma camada HAL para poder
+	realizar a funcionalidade adequada.
+]
+
+== Projeto para o TCC2
+
+=== Metodologia
+
+=== Cronograma
+
+=== Análise De Requisitos
 
 

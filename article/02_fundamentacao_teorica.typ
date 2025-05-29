@@ -388,7 +388,10 @@ de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível
 detectar mais da metade das falhas funcionais apenas com técnicas de software
 no banco de registradores. @ReliabilityArmCortexUnderHeavyIons.
 
-#image("assets/related_works_heavy_ion_reliability.png")
+#figure(
+	image("assets/related_works_heavy_ion_reliability.png"),
+	caption: "Análise de resiliência, dividida por categoria",
+)
 
 Uma outra observação foi que a quantia de falhas injetadas para ocasionar um
 erro de funcionalidade é 2 ordens de magnitude maior na memória em relação ao
@@ -409,7 +412,10 @@ tolerância com menor uso de CPU em relação à redundância tripla utilizando 
 técnicas em software combinado com um par de processadores com auto checagem
 (PSP).
 
-#image("assets/related_works_psp_perf.png")
+#figure(
+	image("assets/related_works_psp_perf.png"),
+	caption: [Utilização de CPU para diferentes implementações de tolerância],
+)
 
 O trabalho demonstra também a viabilidade de prover interfaces mais abstratas
 que ainda sejam capazes de rodar em sistemas de recursos restritos, os

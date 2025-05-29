@@ -32,9 +32,8 @@
 
 	set text(
 		font: ("Times New Roman", "Nimbus Roman"),	
-		lang: "br",
+		lang: "pt",
 	)
-
 
 	// Front page
 	[
@@ -61,7 +60,6 @@
 		#set align(center)
 		#text(local + ", " + data)
 	]
-
 	pagebreak()
 
 	// Table of Contents
@@ -84,3 +82,4 @@
 		style: "assets/ufrj-abnt.csl",
 	)
 }
+
