@@ -5,14 +5,14 @@ Tolerância à falhas (TF) é a capacidade de um sistema computacional continuar
 oferecendo qualidade de serviço mesmo na presença de defeitos e interferências
 inesperadas, falhas podem ser encontradas comumente nos contextos de sistemas
 distribuídos, onde os canais de comunicação podem sofrer degradação ou total
-inoperabilidade devido à interferência eletromagnética, falta de energia e
-eventos climáticos. Sistemas embarcados encontram os mesmos problemas ao
-utilizar um canal com ruído ou instável, mas também podem dados em memória ou
+inoperabilidade devido à interferência eletromagnética, falta de energia e eventos
+climáticos @FaultTolerantSystems. Sistemas embarcados encontram os mesmos problemas
+ao utilizar um canal com ruído ou instável, mas também podem dados em memória ou
 registradores diretamente afetados por causas externas como radiação ionizante,
-flutuações súbitas de temperatura ou voltagem e colisões físicas. A existência
-desses fenômenos necessitam que dispositivos estejam preparados, especialmente
-em aplicações aero-espaciais(que necessitam ser confiáveis e tolerar seu
-ambiente volátil).
+flutuações súbitas de temperatura ou voltagem e colisões físicas @DependabilityInEmbeddedSystems.
+A existência desses fenômenos necessitam que dispositivos estejam preparados,
+especialmente em aplicações aero-espaciais que necessitam operam em um ambiente 
+volátil com consequências catastróficas caso um erro ocorra.
 
 // TODO: Citar um survey (artigo) e operating sys concepts e modern operating systems
 Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
