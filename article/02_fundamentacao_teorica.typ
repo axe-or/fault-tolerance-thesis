@@ -2,11 +2,11 @@
 
 == Falhas e Tolerância
 
-// TODO: Citar livro aqui, talvez definicao IEEE
 Uma _falha_ pode ser compreendida como um defeito fora do controle do sistema
-que pode provocar comportamento que resulta degradação na sua qualidade de serviço neste caso, chamado "erro", seja ao afetar a
-validade dos resultados ou com uma degradação na forma de aumento de latência.
-Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de
+que pode provocar comportamento que resulta degradação na sua qualidade de
+serviço neste caso, chamado "erro", seja ao afetar a validade dos resultados ou
+com uma degradação na forma de aumento de latência. @FaultTolerantSystems
+Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de
 ocorrência:
 
 - Falhas *Transientes*: Ocorrem aleatoriamente e possuem um impacto temporário.
@@ -42,7 +42,7 @@ melhor revestimento e redundância implementada diretamente no circuito, e
 prover transparência de execução para o programador, a desvantagem é custo
 elevado de espaço no silício possível degradação de performance geral e menor
 flexibilidade. O processo de tornar o design e a implementação de um hardware
-com estas características é chamado de hardening.
+com estas características é chamado de "hardening".
 
 // TODO: Mencionar NASA fazendo live patching
 Implementações em software não são capazes de fornecer todas as garantias
@@ -112,7 +112,8 @@ um aumento inesperado no tempo de uma tarefa. @FaultTolerantSystems
 
 === Asserts
 
-// TODO: citar nasa (10 rules) e o artigo da tigerbeetle ou algo da documentacao AdaCore
+// TODO: citar nasa (10 rules) e o artigo da tigerbeetle ou algo da
+// documentacao AdaCore talvez o MISRA C
 A utilização de asserts é um mecanismo simples que é particularmente útil, um
 assert trata-se de checar se uma condição é verdadeira, caso não seja, o
 programa é interrompido e entra um estado de pânico. Utilizar asserts
@@ -282,7 +283,14 @@ categorizados em 2 grandes grupos:
   sistema, como ler arquivos, receber pacotes de rede ou aguardar um evento
   @OperatingSystemConcepts
 
-- *Preemptivos*: Além de poderem transferir a CPU manualmente, o escalonador forçará trocas de contexto caso uma condição para a troca seja satisfeita. O algoritmo mais comum que serve de base para diversos escalonadores preemptivos é o _Round-Robin_ onde tarefas possuem uma quantia de tempo máximo alocada para sua execução contínua, nomeada "time slice" ou "quantum" @ModernOperatingSystems. Tarefas ainda podem possuir relações de prioridade, alterando a ordem que o escalonador realiza seu despache assim como o tamanho de sua time slice.
+- *Preemptivos*: Além de poderem transferir a CPU manualmente, o escalonador
+  forçará trocas de contexto caso uma condição para a troca seja satisfeita. O
+  algoritmo mais comum que serve de base para diversos escalonadores
+  preemptivos é o _Round-Robin_ onde tarefas possuem uma quantia de tempo
+  máximo alocada para sua execução contínua, nomeada "time slice" ou "quantum"
+  @ModernOperatingSystems. Tarefas ainda podem possuir relações de prioridade,
+  alterando a ordem que o escalonador realiza seu despache assim como o tamanho
+  de sua time slice.
 
 Sistemas operacionais de tempo-real são tipicamente executados no modo totalmente
 preemptivo, mas o uso cooperativo também é viável e possui a vantagem de possuir
