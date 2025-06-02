@@ -80,6 +80,7 @@
     	"bibliografia.bib",
 		title: none,
 		style: "assets/ufrj-abnt.csl",
+		full: true,
 	)
 }
 

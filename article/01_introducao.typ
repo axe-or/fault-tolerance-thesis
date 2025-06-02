@@ -1,6 +1,5 @@
 = INTRODUÇÃO
 
-// TODO: 2 Citar livros aqui, sobre TF
 Tolerância à falhas (TF) é a capacidade de um sistema computacional continuar
 oferecendo qualidade de serviço mesmo na presença de defeitos e interferências
 inesperadas, falhas podem ser encontradas comumente nos contextos de sistemas
@@ -14,18 +13,17 @@ A existência desses fenômenos necessitam que dispositivos estejam preparados,
 especialmente em aplicações aero-espaciais que necessitam operam em um ambiente 
 volátil com consequências catastróficas caso um erro ocorra.
 
-// TODO: Citar um survey (artigo) e operating sys concepts e modern operating systems
 Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
 soluções em hardware e software necessitam ser abordadas para garantir a
 qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional
 ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo
 então um candidato interessante para aprimorar sua resiliência com foco em
-reduzir desperdício dos nós computacionais. O processo de detecção das falhas e
+reduzir desperdício dos nós computacionais @OperatingSystemConcepts. O processo de detecção das falhas e
 seu impacto no grafo de execução assim como nas métricas quantitativas de tempo
 de CPU e uso de memória portanto deve ser considerado, particularmente no
 contexto de escalonamento, pois a reação rápida e correta às falhas requer
 previamente a detecção e elaboração das rotinas de escalonamento de forma
-adequada.
+adequada @DependabilityInEmbeddedSystems.
 
 Este trabalho visa portanto fazer uma análise do impacto de diferentes técnicas de
 detecção durante o escalonamento de tarefas e seu impacto na performance e no fluxo de
@@ -34,7 +32,6 @@ benefícios ao tornar um sistema mais resiliente.
 
 == Problematização
 
-// TODO: Citar livro de tf aqui e um artigo (isosimov?)
 Dada a presença de sistemas embarcados em contextos críticos como na exploração
 espacial, automobilística e tecnologia médica, assim como a ubiquidade de
 dispositivos móveis e de baixo consumo energético no mercado consumidor
@@ -43,7 +40,7 @@ computação distribuída, entende-se que manter um alto grau da qualidade de
 serviço com o mínimo de degradação de performance e aumento de custo (monetário
 ou energético), pode prover uma vantagem econômica para fabricantes e
 provedores assim como um benefício social na maior confiabilidade no caso de
-aplicações críticas.
+aplicações críticas. @DependabilityInEmbeddedSystems.
 
 // TODO: Fonte aqui eh mto importante, citar!
 Ademais, ocorreu nos últimos anos uma maior adoção de sistemas COTS (Commercial
@@ -66,7 +63,7 @@ alternativas comerciais mais comuns.
 // TODO: Citar 1 coisa aqui
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação
 e ao nível de tolerância desejado, e no caso dos sistemas COTS, técnicas
-robustas de resilência em hardware nem sempre estão disponíveis, sendo
+robustas de resiliência em hardware nem sempre estão disponíveis, sendo
 necessário delegar tal funcionalidade para a aplicação. Dentre uma multitude de
 técnicas de detecção e reação à falhas, é necessário escolher a mais adequada,
 e para que a escolha seja informada, é essencial que os tradeoffs em termos de

@@ -3,8 +3,8 @@
 == Falhas e Tolerância
 
 // TODO: Citar livro aqui, talvez definicao IEEE
-Uma _falha_ pode ser compreendida como um evento fora do controle do sistema
-que provoca uma degradação na sua qualidade de serviço, seja ao afetar a
+Uma _falha_ pode ser compreendida como um defeito fora do controle do sistema
+que pode provocar comportamento que resulta degradação na sua qualidade de serviço neste caso, chamado "erro", seja ao afetar a
 validade dos resultados ou com uma degradação na forma de aumento de latência.
 Falhas podem ser classificadas em 3 grupos referentes ao seu padrão de
 ocorrência:
@@ -95,21 +95,20 @@ transientes que alteram uma região de bits próximos.
 critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais
 periódicos para garantir se um nó computacional está ativo. Basta enviar um
 sinal simples e verificar se uma resposta correta chega em um tempo pré
-determinado. Sinais heartbeat são extremamente baratos porém não garantem um
+determinado. Sinais heartbeat são baratos porém não garantem uma
 detecção ou correção de erro mais granular, portanto são usados como um
-complemento para detectar falhas de forma concorrente aos métodos mais
+complemento para detectar falhas de forma concorrente a outros métodos mais
 robustos.
 
 O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o
 custo temporal de tolerância limite no pior caso e o custo da viagem ida e
 volta no melhor caso. Este método é aplicado em datacenters, também chamado de
 "health signal" ou "health check", o sinal e sua resposta desejada podem conter
-outros metadados para análise de falhas, caso desejado.
+outros metadados para análise de falhas, caso desejado. 
 
 Também é possível usar os próprios prazos de execução como um mecanismo de
-detecção, porém isso pode não ser viável em sistema com prazos curtos,
-especialmente quando se opera em um contexto hard real time onde não concluir
-dentro do tempo esperado já constitui um erro por si só.
+detecção, um timer pode ser utilizado para alertar prematuramente a um erro que causou
+um aumento inesperado no tempo de uma tarefa. @FaultTolerantSystems
 
 === Asserts
 
@@ -215,7 +214,6 @@ distinção entre estas categorias é explicada na seção seguinte.
 
 == Sistemas Operacionais de Tempo-Real
 
-// TODO: OS Concepts & ta nem bao
 Um sistema operacional é um conjunto conjunto de software que permitem o
 gerenciamento e interação com os recursos da máquina através de uma camada de
 abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a
@@ -253,8 +251,8 @@ Em contraste com sistemas operacionais focados em uso geral que são encontrados
 em servidores e computadores pessoais (como Windows, Linux e OSX), o objetivo
 do primário de um RTOS não é dar ao usuário a sensação de fluidez dinamicamente
 escalonando os recursos da máquina, sistemas em tempo real buscam ser
-simples, confiáveis e determinísticos. É essencial que um RTOS execute as
-tarefas do sistema com um respeito estrito aos prazos de execução
+simples, confiáveis e determinísticos @OperatingSystemConcepts. É essencial que
+um RTOS execute as tarefas do sistema com um respeito estrito aos prazos de execução
 fornecidos e que faça de maneira resiliente à flutuações de tempo causadas
 por IO e outras interrupções.
 
