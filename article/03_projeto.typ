@@ -36,17 +36,27 @@ inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
 parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
 da task ou um contexto de execução.
 
-```pascal
-type FT_Task = record
-	id: uint,
-	body: func(parameter: Address),
-	param: address,
-	stack_base: address,
-	stack_size: uint,
-	fault_handler: FT_Handler,
+```cpp
+/* Código resumido apenas para mostrar os componentes principais, tratamento de erros e funções adicionais foram omitidos */
+using FT_TaskBody = void (*)(void*);
 
-	injectors: []Fault_Injector, // Apenas para testes sintéticos
-end
+using FT_Handler = void (*)(FT_Task*);
+
+struct FT_Task {
+	uint32_t    id;
+	FT_TaskBody body;
+	void*       param;
+	uintptr_t   stack_base;
+	usize_t     stack_size;
+	FT_Handler  fault_handler;
+}
+
+struct FT_Message {
+	uint32_t check_value;
+	uint32_t destination;
+	size_t   payload_size;
+	uint8_t* payload_data;
+}
 ```
 
 == Visão Geral e Premissas
