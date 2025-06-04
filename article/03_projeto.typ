@@ -95,6 +95,8 @@ capazes para realizar uma análise quanto ao overhead proporcional introduzido,
 devido à sua facilidade de realização e poder extrair diversas métricas em
 paralelo, serão priorizados inicialmente neste projeto.
 
+Para explorar o uso computacional será utilizado uma aplicação exemplo que recebe uma série de números gerados pseudo-aleatoriamente simulando um sinal, um núcleo realizará uma transformada de Fourier rápida (FFT) e enviará uma mensagem indicando a conclusão de um pacote, o segundo núcleo realizará uma filtragem passa-banda e realiza a transformada inversa e ????
+
 == Análise de Requisitos
 
 === Algoritmos e Técnicas

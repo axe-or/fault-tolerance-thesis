@@ -112,8 +112,6 @@ um aumento inesperado no tempo de uma tarefa. @FaultTolerantSystems
 
 === Asserts
 
-// TODO: citar nasa (10 rules) e o artigo da tigerbeetle ou algo da
-// documentacao AdaCore talvez o MISRA C
 A utilização de asserts é um mecanismo simples que é particularmente útil, um
 assert trata-se de checar se uma condição é verdadeira, caso não seja, o
 programa é interrompido e entra um estado de pânico. Utilizar asserts
@@ -124,7 +122,7 @@ desenvolvedores para detectar falhas de design cedo, o uso de asserts podem
 detectar um defeito externo, mas por serem mecanismos exclusivamente de fluxo
 de controle, não são muito robustos em suas garantias, mas ainda assim, seu
 custo baixo e fácil inserção/deleção os fazem um mecanismo que não deve ser
-ignorado.
+ignorado @PowerOf10Rules.
 
 == Mecanismos de Tratamento
 
