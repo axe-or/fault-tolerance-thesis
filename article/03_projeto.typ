@@ -49,14 +49,14 @@ struct FT_Task {
 	uintptr_t   stack_base;
 	usize_t     stack_size;
 	FT_Handler  fault_handler;
-}
+};
 
 struct FT_Message {
 	uint32_t check_value;
 	uint32_t destination;
 	size_t   payload_size;
 	uint8_t* payload_data;
-}
+};
 ```
 
 == Visão Geral e Premissas
@@ -66,12 +66,13 @@ struct FT_Message {
 Será partido do ponto que ao menos o processador *watchdog* terá registradores
 que sejam capazes de mascarar falhas, apesar de ser possível executar os
 algoritmos reforçados com análise de fluxo do programa e redundância de
-registradores, isso adiciona uma extra de overhead e como mencionado na seção
-de trabalhos relacionados, a memória fora do banco de registradores pode ser 2
-ordens de magnitude mais sensível à eventos disruptivos, portanto, todos os
-testes subsequentes assumirão ao menos uma quantia mínima de tolerância do
-núcleo monitor. Ao invés focando em detecção de falhas de memória, I/O
-(passagem de mensagem) e resultados dos co-processadores.
+registradores, isso adiciona um grau a mais de complexidade que foge do escopo
+do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
+fora do banco de registradores pode ser 2 ordens de magnitude mais sensível à
+eventos disruptivos, portanto, todos os testes subsequentes assumirão ao menos
+uma quantia mínima de tolerância do núcleo monitor. Pretende-se portanto, focar
+na detecção de falhas de memória, passagem de mensagens e resultados dos
+co-processadores.
 
 Outra necessidade indutiva para a realização do trabalho é que testes
 sintéticos possam ao menos *aproximar* a performance do mundo real, ou ao menos
@@ -88,14 +89,27 @@ elevadas, de tal forma que consiga o grau necessário de confiabilidade mesmo em
 uma situação adversa, no caso de sistemas que possuem um impacto crítico ou
 catastrófico, é melhor optar por ter um excesso de resiliência.
 
-Será assumido que os resultados extraídos de injeção de falhas emuladas, apesar
-de menos condizentes com os valores absolutos da aplicação e não sendo
+Será assumido que os resultados extraídos de injeção de falhas artificiais, apesar
+de menos condizentes com os valores absolutos de uma aplicação e não sendo
 substitutos adequados na fase de aprovação de um produto real, são ao menos
 capazes para realizar uma análise quanto ao overhead proporcional introduzido,
 devido à sua facilidade de realização e poder extrair diversas métricas em
 paralelo, serão priorizados inicialmente neste projeto.
 
-Para explorar o uso computacional será utilizado uma aplicação exemplo que recebe uma série de números gerados pseudo-aleatoriamente simulando um sinal, um núcleo realizará uma transformada de Fourier rápida (FFT) e enviará uma mensagem indicando a conclusão de um pacote, o segundo núcleo realizará uma filtragem passa-banda e realiza a transformada inversa e ????
+// TODO: Trocar por matriz?
+Para explorar o uso computacional será utilizado uma aplicação exemplo que
+recebe uma série de números gerados pseudo-aleatoriamente de forma periódica
+simulando um sensor externo, um núcleo realizará uma transformada de Fourier
+rápida (FFT) e enviará uma mensagem indicando a conclusão de um lote de
+processamento, o segundo núcleo realizará uma filtragem passa-banda e realiza a
+transformada inversa de Fourier e notifica o primeiro núcleo, que neste caso,
+apenas irá despejar os resultados para debugging.
+
+A escolha dos programas de exemplo serve como principal propósito testar uma
+operação que dependa de múltiplos acessos e modificações à memória e que possa
+demonstrar capacidades de processamento assíncronas, que são particularmente
+importantes ao se lidar com múltiplas interrupções causadas por timers ou IO.
+
 
 == Análise de Requisitos
 
@@ -111,17 +125,14 @@ Para explorar o uso computacional será utilizado uma aplicação exemplo que re
   a presença da task mas seu funcionamento esperado.
 
 - Replicação espacial: Uma mesma task será disparada diversas vezes, em sua
-  conclusão, será realizado um consenso. A replicação tripla servirá como um
-  controle.
+  conclusão, será realizado um consenso dentre as respostas.
 
 - Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N
-  respostas catalogadas, a resposta correta será decidida por consenso.
+  respostas catalogadas e verificadas, a resposta correta será decidida por
+  consenso.
 
-- Asserts: Não é um algoritmo propriamente dito, mas sim a checagem de algum
-  invariante necessária dentro do código, que caso seja falsa, é tratada como
-  uma falha crítica, espera-se que esse seja um método barato (porém menos
-  robusto) de detectar estados inconsistentes. Serão utilizados asserts para
-  checar invariantes específicas ao algoritmo.
+- Asserts: Serão utilizados asserts para checar invariantes específicas ao
+  algoritmo, especialmente na entrada e na saída das funções.
 
 === Requisitos Funcionais
 
@@ -134,9 +145,7 @@ Para explorar o uso computacional será utilizado uma aplicação exemplo que re
 
 === Requisitos Não-Funcionais
 
-+ Implementação deve ser realizada em uma linguagem que não necessite da
-  presença de uma MMU, alocação dinâmica (sem limite superior), ou suporte à
-  floats em hardware (C, C++, Rust)
++ Implementação deve ser realizada em uma linguagem que possua controle granular suporte à floats em hardware (C, C++, Rust)
 + Deve ser compatível arquitetura ARMv7-M ou ARMv8-M
 
 == Plano de Verificação
@@ -149,12 +158,12 @@ Para explorar o uso computacional será utilizado uma aplicação exemplo que re
 #pad(left: 5%)[
 	NOTE: Isso aqui é regra de negocio?
 
-	O projeto deve ser capaz de executar em um kernel RTOS, se o componente será
-	acoplado diretamente ao kernel ou implementado como uma extensão trata-se de um
-	detalhe de implementação. Além disso, deve ser possível utilizar em um sistema
-	COTS, isto é, não deve estar associado à um hardware particular e deve ser
-	portável na medida em que necessita apenas de uma camada HAL para poder
-	realizar a funcionalidade adequada.
+  O projeto deve ser capaz de executar em um RTOS, se o componente será
+  acoplado diretamente ao kernel ou implementado como uma extensão trata-se de
+  um detalhe de implementação. Além disso, deve ser possível utilizar em um
+  sistema COTS, isto é, não deve estar associado à um hardware particular e
+  deve ser portável na medida em que necessita apenas de uma camada HAL para
+  poder realizar a funcionalidade adequada.
 ]
 
 == Projeto para o TCC2
