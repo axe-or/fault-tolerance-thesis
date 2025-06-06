@@ -14,50 +14,18 @@ falhas.
 // TODO: Citar sobre coisa orientada a mensagem, pode ser ate documetation de outro RTOS
 
 A arquitetura será primariamente orientada à passagem de mensagens, pois
-permite uma generalização para mecanismos de I/O assíncrono e distribuição da
-arquitetura, permite também um desacoplamento  entre a lógica de detecção e
-transporte das mensagens, potencialmente permitindo otimizações na diminuição
-da ociosidade dos núcleos. O estilo de implementação orientado à mensagens
-naturalmente oferece um custo adicional em termos de latência quando comparado
-à alternativas puramente baseadas em compartilhamento de memória, apesar deste
-custo poder ser amortizado com a utilização de filas concorrentes bem
-implementadas e com a criação de um perfil de uso para melhor ajuste do
-sistema.
+permite uma generalização para mecanismos de I/O assíncrono e possível
+distribuição da arquitetura, permite também um desacoplamento  entre a lógica
+de detecção e transporte das mensagens, potencialmente permitindo otimizações
+futuras na diminuição da ociosidade dos núcleos. O estilo de implementação
+orientado à mensagens naturalmente oferece um custo adicional em termos de
+latência quando comparado à alternativas puramente baseadas em compartilhamento
+de memória, apesar deste custo poder ser amortizado com a utilização de filas
+concorrentes bem implementadas e com a criação de um perfil de uso para melhor
+ajuste do sistema.
 
 // TODO: Mencionar que sistemas como o QNX usam isso tbm?
 
-== Interface
-
-Uma tarefa (task) é uma unidade de trabalho com espaço de stack dedicado e uma
-deadline de conclusão.
-
-O "corpo" de um tarefa é simplesmente a função que executa após a task ter sido
-inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
-parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
-da task ou um contexto de execução.
-
-```cpp
-/* Código resumido apenas para mostrar os componentes principais, tratamento de erros e funções adicionais foram omitidos */
-using FT_TaskBody = void (*)(void*);
-
-using FT_Handler = void (*)(FT_Task*);
-
-struct FT_Task {
-	uint32_t    id;
-	FT_TaskBody body;
-	void*       param;
-	uintptr_t   stack_base;
-	usize_t     stack_size;
-	FT_Handler  fault_handler;
-};
-
-struct FT_Message {
-	uint32_t check_value;
-	uint32_t destination;
-	size_t   payload_size;
-	uint8_t* payload_data;
-};
-```
 
 == Visão Geral e Premissas
 
@@ -97,6 +65,7 @@ devido à sua facilidade de realização e poder extrair diversas métricas em
 paralelo, serão priorizados inicialmente neste projeto.
 
 // TODO: Trocar por matriz?
+
 Para explorar o uso computacional será utilizado uma aplicação exemplo que
 recebe uma série de números gerados pseudo-aleatoriamente de forma periódica
 simulando um sensor externo, um núcleo realizará uma transformada de Fourier
@@ -109,7 +78,6 @@ A escolha dos programas de exemplo serve como principal propósito testar uma
 operação que dependa de múltiplos acessos e modificações à memória e que possa
 demonstrar capacidades de processamento assíncronas, que são particularmente
 importantes ao se lidar com múltiplas interrupções causadas por timers ou IO.
-
 
 == Análise de Requisitos
 
@@ -148,6 +116,51 @@ importantes ao se lidar com múltiplas interrupções causadas por timers ou IO.
 + Implementação deve ser realizada em uma linguagem que possua controle granular suporte à floats em hardware (C, C++, Rust)
 + Deve ser compatível arquitetura ARMv7-M ou ARMv8-M
 
+=== Interface
+
+Uma tarefa (task) é uma unidade de trabalho com espaço de stack dedicado e uma
+deadline de conclusão.
+
+O "corpo" de um tarefa é simplesmente a função que executa após a task ter sido
+inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
+parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
+da task ou um contexto de execução.
+
+```cpp
+/* Código C++ resumido apenas para mostrar os componentes principais, tratamento de erros e funções adicionais foram omitidos */
+using FT_TaskBody = void (*)(void*);
+
+using FT_Handler = void (*)(FT_Task*);
+
+using Task_Id = unsigned int;
+
+struct FT_Task {
+  virtual void execute() = 0;
+
+  virtual void handle_fault(void* ctx) = 0;
+  [[noreturn]] virtual void trap() = 0;
+
+  virtual Task_Id id() = 0;
+  virtual int deadline() = 0;
+
+	// Task_Id     id;
+	// FT_TaskBody body;
+	// void*       param;
+	// uintptr_t   stack_base;
+	// usize_t     stack_size;
+	// FT_Handler  fault_handler;
+};
+
+struct FT_Message {
+	uint32_t check_value;
+	Task_Id  destination;
+	size_t   payload_size;
+	uint8_t* payload_data;
+};
+```
+
+=== Análise de riscos
+
 == Plano de Verificação
 
 + Teste inicial virtualizado
@@ -165,6 +178,7 @@ importantes ao se lidar com múltiplas interrupções causadas por timers ou IO.
   deve ser portável na medida em que necessita apenas de uma camada HAL para
   poder realizar a funcionalidade adequada.
 ]
+
 
 == Projeto para o TCC2
 
