@@ -26,7 +26,6 @@ ajuste do sistema.
 
 // TODO: Mencionar que sistemas como o QNX usam isso tbm?
 
-
 == Visão Geral e Premissas
 
 === Premissas
@@ -50,21 +49,12 @@ porém, uma bateria de testes com injeção artificial de falhas pode ser
 utilizada para verificar as tendências e overheads relativos introduzidos,
 mesmo que não necessariamente reflitam as medidas absolutas do produto final.
 
-Uma outra característica sobre falhas, é que tipicamente ocorrem numa fração
-pequena do tempo de operação do sistema, a maioria das operações ocorrem em um
-estado correto. Portanto, pode-se testar um sistema em uma situação de falhas
-elevadas, de tal forma que consiga o grau necessário de confiabilidade mesmo em
-uma situação adversa, no caso de sistemas que possuem um impacto crítico ou
-catastrófico, é melhor optar por ter um excesso de resiliência.
-
 Será assumido que os resultados extraídos de injeção de falhas artificiais, apesar
 de menos condizentes com os valores absolutos de uma aplicação e não sendo
 substitutos adequados na fase de aprovação de um produto real, são ao menos
 capazes para realizar uma análise quanto ao overhead proporcional introduzido,
 devido à sua facilidade de realização e poder extrair diversas métricas em
 paralelo, serão priorizados inicialmente neste projeto.
-
-// TODO: Trocar por matriz?
 
 Para explorar o uso computacional será utilizado uma aplicação exemplo que
 recebe uma série de números gerados pseudo-aleatoriamente de forma periódica
@@ -76,8 +66,9 @@ apenas irá despejar os resultados para debugging.
 
 A escolha dos programas de exemplo serve como principal propósito testar uma
 operação que dependa de múltiplos acessos e modificações à memória e que possa
-demonstrar capacidades de processamento assíncronas, que são particularmente
-importantes ao se lidar com múltiplas interrupções causadas por timers ou IO.
+demonstrar capacidades de processamento assíncronas (padrão
+produtor/consumidor), que são particularmente importantes ao se lidar com
+múltiplas interrupções causadas por timers ou IO.
 
 == Análise de Requisitos
 
@@ -158,13 +149,14 @@ struct FT_Message {
 	uint8_t* payload_data;
 };
 ```
+DESCREVER INTERFACE COMPLETA
 
 === Análise de riscos
 
 == Plano de Verificação
 
-+ Teste inicial virtualizado
 + Provar corretude e projetar overhead dos algoritmos
++ Teste inicial virtualizado
 + Teste final em placa (ESP32?) rodando um RTOS com injeção de falhas e coleta das métricas
 + Análise das métricas e comparação com as projeções dos testes virtuais
 
