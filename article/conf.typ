@@ -74,8 +74,10 @@
 	// Main content
 	doc
 
+	pagebreak()
+
 	// Bibliography
-	heading("BIBLIOGRAFIA")
+	heading("REFERÊNCIAS")
 	bibliography(
     	"bibliografia.bib",
 		title: none,

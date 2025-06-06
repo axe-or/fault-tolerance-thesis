@@ -28,16 +28,17 @@ ajuste do sistema.
 
 === Premissas
 
-Será partido do ponto que ao menos o processador *watchdog* terá registradores
-que sejam capazes de mascarar falhas, apesar de ser possível executar os
-algoritmos reforçados com análise de fluxo do programa e redundância de
+Será partido do ponto que ao menos o processador que executa o scheduler terá
+registradores de controle (Stack Pointer, Program Counter, Return Address) que
+sejam capazes de mascarar falhas, apesar de ser possível executar os algoritmos
+reforçados com análise de fluxo do programa e adicionar redundância aos
 registradores, isso adiciona um grau a mais de complexidade que foge do escopo
 do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
-fora do banco de registradores pode ser 2 ordens de magnitude mais sensível à
-eventos disruptivos, portanto, todos os testes subsequentes assumirão ao menos
-uma quantia mínima de tolerância do núcleo monitor. Pretende-se portanto, focar
-na detecção de falhas de memória, passagem de mensagens e resultados dos
-co-processadores.
+fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
+à eventos disruptivos, portanto, todos os testes subsequentes assumirão ao
+menos uma quantia mínima de tolerância do núcleo monitor. Pretende-se
+portanto, focar na detecção de falhas de memória, passagem de mensagens e
+resultados dos co-processadores dado que são maioria nas falhas.
 
 Necessariamente, é preciso também presumir que testes sintéticos possam ao
 menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso
@@ -94,7 +95,7 @@ projeto.
 + Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS
   preemptivo sem mudanças significativas
 
-+ TODO: V-Tables com redundância?
++ TODO: V-Tables com redundância
 
 === Programa exemplo
 
@@ -123,10 +124,10 @@ múltiplas interrupções causadas por timers ou IO.
   payload com um comando a ser executado e devolvido, para garantir não somente
   a presença da task mas seu funcionamento esperado.
 
-- Replicação espacial: Uma mesma task será disparada diversas vezes, em sua
+- Redundância Modular: Uma mesma task será disparada diversas vezes, em sua
   conclusão, será realizado um consenso dentre as respostas.
 
-- Replicação temporal: Uma mesma task poderá re-executada N-vezes, tendo suas N
+- Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N
   respostas catalogadas e verificadas, a resposta correta será decidida por
   consenso.
 
@@ -141,10 +142,13 @@ deadline de conclusão.
 O "corpo" de um tarefa é simplesmente a função que executa após a task ter sido
 inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
 parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
-da task ou um contexto de execução.
+da task ou um contexto de execução. Tarefas são expressas na forma da interface
+`FT_Task`, que contém métodos que podem ser implementados de acordo com a
+necessidade da tarefa. O fornecimento de uma interface genérica, apesar de
+introduzir um pouco de overhead com a indireção por meio de tabela de despache
+dinâmico permite maior flexibilidade.
 
 ```cpp
-/* Código C++ resumido apenas para mostrar os componentes principais, tratamento de erros e funções adicionais foram omitidos */
 struct Mem_Layout {
 	uint32_t size;
 	uint32_t align;
@@ -185,22 +189,15 @@ DESCREVER INTERFACE COMPLETA COM UML E PA
 
 == Plano de Verificação
 
-+ Provar corretude e projetar overhead dos algoritmos
-+ Teste inicial virtualizado
-+ Teste final em placa (ESP32?) rodando um RTOS com injeção de falhas e coleta das métricas
++ Implementar os algoritmos fora do RTOS para testar sua corretude lógica e
+  executar sanitizadores de memória e condições de corridas
+
++ Realizar teste com debugger em ambiente virtualizado com o RTOS
+
++ Teste final em microcontrolador ARM rodando um RTOS com injeção de falhas e
+  coleta das métricas
+
 + Análise das métricas e comparação com as projeções dos testes virtuais
-
-#pad(left: 5%)[
-	NOTE: Isso aqui é regra de negocio?
-
-  O projeto deve ser capaz de executar em um RTOS, se o componente será
-  acoplado diretamente ao kernel ou implementado como uma extensão trata-se de
-  um detalhe de implementação. Além disso, deve ser possível utilizar em um
-  sistema COTS, isto é, não deve estar associado à um hardware particular e
-  deve ser portável na medida em que necessita apenas de uma camada HAL para
-  poder realizar a funcionalidade adequada.
-]
-
 
 == Projeto para o TCC2
 
