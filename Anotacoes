@@ -1,0 +1,45 @@
+- inlining & loop unrolling para reduzir pulos na memoria
+- proibição do ITAR aumenta demanda por COTS e técnicas de tolerancia
+- faltas causadas por harmonicas (eletricas)
+
+dar um olhada demanda
+
+coisa do COTS eh regra de negocio
+
+Requisitos:
+- functional e nao funcional
+- 
+
+nao funcionais:
+- chip
+- linguagem
+
+delimitacao de escopo:
+- nao tera outros tipo de placa
+
+
+
+Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
+
+stack unwindings e RTTI -> Premissa 
+
+interface resiliencia com uso limjita -> RF
+
+gravar um .wav e enviar e bota https://www.ocenaudio.com/
+
+convolucao 2D -> Blur gaussiano
+
+risco: demanda das técnicas em termos do freertos no permitir
+
+plano de verificação
+
+Unitário:
+	RF
+Integração:
+	Regras de negócio
+Campanha de Injeção:
+	GDB -> 
+	STMCube -> depurador STLink etc.
+
+Consideração Final:
+	Recapitular o panorama do que foi investigado e 
