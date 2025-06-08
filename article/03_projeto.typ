@@ -196,7 +196,11 @@ Para validar a maioria dos requisitos funcionais serão utilizados de testes uni
 
 *Replicação temporal*: Uma tarefa será disparada $R$ vezes de forma sequencial para executar, durante o teste serão deliberadamente incluídos falhas no código fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$ para paridade com o algoritmo de redundância modular, mas é possível que qualquer $R$ positivo seja usado. O número de execuções e probabilidade de falha serão parâmetros do teste.
 
-*Asserts*: Apenas será testado um exemplo trivial para garantir o disparo da rotina de tratamento caso o assert encontre uma condição falsa, como asserts são extremamente simples e dependem do contexto lógico da função em que estão inseridos, não há como realizar um teste "genérico" externo à aplicação geral. Vale ressaltar que asserts podem ser usados em testes juntos de fuzzers ou simulações determinísticas @TigerBeetleSafety @PowerOf10Rules, mas este não é o caso deste trabalho.
+*Asserts*: Apenas será testado um exemplo trivial para garantir o disparo da rotina de tratamento caso o assert encontre uma condição falsa, como asserts são extremamente simples e dependem do contexto lógico da função em que estão inseridos, não há como realizar um teste "genérico" externo à aplicação geral.
+
+*Fila de Mensagens*: Não é uma técnica de tolerância, mas será testada offline com múltiplas threads se comunicando e causando estresse de memória na fila. A fila MPMC escolhida é baseada em uma implementação lockless do algoritmo @BoundedMPMCQueue
+
+Será também realizado uma validação da 
 
 
 === Campanha de Injeção de Falhas
