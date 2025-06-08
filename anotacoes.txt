@@ -17,17 +17,18 @@ nao funcionais:
 delimitacao de escopo:
 - nao tera outros tipo de placa
 
-
-
 Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
 
-stack unwindings e RTTI -> Premissa 
 
-interface resiliencia com uso limjita -> RF
 
-gravar um .wav e enviar e bota https://www.ocenaudio.com/
+
+OK - stack unwindings e RTTI -> Premissa 
+
+OK - interface resiliencia com uso limitado de memoria -> RF
 
 convolucao 2D -> Blur gaussiano
+
+gravar um .wav e enviar e bota https://www.ocenaudio.com/
 
 risco: demanda das técnicas em termos do freertos no permitir
 
@@ -43,3 +44,23 @@ Campanha de Injeção:
 
 Consideração Final:
 	Recapitular o panorama do que foi investigado e 
+
+
+
+
+
+
+
+
+
+plano de trabalho ?
++ Implementar os algoritmos fora do RTOS para testar sua validade lógica e
+  executar sanitizadores de memória e condições de corridas
+
++ Realizar teste com debugger em ambiente virtualizado com o RTOS
+
++ Teste final em microcontrolador ARM rodando um RTOS com injeção de falhas e
+  coleta das métricas
+
++ Análise das métricas e comparação com as projeções dos testes virtuais
+

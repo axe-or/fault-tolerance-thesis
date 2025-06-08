@@ -91,9 +91,10 @@ Explorar o uso de técnicas de escalonamento de tempo real com detecção de err
   - CRCs para mensagens
   - Heartbeat simples (timer)
   - Heartbeat com Proof of Work
-  - Replicação
+  - Redundância Modular (replicar tarefas)
+  - Replicação Temporal (reexecutar tarefas)
   - Asserts
-- Aplicar como prova de conceito em um RTOS a técnica selecionada
+- Aplicar como prova de conceito em um RTOS as técnicas selecionadas
 - Avaliar por meio de métricas a técnica durante a execução em um RTOS
 - Avaliar por meio de métricas a técnica em nível de memória em um RTOS
 

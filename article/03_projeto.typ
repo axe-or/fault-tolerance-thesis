@@ -3,11 +3,7 @@
 A etapa mais fundamental do projeto é a implementação dos algoritmos e da API
 de resiliência, dado o contexto de real time, cuidados devem ser tomados no
 quesito da performance e uso de memória (que pode indiretamente degradar a CPU
-na presença de erros de cachê). Dado estas restrições, o uso de despache
-dinâmico será mantido baixo, e para reduzir o tamanho do executável não será
-utilizado mecanismo de exceção com stack unwinding ou RTTI (Runtime Type
-Information), ao invés, erros de validação devem ser cuidados explicitamente ou
-através de callbacks.
+na presença de erros de cachê). .
 
 // TODO: Citar sobre coisa orientada a mensagem, pode ser ate documetation de outro RTOS
 
@@ -22,23 +18,22 @@ de memória, apesar deste custo poder ser amortizado com a utilização de filas
 concorrentes bem implementadas e com a criação de um perfil de uso para melhor
 ajuste do sistema.
 
-// TODO: Mencionar que sistemas como o QNX usam isso tbm?
-
 == Visão Geral e Premissas
 
 === Premissas
 
 Será partido do ponto que ao menos o processador que executa o scheduler terá
 registradores de controle (Stack Pointer, Program Counter, Return Address) que
-sejam capazes de mascarar falhas, apesar de ser possível executar os algoritmos
+sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos
 reforçados com análise de fluxo do programa e adicionar redundância aos
 registradores, isso adiciona um grau a mais de complexidade que foge do escopo
 do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
 fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
-à eventos disruptivos, portanto, todos os testes subsequentes assumirão ao
-menos uma quantia mínima de tolerância do núcleo monitor. Pretende-se
-portanto, focar na detecção de falhas de memória, passagem de mensagens e
-resultados dos co-processadores dado que são maioria nas falhas.
+à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons. Portanto, todos os testes subsequentes assumirão ao
+menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e
+resultados dos co-processadores.
+
+Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI (Runtime Type Information), ao invés, erros de validação devem ser cuidados explicitamente com valores ou através de callbacks.
 
 Necessariamente, é preciso também presumir que testes sintéticos possam ao
 menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso
@@ -76,26 +71,24 @@ projeto.
   memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas e
   cache hit rate (caso presente).
 
++ Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa.
+
 === Requisitos Não-Funcionais
 
 + Implementação deve ser realizada em uma linguagem que possua controle
-  granular de layout de memória e não necessite de suporte à floats em hardware (C, C++, Rust)
-
-+ Técnicas não devem utilizar RTTI ou exceções com stack-unwinding
+  granular de layout de memória e não necessite de suporte à floats em hardware. Neste trabalho será utilizado C++ (Versão 14 ou acima)
 
 + Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M
 
 + Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware
   abstraction layer), seja do RTOS ou de terceiros.
 
-+ Precisa fazer uso de múltiplos núcleos quando presente
-
-+ Interface de resiliência precisa ter uso de memória com limite superior determinado
++ Precisa fazer uso de múltiplos núcleos quando presentes
 
 + Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS
   preemptivo sem mudanças significativas
 
-+ TODO: V-Tables com redundância
++ V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos
 
 === Programa exemplo
 
@@ -189,15 +182,24 @@ DESCREVER INTERFACE COMPLETA COM UML E PA
 
 == Plano de Verificação
 
-+ Implementar os algoritmos fora do RTOS para testar sua corretude lógica e
-  executar sanitizadores de memória e condições de corridas
+=== Testes Unitários
 
-+ Realizar teste com debugger em ambiente virtualizado com o RTOS
+Para validar a maioria dos requisitos funcionais serão utilizados de testes unitários, os testes são considerados como um artefato do trabalho e serão distribuídos juntamente ao mesmo. A validação, primariamente das técnicas implementadas, serão validadas da seguinte forma:
 
-+ Teste final em microcontrolador ARM rodando um RTOS com injeção de falhas e
-  coleta das métricas
+*CRC*: Será utilizado como referência uma implementação correta do algoritmo, payloads com resultados já conhecidos serão comparados para garantir a implementação correta.
 
-+ Análise das métricas e comparação com as projeções dos testes virtuais
+*Heartbeat Signal (simples)*: Um cenário reduzido de apenas 2 tarefas com um canal de comunicação será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts. $N$ e $F$ serão especificados como parâmetros do teste.
+
+*Heartbeat Signal (com proof of work)*: Um cenário reduzido de apenas 2 tarefas com um canal de comunicação e uma tabela de consulta para a função de prova será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts ou por erro da função de prova. $N$ e $F$ serão especificados como parâmetros do teste.
+
+*Redundância Modular*: Uma tarefa será disparada $R$ vezes de forma concorrente para executar, durante o teste serão deliberadamente incluídos falhas no código fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$, mas é possível que qualquer $R$ ímpar positivo seja usado. O número de execuções e probabilidade de falha serão parâmetros do teste.
+
+*Replicação temporal*: Uma tarefa será disparada $R$ vezes de forma sequencial para executar, durante o teste serão deliberadamente incluídos falhas no código fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$ para paridade com o algoritmo de redundância modular, mas é possível que qualquer $R$ positivo seja usado. O número de execuções e probabilidade de falha serão parâmetros do teste.
+
+*Asserts*: Apenas será testado um exemplo trivial para garantir o disparo da rotina de tratamento caso o assert encontre uma condição falsa, como asserts são extremamente simples e dependem do contexto lógico da função em que estão inseridos, não há como realizar um teste "genérico" externo à aplicação geral. Vale ressaltar que asserts podem ser usados em testes juntos de fuzzers ou simulações determinísticas @TigerBeetleSafety @PowerOf10Rules, mas este não é o caso deste trabalho.
+
+
+=== Campanha de Injeção de Falhas
 
 == Projeto para o TCC2
 

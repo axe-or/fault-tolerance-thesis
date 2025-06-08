@@ -116,13 +116,11 @@ A utilização de asserts é um mecanismo simples que é particularmente útil, 
 assert trata-se de checar se uma condição é verdadeira, caso não seja, o
 programa é interrompido e entra um estado de pânico. Utilizar asserts
 automáticos na entrada e saída de funções é denominado pré/pós-condições.
-Asserts não previnem erros do hardware ou geram reexecuções, mas tratam-se de
-um mecanismo de uso extremamente fácil que pode ser inserido pelos
-desenvolvedores para detectar falhas de design cedo, o uso de asserts podem
-detectar um defeito externo, mas por serem mecanismos exclusivamente de fluxo
-de controle, não são muito robustos em suas garantias, mas ainda assim, seu
-custo baixo e fácil inserção/deleção os fazem um mecanismo que não deve ser
-ignorado @PowerOf10Rules.
+
+Asserts não previnem erros do hardware ou tratam exceções por conta própria, mas tratam-se de um mecanismo de uso extremamente simples que pode ser inserido pelos
+desenvolvedores para detectar falhas cedo, especialmente erros lógicos e violação de contrato de um interface. Quando usados em conjunto com fuzzers ou simulações determinísticas podem alcançar um alto grau de confiabilidade e revelar erros de design durante a fase de desenvolvimento. @TigerBeetleSafety @PowerOf10Rules
+
+Já na execução de um sistema tolerante, asserts servem como uma forma de rapidamente e imediatamente saber que algo errado aconteceu, dado que sua invariante não é mais mantida. Porém não são robustos o suficiente para detectar corrupção silenciosa de dados ou pulos inesperados de maneira consistente.
 
 == Mecanismos de Tratamento
 
@@ -157,8 +155,8 @@ telecomunicação em larga escala e computação em nuvem.
 
 // TODO: Citar isosimov ou outro
 Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha,
-a probabilidade de *k* falhas intermitentes ocorrem em sequência é menor do que
-a probabilidade de apenas ocorrer *k - 1* vezes no intervalo de execução. Ao
+a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que
+a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao
 re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa.
 
 Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em
