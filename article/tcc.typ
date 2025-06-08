@@ -1,7 +1,7 @@
 #import "conf.typ": conf
 
 #show: conf.with(
-	title: "Exploração de detecção de falhas em tempo real com técnicas de escalonador",
+	title: "Exploração de detecção de falhas em tempo real com técnicas no escalonador",
 	local: "Itajaí (SC)",
 	data: "25 de Março",
 	author: "Marcos Augusto Fehlauer Pereira",

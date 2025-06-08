@@ -46,7 +46,7 @@ aplicações críticas. @DependabilityInEmbeddedSystems.
 Ademais, ocorreu nos últimos anos uma maior adoção de sistemas COTS (Commercial
 off the shelf), dado que estes sistemas podem ser mais baratos e fornecem uma
 solução "genérica" para problemas que anteriormente necessitariam de hardware
-com um design mais especializado. Mesmo no caso em que se deseja utilizar um
+com um design mais especializado @CyberSecSpaceCOTS. Mesmo no caso em que se deseja utilizar um
 design especializado para o produto final, estes sistemas são excelentes para a
 fase de prototipação e validação do projeto, dado sua facilidade de acesso e
 flexibilidade.

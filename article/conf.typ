@@ -103,7 +103,6 @@
 
 	// Main content
 	doc
-
 	pagebreak()
 
 	// Bibliography

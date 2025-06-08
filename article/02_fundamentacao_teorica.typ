@@ -151,6 +151,14 @@ suplantar a execução de suas tarefas mantendo a qualidade média de serviço, 
 uso de sistemas capazes de auto reparo é vital para a existência de
 telecomunicação em larga escala e computação em nuvem.
 
+=== Loop Unrolling & Function Inlining
+
+Uma otimização comum que compiladores realizam é "desenrolar" laços de repetição (Loop Unrolling) com a finalidade de reduzir erros de cachê no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no loop, o que comum em aplicações em que utiliza-se se de um analisador estático para provar propriedades sobre a conclusão adequada do programa @LoopUnrollingARM.
+
+Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada, a razão pela qual é realizado é similar à de unrolling de loops, ao reduzir a quantidade de pulos (e neste caso, manipulação do stack) é possível melhorar a coerência do cachê de instruções, causando uma melhora na performance. Pela mesma razão, ao introduzir redundância o inlining de funções pode também reduzir a chance de um jump inadequado.
+
+Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço desnecessário no executável, o que requer que o frontend da CPU perca mais tempo aguardando IO e decodificando instruções. Portanto, é extremamente importante que estas técnicas não sejam aplicadas de forma arbitrária.
+
 === Re-execução
 
 // TODO: Citar isosimov ou outro
