@@ -45,7 +45,7 @@
 		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
 		
-		box(width: 90%, stroke: luma(0), {
+		box(width: 90%, stroke: (paint: luma(0), thickness: 1.5pt), {
 			set align(left)
 				grid(
 					rows: (auto, auto),
