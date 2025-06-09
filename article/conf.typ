@@ -41,7 +41,7 @@
 
 	// Code listings
 	show figure.where(kind: raw): (fig) => {
-		set text(top-edge: 0.66em)
+		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
 		
 		box(width: 90%, stroke: luma(0), {
@@ -51,7 +51,7 @@
 					box(
 						fill: luma(85%),
 						width: 100%,
-						inset: 8pt,
+						inset: 5pt,
 						stroke: (bottom: luma(0)),
 					)[
 						#text(font: "monospace", weight: "bold", fig.caption)

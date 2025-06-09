@@ -181,6 +181,7 @@ struct FT_Task {
 
 ```]
 
+// TODO: Explicar a tarefa, interface feita pra ser bem felixivel!
 Será utilizado uma interface para a implementação de uma tarefa, 
 
 === Análise de riscos
@@ -205,7 +206,7 @@ Para validar a maioria dos requisitos funcionais serão utilizados de testes uni
 
 *Fila de Mensagens*: Não é uma técnica de tolerância, mas será testada offline com múltiplas threads se comunicando e causando estresse de memória na fila. A fila MPMC escolhida é baseada em uma implementação lockless do algoritmo @BoundedMPMCQueue
 
-Será também realizado uma validação da 
+// TODO COMPLETAR COM VALIDACAO do resto
 
 === Campanha de Injeção de Falhas
 
