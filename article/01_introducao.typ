@@ -56,9 +56,9 @@ Um outro fator que influencia na adoção do uso de COTS para certas aplicaçõe
 que necessitam de tolerância à falhas são as regulações ITAR (International
 Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a
 exportação de diversos tipos de tecnologia de cunho potencialmente militar.
-Neste caso, o impedimento da exportação certos tipos tecnologias de PCBs
+Neste caso, o impedimento da exportação certos tipos  tecnologias de PCBs e firmware
 aumenta mais ainda a necessidade de compradores de outros países adquirirem
-alternativas comerciais mais comuns.
+alternativas comerciais mais comuns que já são complacentes com a regulação @ITARPCBCompliance.
 
 // TODO: Citar 1 coisa aqui
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação

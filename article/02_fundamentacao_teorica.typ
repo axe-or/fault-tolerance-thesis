@@ -90,12 +90,9 @@ transientes que alteram uma região de bits próximos.
 
 === Heartbeat signals
 
-// TODO: Citar livro e talvez aquele artigo de survey
 É possível determinar se uma falha ocorreu com um nó de execução através de um
 critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais
-periódicos para garantir se um nó computacional está ativo. Basta enviar um
-sinal simples e verificar se uma resposta correta chega em um tempo pré
-determinado. Sinais heartbeat são baratos porém não garantem uma
+periódicos para garantir se um nó computacional está ativo @DependabilityInEmbeddedSystems. Basta enviar um sinal simples e verificar se uma resposta correta chega em um tempo pré determinado. Sinais heartbeat são baratos porém não garantem uma
 detecção ou correção de erro mais granular, portanto são usados como um
 complemento para detectar falhas de forma concorrente a outros métodos mais
 robustos.

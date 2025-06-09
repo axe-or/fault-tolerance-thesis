@@ -28,6 +28,7 @@
 	set text(
 		font: ("Times New Roman", "Nimbus Roman"),	
 		lang: "pt",
+		size: 12pt,
 	)
 
 	// Headings
@@ -40,28 +41,33 @@
 
 	// Code listings
 	show figure.where(kind: raw): (fig) => {
-	box(width: 80%, stroke: luma(0),
-		grid(
-		rows: (auto, auto),
-		box(
-			fill: luma(85%),
-			width: 100%,
-			inset: 8pt,
-			stroke: (bottom: luma(0)),
-		)[
-			#set par(first-line-indent: 0pt)
-			#set align(horizon)
-			#set align(left)
-			#text(font: "monospace", weight: "bold", fig.caption)
-		],
-		box(
-			fill: luma(94%),
-			width: 100%,
-			inset: (left: 16pt, right: 8pt, bottom: 8pt, top: 8pt),
-			align(left, fig.body),
+		set text(top-edge: 0.66em)
+		set par(first-line-indent: 0pt)
+		
+		box(width: 90%, stroke: luma(0), {
+			set align(left)
+				grid(
+					rows: (auto, auto),
+					box(
+						fill: luma(85%),
+						width: 100%,
+						inset: 8pt,
+						stroke: (bottom: luma(0)),
+					)[
+						#text(font: "monospace", weight: "bold", fig.caption)
+					],
+					box(
+						fill: luma(94%),
+						width: 100%,
+						inset: (left: 16pt, right: 8pt, bottom: 8pt, top: 8pt),
+						align(left, [
+							#set par(first-line-indent: 0pt, leading: 0.5em)
+							#fig.body
+						]),
+					)
+				)
+			}
 		)
-		)
-	)
 	}
 
 

@@ -1,26 +1,8 @@
-- inlining & loop unrolling para reduzir pulos na memoria
 - proibição do ITAR aumenta demanda por COTS e técnicas de tolerancia
-- faltas causadas por harmonicas (eletricas)
-
-dar um olhada demanda
-
-coisa do COTS eh regra de negocio
-
-nao funcionais:
-- chip
-- linguagem
-
-delimitacao de escopo:
-- nao tera outros tipo de placa
-
-Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
 
 
 
 
-OK - stack unwindings e RTTI -> Premissa 
-
-OK - interface resiliencia com uso limitado de memoria -> RF
 
 convolucao 2D -> Blur gaussiano
 
@@ -46,9 +28,6 @@ Consideração Final:
 
 
 
-
-
-
 plano de trabalho ?
 + Implementar os algoritmos fora do RTOS para testar sua validade lógica e
   executar sanitizadores de memória e condições de corridas
@@ -60,3 +39,7 @@ plano de trabalho ?
 
 + Análise das métricas e comparação com as projeções dos testes virtuais
 
+
+
+
+Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br

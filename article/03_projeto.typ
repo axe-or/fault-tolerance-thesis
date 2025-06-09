@@ -141,22 +141,31 @@ necessidade da tarefa. O fornecimento de uma interface genérica, apesar de
 introduzir um pouco de overhead com a indireção por meio de tabela de despache
 dinâmico permite maior flexibilidade.
 
+#figure(caption: "Mensagens e IDs", [
 ```cpp
-struct Mem_Layout {
-	uint32_t size;
-	uint32_t align;
-};
-
-template<typename T>
-constexpr Mem_Layout memory_layout = { sizeof(T), alignof(T) };
-
-using FT_Handler = void (*)(FT_Task*);
-
 using Time_Point = size_t; // Deve ser suficiente para conter o valor de um timer monotônico
 
 using Task_Id = unsigned int;
 
-constexpr Task_Id BROADCAST = ~ Task_Id(0);
+template<typename Payload>
+struct FT_Message {
+    uint32_t   check_value;
+    Task_Id    sender;
+    Task_Id    receiver;
+    Time_Point sent_at;
+    Time_Point deadline; // 0 - Sem deadline de entrega
+    Payload    payload;
+};
+
+```
+])
+
+Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos aqui é importante, o payload _precisa_ ser o último membro para serialização de estruturas de tamanho arbitrário. O valor `check_value` é o CRC que será utilizado na verificação, o CRC é computado com base em todos os outros campos. Os campos `sender` e `receiver` naturalmente servem a função de remetente e destinatário, mesmo nos casos em que há apenas um destinatário ou remetente, a informação adicional serve como uma camada extra que pode ser assegurada com asserts (e também é representada no valor de checagem)
+
+
+
+```
+using FT_Handler = void (*)(FT_Task*);
 
 struct FT_Task {
   virtual void execute(void* param) = 0;
@@ -167,13 +176,7 @@ struct FT_Task {
   virtual Time_Point deadline() = 0;
 };
 
-template<typename T>
-struct FT_Message {
-	uint32_t check_value;
-	Task_Id  sender;
-	Task_Id  receiver;
-	T        payload;
-};
+
 ```
 
 DESCREVER INTERFACE COMPLETA COM UML E PA
@@ -201,7 +204,6 @@ Para validar a maioria dos requisitos funcionais serão utilizados de testes uni
 *Fila de Mensagens*: Não é uma técnica de tolerância, mas será testada offline com múltiplas threads se comunicando e causando estresse de memória na fila. A fila MPMC escolhida é baseada em uma implementação lockless do algoritmo @BoundedMPMCQueue
 
 Será também realizado uma validação da 
-
 
 === Campanha de Injeção de Falhas
 
