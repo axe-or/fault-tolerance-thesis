@@ -33,7 +33,10 @@ fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
 menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e
 resultados dos co-processadores.
 
-Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI (Runtime Type Information), ao invés, erros de validação devem ser cuidados explicitamente com valores ou através de callbacks.
+Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais
+previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI
+(Runtime Type Information), ao invés, erros de validação devem ser cuidados
+explicitamente com valores ou através de callbacks.
 
 Necessariamente, é preciso também presumir que testes sintéticos possam ao
 menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso
@@ -165,7 +168,7 @@ Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos
 
 #figure(caption: "Interface básica de uma tarefa")[
 ```cpp
-using FT_Handler = void (*)(FT_Task*);
+using FT_Handler = bool (*)(FT_Task*);
 
 struct FT_Task_Info {
     Task_Id    id;
@@ -178,11 +181,24 @@ struct FT_Task {
   virtual Task_Id execute(void* param) = 0;
   virtual FT_Task_Info info() = 0;
 };
-
 ```]
 
-// TODO: Explicar a tarefa, interface feita pra ser bem felixivel!
-Será utilizado uma interface para a implementação de uma tarefa, 
+Uma tarefa é uma unidade de execução com um espaço de pilha dededicado, mas que
+não necessariamente está em um espaço de memória diferente, um tipo tarefa pode
+ser implementado de qualquer forma contanto que conforme com a interface
+`FT_Task` que define um método para inicialização da task e outro para ler seu
+status. A interface impõe pouca restrição sobre seu modelo exato de execução, o
+objetivo desta escolha é primariamente facilitar a implementação das técnicas
+de maneira independente, ao manter uma abstração pequena, se sacrifica um grau
+de garantias em troca de uma implementação simples. Dado que tasks não serão
+criadas e destruídas numa frequência alta, entende-se que o overhead de uma
+indireção de chamada virtual não será significativo. Manter a interface simples
+também facilita sua transformação em uma V-Table com redundância.
+
+A função de tipo `FT_Handler` é invocada imediatamente após a detecção de uma
+falha na tarefa, ela não é parte da interface diretamente pois tarefas podem
+compartilhar um mesmo handler, e para facilitar compor múltiplos handlers,
+estes são mantidos desacoplados da interface.
 
 === Análise de riscos
 
@@ -190,21 +206,47 @@ Será utilizado uma interface para a implementação de uma tarefa,
 
 === Testes Unitários
 
-Para validar a maioria dos requisitos funcionais serão utilizados de testes unitários, os testes são considerados como um artefato do trabalho e serão distribuídos juntamente ao mesmo. A validação, primariamente das técnicas implementadas, serão validadas da seguinte forma:
+Para validar a maioria dos requisitos funcionais serão utilizados de testes
+unitários, os testes são considerados como um artefato do trabalho e serão
+distribuídos juntamente ao mesmo. A validação, primariamente das técnicas
+implementadas, serão feitas da seguinte forma:
 
-*CRC*: Será utilizado como referência uma implementação correta do algoritmo, payloads com resultados já conhecidos serão comparados para garantir a implementação correta.
+*CRC*: Será utilizado como referência uma implementação correta do algoritmo,
+payloads com resultados já conhecidos serão comparados para garantir a
+implementação correta.
 
-*Heartbeat Signal (simples)*: Um cenário reduzido de apenas 2 tarefas com um canal de comunicação será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts. $N$ e $F$ serão especificados como parâmetros do teste.
+*Heartbeat Signal (simples)*: Um cenário reduzido de apenas 2 tarefas com um
+canal de comunicação será utilizado para testar essa técnica, o algoritmo deve
+ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts. $N$ e $F$
+serão especificados como parâmetros do teste.
 
-*Heartbeat Signal (com proof of work)*: Um cenário reduzido de apenas 2 tarefas com um canal de comunicação e uma tabela de consulta para a função de prova será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts ou por erro da função de prova. $N$ e $F$ serão especificados como parâmetros do teste.
+*Heartbeat Signal (com proof of work)*: Um cenário reduzido de apenas 2 tarefas
+com um canal de comunicação e uma tabela de consulta para a função de prova
+será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar
+por $N$ vezes e capturar $F$ falhas por timeouts ou por erro da função de
+prova. $N$ e $F$ serão especificados como parâmetros do teste.
 
-*Redundância Modular*: Uma tarefa será disparada $R$ vezes de forma concorrente para executar, durante o teste serão deliberadamente incluídos falhas no código fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$, mas é possível que qualquer $R$ ímpar positivo seja usado. O número de execuções e probabilidade de falha serão parâmetros do teste.
+*Redundância Modular*: Uma tarefa será disparada $R$ vezes de forma concorrente
+para executar, durante o teste serão deliberadamente incluídos falhas no código
+fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$,
+mas é possível que qualquer $R$ ímpar positivo seja usado. O número de
+execuções e probabilidade de falha serão parâmetros do teste.
 
-*Replicação temporal*: Uma tarefa será disparada $R$ vezes de forma sequencial para executar, durante o teste serão deliberadamente incluídos falhas no código fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$ para paridade com o algoritmo de redundância modular, mas é possível que qualquer $R$ positivo seja usado. O número de execuções e probabilidade de falha serão parâmetros do teste.
+*Replicação temporal*: Uma tarefa será disparada $R$ vezes de forma sequencial
+para executar, durante o teste serão deliberadamente incluídos falhas no código
+fonte para validar o algoritmo de consenso no final. Será utilizado $R = 3$
+para paridade com o algoritmo de redundância modular, mas é possível que
+qualquer $R$ positivo seja usado. O número de execuções e probabilidade de
+falha serão parâmetros do teste.
 
-*Asserts*: Apenas será testado um exemplo trivial para garantir o disparo da rotina de tratamento caso o assert encontre uma condição falsa, como asserts são extremamente simples e dependem do contexto lógico da função em que estão inseridos, não há como realizar um teste "genérico" externo à aplicação geral.
+*Asserts*: Apenas será testado um exemplo trivial para garantir o disparo da
+rotina de tratamento caso o assert encontre uma condição falsa, como asserts
+são extremamente simples e dependem do contexto lógico da função em que estão
+inseridos, não há como realizar um teste "genérico" externo à aplicação geral.
 
-*Fila de Mensagens*: Não é uma técnica de tolerância, mas será testada offline com múltiplas threads se comunicando e causando estresse de memória na fila. A fila MPMC escolhida é baseada em uma implementação lockless do algoritmo @BoundedMPMCQueue
+*Fila de Mensagens*: Não é uma técnica de tolerância, mas será testada offline
+com múltiplas threads se comunicando e causando estresse de memória na fila. A
+fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @BoundedMPMCQueue
 
 // TODO COMPLETAR COM VALIDACAO do resto
 
