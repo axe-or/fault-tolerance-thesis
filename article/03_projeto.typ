@@ -160,26 +160,28 @@ struct FT_Message {
 ```
 ])
 
-Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos aqui é importante, o payload _precisa_ ser o último membro para serialização de estruturas de tamanho arbitrário. O valor `check_value` é o CRC que será utilizado na verificação, o CRC é computado com base em todos os outros campos. Os campos `sender` e `receiver` naturalmente servem a função de remetente e destinatário, mesmo nos casos em que há apenas um destinatário ou remetente, a informação adicional serve como uma camada extra que pode ser assegurada com asserts (e também é representada no valor de checagem)
+Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos aqui é importante, o payload _precisa_ ser o último membro para serialização de estruturas de tamanho arbitrário. O valor `check_value` é o valor de checagem do CRC que será utilizado para detectar corrupções e é computado com base em todos os outros campos. Os campos `sender` e `receiver` servem a função de remetente e destinatário, mesmo nos casos em que há apenas um destinatário ou remetente, a informação adicional serve como uma camada extra que pode ser assegurada com asserts (e também é representada no valor de checagem). Já os pontos de tempo servem para definir uma deadline de entrega, caso exista.
 
 
-
-```
+#figure(caption: "Interface básica de uma tarefa")[
+```cpp
 using FT_Handler = void (*)(FT_Task*);
 
-struct FT_Task {
-  virtual void execute(void* param) = 0;
-  virtual FT_Handler handler() = 0;
-
-  virtual Task_Id id() = 0;
-  virtual Time_Point start_time() = 0;
-  virtual Time_Point deadline() = 0;
+struct FT_Task_Info {
+    Task_Id    id;
+    FT_Handler handler;
+    Time_Point started_at;
+    Time_Point deadline; // 0 - Sem deadline
 };
 
+struct FT_Task {
+  virtual Task_Id execute(void* param) = 0;
+  virtual FT_Task_Info info() = 0;
+};
 
-```
+```]
 
-DESCREVER INTERFACE COMPLETA COM UML E PA
+Será utilizado uma interface para a implementação de uma tarefa, 
 
 === Análise de riscos
 
