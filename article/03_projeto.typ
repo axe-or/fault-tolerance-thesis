@@ -93,21 +93,28 @@ projeto.
 
 + V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos
 
-=== Programa exemplo
+=== Programas exemplos
 
-Para explorar o uso computacional será utilizado uma aplicação exemplo que
-recebe uma série de números gerados pseudo-aleatoriamente de forma periódica
-simulando um sensor externo, um núcleo realizará uma transformada de Fourier
-rápida (FFT) e enviará uma mensagem indicando a conclusão de um lote de
-processamento, o segundo núcleo realizará uma filtragem passa-banda e realiza a
-transformada inversa de Fourier e notifica o primeiro núcleo, que neste caso,
-apenas irá despejar os resultados para debugging.
+Serão utilizados 2 programas de teste durante a execução das falhas, um realizará um filtro passa-banda com no domínio da frequência (transformada de Fourier) e outro aplicará uma convolução bidimensional.
 
-A escolha dos programas de exemplo serve como principal propósito testar uma
+A escolha da primeira aplicação serve primariamente testar uma
 operação que dependa de múltiplos acessos e modificações à memória e que possa
 demonstrar capacidades de processamento assíncronas (padrão
 produtor/consumidor), que são particularmente importantes ao se lidar com
 múltiplas interrupções causadas por timers ou IO.
+
+Já o segundo programa, de natureza mais simples, visa causar alto estresse em termos de loads,juntamente com muitas operações aritméticas, mas com menos ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas em um caso mais extremo que requer muito processamento.
+
+==== Processador de Sinal digital
+A aplicação recebe um vetor de valores de forma periódica
+simulando um sensor externo, uma tarefa receberá o lote e realizará uma transformada rápida de Fourier, após concluir, enviará o payload para outra tarefa que aplica um filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que realiza a FFT inversa e despeja os resultados para depuração.
+
+#figure(caption: "Resumo do fluxo do programa exemplo com FFT",
+  image("assets/diagrama_sequencia_fft.png", height: 33%))
+
+==== Convolução bidimensional
+
+// TODO: EXPLICAR ISSO NE BOY
 
 === Algoritmos e Técnicas
 
@@ -183,7 +190,7 @@ struct FT_Task {
 };
 ```]
 
-Uma tarefa é uma unidade de execução com um espaço de pilha dededicado, mas que
+Uma tarefa é uma unidade de execução com um espaço de pilha dedicado, mas que
 não necessariamente está em um espaço de memória diferente, um tipo tarefa pode
 ser implementado de qualquer forma contanto que conforme com a interface
 `FT_Task` que define um método para inicialização da task e outro para ler seu

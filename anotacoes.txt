@@ -8,6 +8,7 @@ convolucao 2D -> Blur gaussiano
 
 gravar um .wav e enviar e bota https://www.ocenaudio.com/
 
+analise de risco
 risco: demanda das técnicas em termos do freertos no permitir
 
 plano de verificação
