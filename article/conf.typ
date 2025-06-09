@@ -40,6 +40,7 @@
 	show heading: set block(below: 18pt, above: 18pt)
 
 	// Code listings
+  set raw(theme: "assets/light.tmTheme")
 	show figure.where(kind: raw): (fig) => {
 		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
@@ -54,7 +55,7 @@
 						inset: 5pt,
 						stroke: (bottom: luma(0)),
 					)[
-						#text(font: "monospace", weight: "bold", fig.caption)
+						#text(weight: "bold", fig.caption)
 					],
 					box(
 						fill: luma(94%),
