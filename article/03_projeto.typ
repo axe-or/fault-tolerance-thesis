@@ -112,7 +112,7 @@ simulando um sensor externo, uma tarefa receberá o lote e realizará uma transf
 #figure(caption: "Resumo do fluxo do programa exemplo com FFT",
   image("assets/diagrama_sequencia_fft.png", height: 33%))
 
-==== Convolução bidimensional
+==== Convolução Bidimensional
 
 // TODO: EXPLICAR ISSO NE BOY
 

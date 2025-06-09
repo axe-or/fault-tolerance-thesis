@@ -1,12 +1,9 @@
-- proibição do ITAR aumenta demanda por COTS e técnicas de tolerancia
-
-
-
-
+fundamentacao: mencionar importancia de tarefas
+- computadores multicleos
+- mesmo quando so tem 1 ou 2 nucleos, IO assincrono ainda eh bao
 
 convolucao 2D -> Blur gaussiano
 
-gravar um .wav e enviar e bota https://www.ocenaudio.com/
 
 analise de risco
 risco: demanda das técnicas em termos do freertos no permitir
@@ -41,6 +38,7 @@ plano de trabalho ?
 + Análise das métricas e comparação com as projeções dos testes virtuais
 
 
+gravar um .wav e enviar e bota https://www.ocenaudio.com/
 
 
 Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
