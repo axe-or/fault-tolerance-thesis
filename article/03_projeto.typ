@@ -114,7 +114,7 @@ simulando um sensor externo, uma tarefa receberá o lote e realizará uma transf
 
 ==== Convolução Bidimensional
 
-// TODO: EXPLICAR ISSO NE BOY
+O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma imagem providenciada como input, será aplicado um kernel de blur gaussiano de ordem $N$, onde $N$ será testado com os valores: ${3, 5, 7}$ em uma imagem de dimensões arbitrárias (mas com limite superior de tamanho). O objetivo deste programa é testar situações com alto estresse de memória e processamento, o processo de convolução envolve operações de janelamento com multiplicações e adições, devido à quantidade maior de dados, espera-se que esse algoritmo represente algo mais próximo de um pior-caso em termos de acessos à memória.
 
 === Algoritmos e Técnicas
 
