@@ -372,18 +372,23 @@ tarefas indicados com um símbolo circular representam pontos ordinários no
 grafo, já pontos com símbolos quadrados indicam as condições de transparência.
 @SchedAndOptOfDistributedFT
 
-Dado um grafo não ponderado direcionado acíclico com seus nós representando tarefas, arestas representando o fluxo de execução e arestas nomeadas representando fluxo dependente da entrega de mensagens, será utilizado a notação $T_X [N]$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo $T_2 [1]$ indica a primeira execução da tarefa $T_2$, enquanto $T_1 [3]$ indica a terceira reexecução da tarefa $T_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X [N]$, mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas. @SchedFTWithSoftAndHardConstraints
+Dado um grafo não ponderado direcionado acíclico com seus nós representando tarefas/processos, arestas representando o fluxo de execução e arestas nomeadas representando fluxo dependente da entrega de mensagens, será utilizado a notação $P_X (N)$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo $P_2 (1)$ indica a primeira execução da tarefa $P_2$, enquanto $P_1 (3)$ indica a terceira reexecução da tarefa $P_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X (N)$, mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas. @SchedFTWithSoftAndHardConstraints
 
-- *TODO*: >> Grafo simples aqui <<
+Para melhor exemplificar a importância da detecção das falhas, será tomado como exemplo um grafo simples, com apenas 3 tarefas e uma mensagem. O grafo precisará tolerar uma falha transiente. O fluxo "ideal" (sem falhas) seria este:
 
-- *TODO*:>> Grafo com múltiplas mensagens aqui <<
+#figure(caption: "Grafo com 3 processos e uma mensagem", image(height: 180pt, "assets/ftg_simples.png"))
 
-O escalonamento tolerante à falhas é a combinação de métodos que permitem que o
-escalonador reaja à ocorrência de falhas e agende as tarefas de forma a
-minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de
-escalonamento pode ser executada online, onde existe a possibilidade de criar e
-suspender tarefas dinamicamente ou offline, onde o número e prazos das tarefas
-são determinados previamente. Este trabalho utilizará de um plano de execução offline, isto é, o número de tarefas para um dado programa será definido em tempo de desenvolvimento.
+Ao incluir os diferentes desvios possíveis na presença de apenas _uma_ falha, temos o seguinte grafo, importante notar que falhas botem ocorrer tanto na tarefa quanto na transição de estado dependente de mensagem.
+
+#figure(caption: "Mesmo grafo, mas tolerante à uma falha transiente", image(height: 240pt, "assets/ftg_expandido.png"))
+
+Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha não tivesse acontecido.
+
+#figure(caption: [Introdução de transparência (freezing) em $P_2$], image(height: 240pt, "assets/ftg_transparencia.png"))
+
+Ao introduzir apenas um ponto de transparência é possível reduzir significativamente as possibilidades de execução do sistema, isso não é benéfico do ponto de vista especial para um escalonador baseado em tabelas, mas também do ponto de vista de confiabilidade o sistema torna-se mais previsível. Este exemplo é simples e tolera apenas uma falha transiente, porém processos complexos com múltiplas mensagens entre si causam um aumento exponencial de complexidade, especialmente caso seja necessário tolerar até $k$ falhas transientes.
+
+Ao aplicar juntamente técnicas de escalonamento como a reexecução ou redundância modular é possível introduzir estes pontos de transparência estrategicamente, com o objetivo de melhorar a confiabilidade do sistema e torná-lo mais previsível. A introdução de transparência naturalmente não é gratuita, é feito um tradeoff entre garantias mais fortes no escalonador e menos imprevisibilidade na execução com o custo de maior uso da CPU e memória, todos os pontos de transparência necessitam ser checados o que pode gerar um tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para garantir a possibilidade de reexecuções suficientes.
 
 == Trabalhos Relacionados
 
@@ -409,13 +414,13 @@ detectar e mitigar erros de memória mais rapidamente
 
 === Application-Level Fault Tolerance in Real-Time Embedded System
 
-// TODO: citar o arigo, acho que nao precisa botar o nome dos sujeitos
-No artigo de Afonso, Silva, Tavares e Montenegro um framework de execução na
-para o sistema operacional BOSS é criado, o trabalho apresenta técnicas de
-escalonamento mas não entra em detalhamento profundo na parte de detecção, mas
+Neste trabalho são apresentadas técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface.
+O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas
 sim de prover uma biblioteca na forma de classes representando threads
-resilientes. O trabalho possui um caso de estudo com sistema de filtragem de
-radar, o trabalho demonstra resultados favoráveis para uma forma híbrida de
+resilientes @ApplicationLevelFT. Um caso de estudo de sistema de filtragem de
+radar é utilizado como projeto.
+
+Os pesquisadores demonstraram resultados favoráveis para uma forma híbrida de
 tolerância com menor uso de CPU em relação à redundância tripla utilizando de
 técnicas em software combinado com um par de processadores com auto checagem
 (PSP).
@@ -436,10 +441,7 @@ Haskell e Rust) que podem ser também emuladas em C++ com o sistema de
 
 === A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems
 
-// TODO: citar o arigo, acho que nao precisa botar o nome dos sujeitos, botar imagem?
-
-No trabalho realizado pelos pesquisadores Asghari, Marvasti e Daneshtalab
-propõem um método de detecção e reação à erros de controle fluxo juntamente com
+Neste trabalho é proposto um método de detecção e reação à erros de controle fluxo juntamente com
 correção de payloads de dados, o trabalho demonstra resultados positivos e
 conclui que a aplicação de técnicas de software podem aprimorar drasticamente a
 tolerância de um sistema. O trabalho possui um foco na análise do grafo de
@@ -451,6 +453,6 @@ em relação à resiliência com o que será proposto neste artigo, com a princi
 diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O
 trabalho de Asghari et. al serve como um exemplo de uma possível extensão
 futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de
-diversas técnicas de análise e detecção de fluxo defeituoso.
+diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
 
 

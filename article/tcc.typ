@@ -9,28 +9,28 @@
 )
 
 // Abstract (Native language)
-align(center, heading(numbering: none, "RESUMO"))
-pagebreak()
+#align(center, heading(numbering: none, "RESUMO"))
+#pagebreak()
 
 // Abstract (English)
-align(center, heading(numbering: none, "ABSTRACT"))
-pagebreak()
+#align(center, heading(numbering: none, "ABSTRACT"))
+#pagebreak()
 
 // Code listings & figures
-outline(
+#outline(
 	title: "LISTA DE FIGURAS",
 	target: figure,
 	depth: 1,
 )
-pagebreak()
+#pagebreak()
 
 // Table of Contents
-outline(
+#outline(
 	title: "SUMÁRIO",
 	target: heading,
 	depth: 2,
 )
-pagebreak()
+#pagebreak()
 
 #include "01_introducao.typ"
 
