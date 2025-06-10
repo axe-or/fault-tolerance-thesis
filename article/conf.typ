@@ -52,7 +52,7 @@
 				grid(
 					rows: (auto, auto),
 					box(
-						fill: luma(85%),
+						fill: luma(90%),
 						width: 100%,
 						inset: 5pt,
 						stroke: (bottom: luma(0)),
@@ -60,7 +60,7 @@
 						#text(weight: "bold", fig.caption)
 					],
 					box(
-						fill: luma(94%),
+						fill: luma(98%),
 						width: 100%,
 						inset: (left: 16pt, right: 8pt, bottom: 8pt, top: 8pt),
 						align(left, [
@@ -141,6 +141,7 @@
 
 	// Main content
 	doc
+	pagebreak()
 
 	// References
 	heading("REFERÊNCIAS")

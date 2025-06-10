@@ -111,7 +111,13 @@ realizar uma pré análise e validar se a implementação está correta.
 
 === Métodos
 
+Serão utilizados testes unitários e testes ponta a ponta para a validação dos algoritmos de detecção e técnicas de execução das tarefas, o trabalho será testado inicialmente em um ambiente virtualizado para ser posteriormente executado em um microcontrolador com FreeRTOS.
+
+Para a realização da análise será utilizado ferramentas de profiling nativas ao sistema operacional e de depurador externo. As principais métricas de interesse são relacionadas ao número de falhas detectadas e o impacto das técnicas em relação à versão sem tolerância.
+
 === Materiais
+
+Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou Clang), o alvo principal do trabalho será um microcontrolador 32-bits da arquitetura ARMv7-M executando FreeRTOS. Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta de depuração do hardware (STPLink) para também auxiliar na coleta das métricas. Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU juntamente com as ferramentas anteriormente citadas, assim como AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo durante o desenvolvimento.
 
 == Estrutura do Trabalho
 
