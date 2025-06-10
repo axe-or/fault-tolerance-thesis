@@ -3,16 +3,15 @@ Campanha de Injeção:
 	STMCube -> depurador STLink etc.
 
 Consideração Final:
-	Recapitular o panorama do que foi investigado e 
+	Recapitular o panorama do que foi investigado
 
 Plano de trabalho (checar template da márcia)
 
 Cronograma do TCC 2
 Requisitos do TCC 2?
 
-fundamentacao: mencionar importancia de tarefas
-- computadores multicleos
-- mesmo quando so tem 1 ou 2 nucleos, IO assincrono ainda eh bao
+fundamentação:
+elaborar um pocuo mais sobre técnicas que usam o compilador para detectar jumps inválidos, não serão abordadas mas é bom mencionar
 
 
 
