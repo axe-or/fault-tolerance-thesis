@@ -300,6 +300,15 @@ mas é importante que seja tomado o cuidado adequado para que nenhum prazo de
 execução hard real time seja violado por uma tarefa inadvertidamente utilizando
 a CPU por uma quantidade longa de tempo.
 
+=== Concorrência e Assincronia
+
+// TODO: Citar palestra do Rob Pike e alguma coisa do Joe Armstrong
+
+Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência.
+
+// TODO
+Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressivada do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e cachês da CPU. O processo de acessar um recurso é deve lidar com o fato de ser _assíncrono_. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocisioso, esperar 20 milissegundos para um pacote de rede chegar é aceitável para um humano, mas é uma eternidade para um processador. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+
 == Escalonamento tolerante à falhas
 
 // TODO: Isosimov e mais algunm survey
