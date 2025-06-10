@@ -373,6 +373,7 @@ grafo, já pontos com símbolos quadrados indicam as condições de transparênc
 @SchedAndOptOfDistributedFT
 
 Dado um grafo não ponderado direcionado acíclico com seus nós representando tarefas, arestas representando o fluxo de execução e arestas nomeadas representando fluxo dependente da entrega de mensagens, será utilizado a notação $T_X [N]$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo $T_2 [1]$ indica a primeira execução da tarefa $T_2$, enquanto $T_1 [3]$ indica a terceira reexecução da tarefa $T_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X [N]$, mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas. @SchedFTWithSoftAndHardConstraints
+
 - *TODO*: >> Grafo simples aqui <<
 
 - *TODO*:>> Grafo com múltiplas mensagens aqui <<

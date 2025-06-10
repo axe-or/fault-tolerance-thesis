@@ -5,6 +5,7 @@
 	local: "Itajaí (SC)",
 	data: "25 de Março",
 	author: "Marcos Augusto Fehlauer Pereira",
+	supervisor: "Felipe Viel",
 )
 
 #include "01_introducao.typ"

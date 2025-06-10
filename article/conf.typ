@@ -1,8 +1,10 @@
 #let conf(doc,
-	title: "SEM TÍTULO",
-	local: "SEM LOCAL",
-	data: "SEM DATA",
-	author: "SEM AUTOR",
+	title: "<SEM TÍTULO>",
+	local: "<SEM LOCAL>",
+	data: "<SEM DATA>",
+	author: "<SEM AUTOR>",
+	research_area: "<SEM ÁREA>",
+	supervisor: "<SEM ORIENTADOR>",
 ) = {
 	// Page
 	set page(
@@ -84,16 +86,55 @@
 
 		#v(0.8fr)
 
-		#text(weight: "bold", upper(title))
-		#v(28pt)
+		por #linebreak()
+		#text(weight: "bold", author)
 
 		#set align(left)
 
-		#h(50%) por #linebreak()
-		#h(50%) #text(weight: "bold", author) 
+		por #linebreak()
+		#align(center, text(weight: "bold", author))
 
 		#v(1fr)
 
+		#set align(center)
+		#text(local + ", " + data)
+	]
+	pagebreak()
+
+	// 2nd Front page
+
+	[
+		#set align(center)
+		#set text(size: 14pt)
+		#set par(justify: false, first-line-indent: 0pt)
+
+		*UNIVERSIDADE DO VALE DO ITAJAÍ* #linebreak()
+		*ESCOLA POLITÉCNICA* #linebreak()
+		*CURSO DE CIÊNCIA DA COMPUTAÇÃO*
+
+		#v(0.8fr)
+
+		#text(weight: "bold", upper(title))
+		#v(28pt)
+
+		Área de #research_area
+
+		por #linebreak()
+		#text(weight: "bold", author)
+
+		#v(0.40fr)
+
+		#h(50%) #box(width: 50%)[
+			#set text(size: 12pt)
+			#set align(left)
+			#set par(justify: true)
+			Relatório apresentado à Banca Examinadora do Trabalho de Conclusão de Curso de Ciências da Computação, para análise e aprovação. #linebreak()
+			Orientador: #supervisor
+		]
+
+		#v(1fr)
+
+		#set text(size: 14pt)
 		#set align(center)
 		#text(local + ", " + data)
 	]
