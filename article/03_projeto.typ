@@ -253,6 +253,12 @@ inseridos, não há como realizar um teste "genérico" externo à aplicação ge
 com múltiplas threads se comunicando e causando estresse de memória na fila. A
 fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @BoundedMPMCQueue
 
+*Programa exemplo*: Será testado em um ambiente hosted primeiro a implementação dos componentes complexos (FFT, convolução, passa-banda), sendo comparados com resultados implementações já bem estabelecidas.
+
+=== Outros testes
+
+Serão realizados testes ponta a ponta com os dois programas de exemplo para garantir sua validade lógica antes de ser realizada sua execução definitiva. As técnicas de detecção também passarão por teste de integração juntamente ao teste dos programas com injeção de falhas baseadas em callbacks. O objetivo é produzir uma exemplo prova de conceito que já contém grande parte da implementação, para que erros inesperados e mudanças de design sejam feitas anteriormente dos testes com o microcontrolador para diminuir a quantidade de fricção na análise final (mas mantendo ainda um limite superior de uso de recursos). 
+
 // TODO COMPLETAR COM VALIDACAO do resto
 
 === Campanha de Injeção de Falhas
@@ -275,7 +281,6 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 - Probabilidade e Impacto: Baixa | Médio
 - Gatilho: Teste em microcontrolador ou ambiente virtualizado
 - Mitigação: Utilizar outro profiler, inserir pontos de medição manualmente
-
 
 == Projeto para o TCC2
 
