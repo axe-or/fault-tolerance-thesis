@@ -42,7 +42,7 @@
 	show heading: set block(below: 18pt, above: 18pt)
 
 	// Code listings
-  set raw(theme: "assets/light.tmTheme")
+  	set raw(theme: "assets/light.tmTheme")
 	show figure.where(kind: raw): (fig) => {
 		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
@@ -86,13 +86,11 @@
 
 		#v(0.8fr)
 
+		#text(weight: "bold", upper(title))
+		#v(28pt)
+
 		por #linebreak()
 		#text(weight: "bold", author)
-
-		#set align(left)
-
-		por #linebreak()
-		#align(center, text(weight: "bold", author))
 
 		#v(1fr)
 
@@ -140,6 +138,22 @@
 	]
 	pagebreak()
 
+	// Abstract (Native language)
+	align(center, heading(numbering: none, "RESUMO"))
+	pagebreak()
+
+	// Abstract (English)
+	align(center, heading(numbering: none, "ABSTRACT"))
+	pagebreak()
+
+	// Code listings & figures
+	outline(
+		title: "LISTA DE FIGURAS",
+		target: figure,
+		depth: 1,
+	)
+	pagebreak()
+
 	// Table of Contents
 	outline(
 		title: "SUMÁRIO",
@@ -163,11 +177,6 @@
 	)
 
 	pagebreak()
-	// Code listings
-	outline(
-		title: "ÍNDICE DE FIGURAS",
-		target: figure,
-		depth: 1,
-	)
+
 }
 
