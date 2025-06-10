@@ -1,16 +1,3 @@
-fundamentacao: mencionar importancia de tarefas
-- computadores multicleos
-- mesmo quando so tem 1 ou 2 nucleos, IO assincrono ainda eh bao
-
-analise de risco
-risco: demanda das técnicas em termos do freertos no permitir
-
-plano de verificação
-
-OK Unitário: RF
-
-Integração:
-	Regras de negócio
 Campanha de Injeção:
 	GDB -> 
 	STMCube -> depurador STLink etc.
@@ -18,6 +5,14 @@ Campanha de Injeção:
 Consideração Final:
 	Recapitular o panorama do que foi investigado e 
 
+Plano de trabalho (checar template da márcia)
+
+Cronograma do TCC 2
+Requisitos do TCC 2?
+
+fundamentacao: mencionar importancia de tarefas
+- computadores multicleos
+- mesmo quando so tem 1 ou 2 nucleos, IO assincrono ainda eh bao
 
 
 
