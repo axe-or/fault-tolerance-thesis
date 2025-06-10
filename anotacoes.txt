@@ -42,3 +42,23 @@ gravar um .wav e enviar e bota https://www.ocenaudio.com/
 
 
 Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
+
+
+O trabalho como um todo é de risco baixo, porém é importante ressaltar os seguin-
+tes obstáculos:
+Risco I: Inadequação das interfaces do sistema operacional para mecanismos de de-
+tecção
+• Probabilidade: Baixa
+• Gatilho: Adaptar algoritmos da prova de conceito para o sistema operacional.
+• Mitigação: Utilizar outro sistema operacional (FreeRTOS, Zephyr, Linux+RT_PATCH,
+etc.) ou modificar o sistema alvo diretamente em último caso.
+Risco II: Dificuldade de coletar métricas de performance
+• Probabilidade: Baixa
+• Gatilho: Medição após algoritmo implementado
+• Mitigação: Utilizar depurador de kernel e métricas externas de VMs como QEMU
+Risco III: Dificuldade de teste com barramento físico (problema de integração com
+driver)
+• Probabilidade: Baixa / Média
+• Gatilho: Teste com hardware
+• Mitigação: Procurar driver ou barramento alternativo(melhor) ou simular barra-
+mento com software (menos ideal).

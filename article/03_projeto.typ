@@ -207,8 +207,6 @@ falha na tarefa, ela não é parte da interface diretamente pois tarefas podem
 compartilhar um mesmo handler, e para facilitar compor múltiplos handlers,
 estes são mantidos desacoplados da interface.
 
-=== Análise de riscos
-
 == Plano de Verificação
 
 === Testes Unitários
@@ -258,6 +256,26 @@ fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @Bo
 // TODO COMPLETAR COM VALIDACAO do resto
 
 === Campanha de Injeção de Falhas
+
+== Análise de riscos
+
+O trabalho é de risco baixo, dado que constrói em cima de fundações técnicas previamente exploradas, porém dentro dos principais riscos que possam alterar ou causar problemas durante a realização encontram-se:
+
+*Risco I*: Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.
+- Probabilidade e Impacto: Baixa | Médio
+- Gatilho: Implementar interface no RTOS
+- Mitigação: Utilizar outro RTOS, modificar o RTOS escolhido, adaptar a interface
+
+*Risco II*: Problemas para injetar falhas com depurador.
+- Probabilidade e Impacto: Baixa | Alto
+- Gatilho: Teste em microcontrolador
+- Mitigação: Utilizar de outro depurador, manualmente injetar pontos de falhas no código
+
+*Risco III*: Dificuldade de coletar métricas de performance com profiler
+- Probabilidade e Impacto: Baixa | Médio
+- Gatilho: Teste em microcontrolador ou ambiente virtualizado
+- Mitigação: Utilizar outro profiler, inserir pontos de medição manualmente
+
 
 == Projeto para o TCC2
 

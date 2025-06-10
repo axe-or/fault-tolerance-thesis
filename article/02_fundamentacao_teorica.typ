@@ -325,7 +325,7 @@ extra, similar à de uma mudança de contexto, para restaurar o estado anterior
 da tarefa.
 
 Uma consequência natural de possuir diversos processos se comunicando com até
-*k* falhas, é uma explosão combinatória de possíveis caminhos de execução e
+$k$ falhas, é uma explosão combinatória de possíveis caminhos de execução e
 reexecução, além de drasticamente aumentar o tempo de execução de algoritmos de
 escalonamento (seja online ou offline), o sistema se torna excessivamente
 complicado, afetando negativamente duas das características desejáveis de
@@ -360,16 +360,7 @@ tarefas indicados com um símbolo circular representam pontos ordinários no
 grafo, já pontos com símbolos quadrados indicam as condições de transparência.
 @SchedAndOptOfDistributedFT
 
-Dado um grafo direcionado não ponderado acíclico, será utilizado a notação $T_X
-[N]$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua
-$N$-ésima re-execução, por exemplo $T_2 [1]$ indica a primeira execução da
-tarefa $T_2$, enquanto $T_1 [3]$ indica a terceira reexecução da tarefa $T_1$.
-Uma notação similar será utilizada para mensagens entre tarefas, $m_X [N]$,
-mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção,
-mas ao invés de re-execução, mensagens são re-enviadas ou restauradas no caso
-algoritmos de recuperação de erro estejam disponíveis.
-@SchedFTWithSoftAndHardConstraints
-
+Dado um grafo não ponderado direcionado acíclico com seus nós representando tarefas, arestas representando o fluxo de execução e arestas nomeadas representando fluxo dependente da entrega de mensagens, será utilizado a notação $T_X [N]$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo $T_2 [1]$ indica a primeira execução da tarefa $T_2$, enquanto $T_1 [3]$ indica a terceira reexecução da tarefa $T_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X [N]$, mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas. @SchedFTWithSoftAndHardConstraints
 - *TODO*: >> Grafo simples aqui <<
 
 - *TODO*:>> Grafo com múltiplas mensagens aqui <<
@@ -379,10 +370,7 @@ escalonador reaja à ocorrência de falhas e agende as tarefas de forma a
 minimizar tempo ocioso e overhead de recuperação e detecção. A rotina de
 escalonamento pode ser executada online, onde existe a possibilidade de criar e
 suspender tarefas dinamicamente ou offline, onde o número e prazos das tarefas
-são determinados previamente. Este trabalho será focado na execução offline,
-pois fornece garantias mais fortes de transparência e previsibilidade, é
-importante mencionar que um método offline de boa qualidade também pode ser
-adaptado para um contexto online.
+são determinados previamente. Este trabalho utilizará de um plano de execução offline, isto é, o número de tarefas para um dado programa será definido em tempo de desenvolvimento.
 
 == Trabalhos Relacionados
 
