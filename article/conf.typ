@@ -138,36 +138,11 @@
 	]
 	pagebreak()
 
-	// Abstract (Native language)
-	align(center, heading(numbering: none, "RESUMO"))
-	pagebreak()
-
-	// Abstract (English)
-	align(center, heading(numbering: none, "ABSTRACT"))
-	pagebreak()
-
-	// Code listings & figures
-	outline(
-		title: "LISTA DE FIGURAS",
-		target: figure,
-		depth: 1,
-	)
-	pagebreak()
-
-	// Table of Contents
-	outline(
-		title: "SUMÁRIO",
-		target: heading,
-		depth: 2,
-	)
-	pagebreak()
-
 
 	// Main content
 	doc
-	pagebreak()
 
-	// Bibliography
+	// References
 	heading("REFERÊNCIAS")
 	bibliography(
     	"bibliografia.bib",
