@@ -1,11 +1,13 @@
+Fazer resumo
 Campanha de Injeção:
-	GDB -> 
+	Software -> task de injeção em range de memória protegido e callbacks de injeção
 	STMCube -> depurador STLink etc.
 
 Consideração Final:
 	Recapitular o panorama do que foi investigado
 
-Plano de trabalho (checar template da márcia)
+fundamentação:
+	falar sobre técnicas de injeção, resumidamente: Física, software lógica, hardware e simulador
 
 Cronograma do TCC 2
 Requisitos do TCC 2?
