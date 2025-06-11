@@ -121,5 +121,5 @@ Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou C
 
 == Estrutura do Trabalho
 
-
+Na seção de fundamentação teórica serão explorados os tópicos centrais que constituem a premissa do trabalho, primariamente conceitos de detecção de falhas e escalonamento nos sistemas operacionais. Sistemas operacionais são um tópico particularmente vasto, portanto sua abordagem será mais focada apenas nos aspectos mais essenciais do trabalho. Após a fundamentação será discutido o projeto de como será realizado a pesquisa de tolerância à falhas, especialmente o plano de verificação da validade da pesquisa para a escrita final da monografia.
 

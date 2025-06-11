@@ -170,7 +170,7 @@ Em contraste com a técnica de redundância tripla, é possível entender que a
 redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É
 improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a
 re-execução depende de uma resiliência "temporal" (É improvável que múltiplas
-falhas ocorram repetidamente em *N* execuções)
+falhas ocorram repetidamente em $N$ execuções)
 
 === Correção de Erro
 
@@ -304,13 +304,12 @@ a CPU por uma quantidade longa de tempo.
 
 // TODO: Citar palestra do Rob Pike e alguma coisa do Joe Armstrong
 
-Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência.
+Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência @MakingReliableDistSystems.
 
 // TODO
-Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressivada do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e cachês da CPU. O processo de acessar um recurso é deve lidar com o fato de ser _assíncrono_. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocisioso, esperar 20 milissegundos para um pacote de rede chegar é aceitável para um humano, mas é uma eternidade para um processador. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressividade do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e cachês da CPU. O processo de acessar um recurso é deve lidar com o fato de ser _assíncrono_. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocioso, esperar 20 milissegundos para um pacote de rede chegar é aceitável para um humano, mas é uma eternidade para um processador @ComputerOrganizationAndDesign. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
 
-// MAIS! mais joe armstrong (make america great again!)
-É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de clock speed das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem no mínimo 2 núcleos. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se benefeciar tremendamente das possibilidades de concorrêcia providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplas threads de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks.
+É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de clock speed das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais @ComputerOrganizationAndDesign. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplas threads de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks @OperatingSystemConcepts.
 
 == Escalonamento tolerante à falhas
 
