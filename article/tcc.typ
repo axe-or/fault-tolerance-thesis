@@ -10,10 +10,12 @@
 
 // Abstract (Native language)
 #align(center, heading(numbering: none, "RESUMO"))
+Sistemas de computador são presentes em múliplas áreas da vida humana, alguns destes sistemas, possuidores de um próposito específico no contexto de um dispositivo maior (sistemas embarcados), necessitam em alguns casos operar sobre condições com falhas enquanto oferecem sua funcionalidade esperada. Um tipo de programa que permite a execução de diferentes tarefas concorrente é um sistema operacional em tempo real (RTOS), que são frequentemente utilizados em dispositivos embarcados. Neste trabalho, uma variadade de técnicas de tolerância à falhas que operam perto de um sistema operacional de tempo real são exploradas e comaparadas para melhor entender os tradeoffs feitos entre performance e tolerância à falhas.
 #pagebreak()
 
 // Abstract (English)
 #align(center, heading(numbering: none, "ABSTRACT"))
+Computer systems are present in many facets of human life, some computer systems, which have a particular purpose within a wider device (embedded systems) may have to operate under faulty conditions while still providing their expected functionality. One type of program which allows for the concurrent execution of different tasks is a real time operating system (RTOS), which are frequently used in embedded devices. In this work, a variety of fault tolerance techniques that operate closely with a real time operating system scheduler are explored and compared to better understand the tradeoffs between performance and tolerance against faults.
 #pagebreak()
 
 // Code listings & figures
