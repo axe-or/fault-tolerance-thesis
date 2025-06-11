@@ -97,6 +97,8 @@ detecção ou correção de erro mais granular, portanto são usados como um
 complemento para detectar falhas de forma concorrente a outros métodos mais
 robustos.
 
+#figure(caption: "Exemplo de um sinal heartbeat simples", image("assets/heartbeat_signal.png"))
+
 O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o
 custo temporal de tolerância limite no pior caso e o custo da viagem ida e
 volta no melhor caso. Este método é aplicado em datacenters, também chamado de
@@ -119,6 +121,19 @@ desenvolvedores para detectar falhas cedo, especialmente erros lógicos e viola�
 
 Já na execução de um sistema tolerante, asserts servem como uma forma de rapidamente e imediatamente saber que algo errado aconteceu, dado que sua invariante não é mais mantida. Porém não são robustos o suficiente para detectar corrupção silenciosa de dados ou pulos inesperados de maneira consistente.
 
+#figure(caption: "Exemplo da implementação de um Assert", [
+```cpp
+void assert(bool predicate, string message){
+    [[unlikely]]
+    if(!predicate){
+        // Opcional: imprimir uma mensagem de erro
+        log_error(message);
+        trap(); // Emitir exceção
+    }
+}
+```
+])
+
 == Mecanismos de Tratamento
 
 Uma vez que uma falha tenha sido detectada o sistema precisa *tratar* a falha o
@@ -136,10 +151,12 @@ transientes ocorrendo simultaneamente em um sistema é mais baixa do que a
 probabilidade de apenas 1 falha.
 
 Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy)
-onde essencialmente a tarefa é executada 3 vezes em paralelo, e uma porta de
+onde uma a tarefa é executada 3 vezes em paralelo, e uma porta de
 consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR
 é elegante em sua simplicidade e consegue atingir um bom grau de resiliência,
-porém com o custo adicional de triplicar a superfície.
+porém com o custo adicional de triplicar o custo.
+
+#figure(caption: "Exemplo de redundância modular na execução de tarefas", image("assets/redundancia_tmr.png"))
 
 Sistemas distribuídos também podem aproveitar de sua redundância natural por
 serem sistemas com múltiplos nós computacionais, falhas transientes em um nó
@@ -156,6 +173,43 @@ Outra transformação comum é o inlining de funções, onde o corpo de uma fun�
 
 Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço desnecessário no executável, o que requer que o frontend da CPU perca mais tempo aguardando IO e decodificando instruções. Portanto, é extremamente importante que estas técnicas não sejam aplicadas de forma arbitrária.
 
+
+#figure(caption: "Exemplo de função sem unrolling ou inlining", [
+```c
+#define COUNT 5
+
+int square(int n){
+    return n * n;
+}
+
+int sum_squares(int values[COUNT]){
+    int acc = 0;
+    for(int i = 0; i < COUNT; i++){
+        acc += values[i];
+    }
+    return acc;
+}
+```
+])
+
+#figure(caption: "Função equivalente, após unrolling e inlining", [
+```c
+#define COUNT 5
+
+int sum_squares(int values[COUNT]){
+    int acc = 0;
+    acc += (values[0] * values[0]);
+    acc += (values[1] * values[1]);
+    acc += (values[2] * values[2]);
+    acc += (values[3] * values[3]);
+    acc += (values[4] * values[4]);
+    return acc;
+}
+```
+])
+
+
+
 === Re-execução
 
 // TODO: Citar isosimov ou outro
@@ -171,6 +225,10 @@ redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É
 improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a
 re-execução depende de uma resiliência "temporal" (É improvável que múltiplas
 falhas ocorram repetidamente em $N$ execuções)
+
+É também possível utilizar reexecuções sucessivas como um mecanismo de detecção e prevenção, a tarefa é reexecutada $N$ vezes, seus $N$ resultados são temporariamente guardados e passam então por um consenso. Similar à técnica de redundância modular, mas sacrificando tempo ao invés de múltiplas instâncias concorrentes.
+
+#figure(caption: "Exemplo de reexecução com consenso", image("assets/redundancia_reexec.png"))
 
 === Correção de Erro
 
