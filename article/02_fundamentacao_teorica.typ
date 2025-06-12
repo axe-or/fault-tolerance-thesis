@@ -628,7 +628,7 @@ Injeção *Lógica por Hardware*: Utiliza-se de um dispositivo adicional para in
 
 Injeção *Lógica por Software*: Funções são executadas em software para injetar falhas em outras partes do programa, o método é pouco invasivo, de baixo custo, alta portabilidade e permite um controle muito elevado sobre os pontos de injeção e estilo de falha @FaultInjectionTechniques. Possui a desvantagem de aumentar o tempo médio de execução ao introduzir um overhead e espaço extra de memória para armazenar o código de injeção, também não reflete tão precisamente os fenômenos físicos.
 
-Injeção *Simulada*: O dispositivo é executado em um ambiente totalmente simulado, tem como vantagem não ser invasivo, altamente flexível e nem sequer necessitar de uma versão física do dispositivo, porém tipicamente requer software de simulação potencialmente caro assim como uma descrição do chip na forma de alguma linguagem de descrição de hardware, que raramente é disponibilizada.
+Injeção *Simulada*: O dispositivo é executado em um ambiente totalmente simulado, tem como vantagem não ser invasivo, altamente flexível e nem sequer necessitar de uma versão física do dispositivo, porém tipicamente requer software de simulação potencialmente caro assim como uma descrição do chip na forma de alguma linguagem de descrição de hardware, que raramente é disponibilizada @FaultInjectionTechniques.
 
 == Trabalhos Relacionados
 

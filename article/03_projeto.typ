@@ -120,12 +120,8 @@ O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma im
 
 - CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
 
-- Heartbeat Signal (simples): Um sinal periódico será enviado para a tarefa em
-  paralelo, apenas uma resposta sequencial será necessária.
-
-- Heartbeat Signal (com proof of work): Um sinal periódico juntamente com um
-  payload com um comando a ser executado e devolvido, para garantir não somente
-  a presença da task mas seu funcionamento esperado.
+- Heartbeat Signal: Um sinal periódico será enviado para a tarefa em
+  paralelo, a tarefa necessita responder ao sinal dentro de uma deadline pré determinada com o contador do sinal incrementado.
 
 - Redundância Modular: Uma mesma task será disparada diversas vezes, em sua
   conclusão, será realizado um consenso dentre as respostas.
@@ -220,16 +216,10 @@ implementadas, serão feitas da seguinte forma:
 payloads com resultados já conhecidos serão comparados para garantir a
 implementação correta.
 
-*Heartbeat Signal (simples)*: Um cenário reduzido de apenas 2 tarefas com um
+*Heartbeat Signal*: Um cenário reduzido de apenas 2 tarefas com um
 canal de comunicação será utilizado para testar essa técnica, o algoritmo deve
 ser capaz de rodar por $N$ vezes e capturar $F$ falhas por timeouts. $N$ e $F$
 serão especificados como parâmetros do teste.
-
-*Heartbeat Signal (com proof of work)*: Um cenário reduzido de apenas 2 tarefas
-com um canal de comunicação e uma tabela de consulta para a função de prova
-será utilizado para testar essa técnica, o algoritmo deve ser capaz de rodar
-por $N$ vezes e capturar $F$ falhas por timeouts ou por erro da função de
-prova. $N$ e $F$ serão especificados como parâmetros do teste.
 
 *Redundância Modular*: Uma tarefa será disparada $R$ vezes de forma concorrente
 para executar, durante o teste serão deliberadamente incluídos falhas no código
@@ -261,22 +251,41 @@ Serão realizados testes ponta a ponta com os dois programas de exemplo para gar
 
 === Campanha de Injeção de Falhas
 
-Para testar a injeção de falhas será utilizado primariamente mecanismos lógicos
-em software com o auxílio do depurador STLink. As falhas serão de natureza
+Para testar a injeção de falhas serão utilizados mecanismos lógicos
+em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza
 transiente e focarão no segmento de memória com leitura e escrita.
 
-A injeção será feita de maneira automática com o depurador e também com o uso
-de uma task injetora que periodicamente corromperá $N$ bytes de memória
-controlada ou compartilhada por outras tasks. Será utilizado um contador
-global, acessado com instruções atômicas para registrar quantas falhas foram
-detectadas, naturalmente, o contador e a task de injeção estarão isentos da
-campanha. Durante a execução dos programas, espera-se que sejam detectados os
-resultados inconsistentes como dimensões de matriz incorretas, resultados de
-operações aritméticas distintas e reenvio de mensagens.
+As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a partir de um endereço base são escolhidos e escritos com dados pseudo aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático com escrita, o stack das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rounds (e.x: 1000) e terão suas métricas coletadas até o final dos rounds ou caso os erros cumulativos causem um reset total do sistema.
 
-A injeção de falhas lógicas via software também será realizada durante a fase
-de desenvolvimento para validar as técnicas antes de seu deploy no
-microcontrolador.
+As combinações de técnicas escolhidas serão:
+
+#figure(caption: [Combinações de técnicas utilizadas], table(
+  columns: (auto, auto, auto, auto, auto),
+  // column-gutter: (auto, 4pt, auto),
+  table.header([*Redundância modular*], [*Reexecução*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
+  "-","-","-","-","-",
+  "-","-","-","-","✓",
+
+  "✓","-","-","-","✓",
+  "✓","-","-","✓","✓",
+  "✓","-","✓","-","✓",
+  "✓","-","✓","✓","✓",
+  
+  "-","✓","-","-","✓",
+  "-","✓","-","✓","✓",
+  "-","✓","✓","-","✓",
+  "-","✓","✓","✓","✓",
+))
+
+==== Injeção Lógica com Software
+
+Será criado uma task com um "micro heap" associado à mesma, a task executará de forma paralela à todas as outras, a cada ciclo de preempção, a task injetora acessa sua fila de candidatos e invoca um callback associado para causar N bytes de corrupção de memória. É importante notar que por consistência, será necessário "fixar" esta tarefa monitora em um grupo. Como complemento, será introduzido uma lista de injetores de falhas que as tasks podem invocar, primariamente para testes.
+
+A escolha da injeção lógica com software permite que já sejam feitos testes preliminares das técnicas durante o desenvolvimento, possivelmente certos tipos de erros de design.
+
+==== Injeção Lógica com Hardware
+
+Utilizando do depurador
 
 == Análise de riscos
 
@@ -302,6 +311,24 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 === Metodologia
 
 === Cronograma
+
+#set par(justify: false, leading: 0.5em)
+#figure(caption: "Cronograma para o TCC3", table(
+  columns: (1fr,) + (auto,) * 6,
+  table.header([*Atividade*], [*07/2025*], [*08/2025*], [*09/2025*], [*10/2025*], [*11/2025*], [*12/2025*]),
+  [Escrita da Monografia],               [`___X`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XX__`],
+  [Implementação dos Algoritmos],        [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Testes dos Algoritmos],               [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Implementação dos Programas Exemplo], [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  [Teste dos Programas Exemplo],         [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  
+  [Implementação da Injeção em Software], [`____`], [`____`], [`__XX`], [`XX__`],  [`____`], [`____`],
+  [Teste dos Programas Exemplo],          [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+
+  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
+  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
+  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
+))
 
 === Análise De Requisitos
 

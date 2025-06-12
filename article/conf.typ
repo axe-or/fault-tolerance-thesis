@@ -15,6 +15,13 @@
 			right: 2cm,
 			bottom: 2cm,
 		),
+		header: context {
+			let skip = 6
+			if here().page() > skip {
+				set align(right)
+				counter(page).display("1")
+			}
+		},
 	)
 
 	// Paragraph
@@ -155,8 +162,5 @@
 		style: "assets/ufrj-abnt.csl",
 		full: true,
 	)
-
-	pagebreak()
-
 }
 
