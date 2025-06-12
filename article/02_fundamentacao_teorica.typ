@@ -2,36 +2,6 @@
 
 == Definições Principais
 
-=== Qualidade de Serviço
-
-A qualidade de serviço de um sistema é o quão capaz ele é de prover sua
-funcionalidade desejada. Como é uma noção geral, que depende muito das
-interdependências particulares do sistema, será utilizada uma definição
-simples. A qualidade do serviço $Q$ do sistema é a média ponderada de seus serviços
-$S_0 ... S_n$ com os pesos de seus fatores de contribuição para a qualidade $q_0 ... q_n$.
-
-#figure(caption: [Medida da qualidade de serviço], kind: "formula", $
-  Q = (sum_(i = 0)^n S_i q_i) / (sum_(i = 0)^n q_i)
-$)
-
-É importante mencionar que existem outras formas de modelagem da função
-qualidade que levam em consideração o fluxo total de execução e a cadeia de
-interdependência entre tarefas e mensagens, porém, para os propósitos deste
-trabalho, a definição simples será uma aproximação suficiente.
-
-=== Disponibilidade
-
-A disponibilidade $D$ é a razão entre o tempo em que o sistema não consegue
-prover (ou tempo "indisponível") e o e seu tempo total de operação.
-
-#figure(caption: [Disponibilidade], kind: "formula", $
-  D = (t_d - t_i) / (t_d + t_i)
-$)
-
-Onde $t_i$ é o tempo indisponível e $t_d$ o tempo disponível do sistema.
-
-=== Confiabilidade
-
 === Falhas e Erros
 
 Um _defeito_ é uma alteração não esperada causada por um fenômeno externo ou
@@ -45,7 +15,79 @@ leva a degradação eventual, dado que a distinção particular entre falha e
 defeito não é de grande importância para a comparação das técnicas
 apresentadas.
 
-== Falhas e Tolerância
+=== Qualidade de Serviço
+
+A qualidade de serviço de um sistema é o quão capaz ele é de prover sua
+funcionalidade desejada. Como é uma noção geral, que depende muito das
+interdependências particulares do sistema, será utilizada uma definição
+simples. A qualidade do serviço $Q$ do sistema pode ser aproximada pela média
+ponderada de seus serviços $S_0 ... S_n$ com os pesos de seus fatores de
+contribuição para a qualidade total $q_0 ... q_n$ @SchedAndOptOfDistributedFT.
+
+#figure(caption: [Aproximação da Qualidade de Serviço], kind: "formula", $
+  Q = (sum_(i = 0)^n S_i q_i) / (sum_(i = 0)^n q_i)
+$)
+
+É importante mencionar que existem outras formas de modelagem da função
+qualidade que levam em consideração o fluxo total de execução e a cadeia de
+interdependência entre tarefas e mensagens, porém, para os propósitos deste
+trabalho, a definição simples será uma aproximação suficiente.
+
+=== Confiabilidade
+
+Confiabilidade (usado aqui no mesmo sentido da palavra inglesa Reliability), é
+a probabilidade de um sistema executar corretamente no período $[t_0, t]$. Para
+modelar essa métrica é necessário um modelo estatístico que é particular da
+aplicação, independente do modelo escolhido, a confiabilidade é dita como uma
+função do tempo, da taxa de falhas $lambda$ e das probabilidades de falha externas. @FaultInjectionTechniques
+
+#figure(caption: [Confiabilidade], kind: "formula", $
+  R(t) = f(t, lambda, ...)
+$)
+
+=== Disponibilidade
+
+A disponibilidade (do inglês Availability) $A$ é a razão entre o tempo em que o sistema não consegue
+prover seu serviço (downtime) e o e seu tempo total de operação @FaultInjectionTechniques.
+
+#figure(caption: [Disponibilidade], kind: "formula", $
+  A = t_u / (t_u + t_d)
+$)
+
+Onde $t_d$ é o downtime e $t_u$ é o uptime do sistema.
+
+=== Capacidade de manutenção
+
+É a probabilidade de que um sistema em um estado quebrado consiga ser reparado
+com sucesso, antes de um tempo $t$ @FaultInjectionTechniques, a modelagem
+precisa deste atributo necessita de conhecimento particular sobre a aplicação e
+sobre a disponibilidade de equipamentos (ou especialistas humanos) para a
+realização do reparo. Asssim como a confiabilidade, é descrita por uma
+distribuição de probabilidade particular da aplicação.
+
+#figure(caption: [Capacidade de manuntenção], kind: "formula", $
+  M(t) = f(t, lambda, ...)
+$)
+
+=== Segurança
+
+Segurança é a probabilidade do sistema funcione ou não sem causar danos à
+integridade humana ou à outros patrimônios, por ser um fator muito particular
+da aplicação e seu contexto, uma estimativa analítica geral é extremamente
+difícil.
+
+=== Dependabilidade
+
+Será utilizado o termo dependabilidade como uma propriedade que sumariza os
+atributos (conhecidos em inglês como critério RAMS): confiabilidade,
+disponibilidade, capacidade de manuntenção e segurança.
+
+A tolerância à falhas impacta os atributos confiabilidade e disponibilidade
+positivamente, e pode em alguns casos melhorar a capacidade de manuntenção,
+sendo assim, a Tolerância à falhas é um aspecto importante para sistemas com
+boa dependabilidade.
+
+== Tolerância à falhas
 
 Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de
 ocorrência @FaultTolerantSystems.
@@ -76,7 +118,6 @@ uma qualidade de serviço aceitável mesmo na presença de falhas são necessár
   desligamento gracioso do sistema ou reorganização para manter o máximo de
   qualidade de serviço possível.
 
-// TODO: Citar mais algum livro aqui?
 A detecção e o tratamento podem ser implementados em hardware ou em software,
 implementações em hardware conseguem fazer garantias físicas mais fortes com
 melhor revestimento e redundância implementada diretamente no circuito, e
@@ -104,7 +145,6 @@ forneça uma boa qualidade de serviço pelo menor custo possível.
 
 == Mecanismos de Detecção
 
-// TODO: Ctiar livro, wikipedia etc.
 Os mecanismos de detecção, permitem que um sistema detecte uma inconsistência
 em seus dados, causada por falha externa ou por erro lógico de outra parte no
 caso de sistemas distribuídos. Os mecanismos de detecção são essenciais para a
@@ -114,13 +154,12 @@ posteriormente.
 
 === CRC (Cyclic Redundancy Check)
 
-// TODO: Citar livro
 Os CRCs são códigos de detecção de erro comumente utilizados em redes de
 computador e armazenamento não volátil para detectar falhas. Para cada segmento
 de dado é concatenado um valor (denominado "check value" ou simplesmente o
 valor CRC) que é calculado com base no resto da divisão de um polinômio
 previamente acordado entre remetente e destinatário (chamado de "polinômio
-gerador").
+gerador") @FaultTolerantSystems.
 
 Ao receber o segmento, o receptor calcula seu próprio valor CRC com base nos
 dados do segmento (sem incluir o CRC do destinatário), caso ocorra diferença
@@ -133,7 +172,10 @@ transientes que alteram uma região de bits próximos.
 
 É possível determinar se uma falha ocorreu com um nó de execução através de um
 critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais
-periódicos para garantir se um nó computacional está ativo @DependabilityInEmbeddedSystems. Basta enviar um sinal simples e verificar se uma resposta correta chega em um tempo pré determinado. Sinais heartbeat são baratos porém não garantem uma
+periódicos para garantir se um nó computacional está ativo @DependabilityInEmbeddedSystems.
+
+Basta enviar um sinal simples e verificar se uma resposta correta chega em um
+tempo pré determinado. Sinais heartbeat são baratos porém não garantem uma
 detecção ou correção de erro mais granular, portanto são usados como um
 complemento para detectar falhas de forma concorrente a outros métodos mais
 robustos.
@@ -157,10 +199,19 @@ assert trata-se de checar se uma condição é verdadeira, caso não seja, o
 programa é interrompido e entra um estado de pânico. Utilizar asserts
 automáticos na entrada e saída de funções é denominado pré/pós-condições.
 
-Asserts não previnem erros do hardware ou tratam exceções por conta própria, mas tratam-se de um mecanismo de uso extremamente simples que pode ser inserido pelos
-desenvolvedores para detectar falhas cedo, especialmente erros lógicos e violação de contrato de um interface. Quando usados em conjunto com fuzzers ou simulações determinísticas podem alcançar um alto grau de confiabilidade e revelar erros de design durante a fase de desenvolvimento. @TigerBeetleSafety @PowerOf10Rules
+Asserts não previnem erros do hardware ou tratam exceções por conta própria,
+mas tratam-se de um mecanismo de uso extremamente simples que pode ser inserido
+pelos desenvolvedores para detectar falhas cedo, especialmente erros lógicos e
+violação de contrato de um interface. Quando usados em conjunto com fuzzers ou
+simulações determinísticas podem alcançar um alto grau de confiabilidade e
+revelar erros de design durante a fase de desenvolvimento. @TigerBeetleSafety
+@PowerOf10Rules
 
-Já na execução de um sistema tolerante, asserts servem como uma forma de rapidamente e imediatamente saber que algo errado aconteceu, dado que sua invariante não é mais mantida. Porém não são robustos o suficiente para detectar corrupção silenciosa de dados ou pulos inesperados de maneira consistente.
+Já na execução de um sistema tolerante, asserts servem como uma forma de
+rapidamente e imediatamente saber que algo errado aconteceu, dado que sua
+invariante não é mais mantida. Porém não são robustos o suficiente para
+detectar corrupção silenciosa de dados ou pulos inesperados de maneira
+consistente.
 
 #figure(caption: "Exemplo da implementação de um Assert", [
 ```cpp
@@ -208,12 +259,30 @@ telecomunicação em larga escala e computação em nuvem.
 
 === Loop Unrolling & Function Inlining
 
-Uma otimização comum que compiladores realizam é "desenrolar" laços de repetição (Loop Unrolling) com a finalidade de reduzir erros de cachê no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no loop, o que comum em aplicações em que utiliza-se se de um analisador estático para provar propriedades sobre a conclusão adequada do programa @LoopUnrollingARM.
+Uma otimização comum que compiladores realizam é "desenrolar" laços de
+repetição (Loop Unrolling) com a finalidade de reduzir erros de cachê no
+preditor de desvios da CPU, no contexto de tolerância à falhas, é possível
+utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a
+possibilidade de pulos dependentes de um valor, torna-se menos provável um
+salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também
+ser feito caso exista um limite superior conhecido no loop, o que comum em
+aplicações em que utiliza-se se de um analisador estático para provar
+propriedades sobre a conclusão adequada do programa @LoopUnrollingARM.
 
-Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada, a razão pela qual é realizado é similar à de unrolling de loops, ao reduzir a quantidade de pulos (e neste caso, manipulação do stack) é possível melhorar a coerência do cachê de instruções, causando uma melhora na performance. Pela mesma razão, ao introduzir redundância o inlining de funções pode também reduzir a chance de um jump inadequado.
+Outra transformação comum é o inlining de funções, onde o corpo de uma função é
+copiado como se o código tivesse sido diretamente escrito em seu ponto de
+chamada, a razão pela qual é realizado é similar à de unrolling de loops, ao
+reduzir a quantidade de pulos (e neste caso, manipulação do stack) é possível
+melhorar a coerência do cachê de instruções, causando uma melhora na
+performance. Pela mesma razão, ao introduzir redundância o inlining de funções
+pode também reduzir a chance de um jump inadequado.
 
-Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço desnecessário no executável, o que requer que o frontend da CPU perca mais tempo aguardando IO e decodificando instruções. Portanto, é extremamente importante que estas técnicas não sejam aplicadas de forma arbitrária.
-
+Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o
+efeito oposto do que se deseja no quesito de performance, quando aplicadas de
+forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço
+desnecessário no executável, o que requer que o frontend da CPU perca mais
+tempo aguardando IO e decodificando instruções. Portanto, é extremamente
+importante que estas técnicas não sejam aplicadas de forma arbitrária.
 
 #figure(caption: "Exemplo de função sem unrolling ou inlining", [
 ```c
@@ -267,17 +336,20 @@ improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a
 re-execução depende de uma resiliência "temporal" (É improvável que múltiplas
 falhas ocorram repetidamente em $N$ execuções)
 
-É também possível utilizar reexecuções sucessivas como um mecanismo de detecção e prevenção, a tarefa é reexecutada $N$ vezes, seus $N$ resultados são temporariamente guardados e passam então por um consenso. Similar à técnica de redundância modular, mas sacrificando tempo ao invés de múltiplas instâncias concorrentes.
+É também possível utilizar reexecuções sucessivas como um mecanismo de detecção
+e prevenção, a tarefa é reexecutada $N$ vezes, seus $N$ resultados são
+temporariamente guardados e passam então por um consenso. Similar à técnica de
+redundância modular, mas sacrificando tempo ao invés de múltiplas instâncias
+concorrentes.
 
 #figure(caption: "Exemplo de reexecução com consenso", image("assets/redundancia_reexec.png"))
 
 === Correção de Erro
 
-// TODO: Citar alguem aqui
 Existem também algoritmos que permitem detectar e corrigir erros dentro de um
 payload, em troca de um custo de espaço e tempo para a detecção, dentro da
 família de algoritmos que possibilitam detecção e correção, são encontrados os
-códigos como os de: Reed-Solomon, Turbo Codes, LDPCs.
+códigos como os de: Reed-Solomon, Turbo Codes, LDPCs. @SoftwareFTInRTSystems,
 
 Este trabalho não abordará algoritmos de correção de forma aprofundada pois
 foge do escopo de foco nas técnicas de escalonamento (execução) e detecção, mas
@@ -295,7 +367,7 @@ das principais características de sistemas embarcados são:
 Diferente de um sistema de computação mais generalizado como um computador
 pessoal ou um servidor, sistemas embarcados são especializados para uma solução
 de escopo restrito. Um exemplo de um sistema embarcado são microcontroladores
-encontrados em dispositivos como mouses, teclados e eletrodomésticos.
+encontrados em dispositivos como mouses, teclados e eletrodomésticos @ComputerOrganizationAndDesign.
 
 *Limitação de recursos*:
 Um corolário da natureza especialista destes sistemas, é que recursos alocados
@@ -309,7 +381,7 @@ continuam estaticamente delimitados para cumprir sua função específica.
 *Critério Temporal*:
 Sistemas embarcados, por serem parte de um todo maior, devem realizar sua
 função com o mínimo de interrupção para a funcionalidade geral do contexto
-externo. A importância do tempo de execução de uma tarefa de um sistema pode
+externo @OperatingSystemConcepts. A importância do tempo de execução de uma tarefa de um sistema pode
 ser classificada em duas categorias: Soft real time, e Hard real time, a
 distinção entre estas categorias é explicada na seção seguinte.
 
@@ -505,6 +577,8 @@ menos imprevisibilidade na execução com o custo de maior uso da CPU e memória
 todos os pontos de transparência necessitam ser checados o que pode gerar um
 tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para
 garantir a possibilidade de reexecuções suficientes.
+
+=== Injeção de falhas
 
 == Trabalhos Relacionados
 
