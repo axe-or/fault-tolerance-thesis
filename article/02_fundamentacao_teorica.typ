@@ -622,7 +622,13 @@ deliberadamente causar falhas com o propósito de catalogar e validar se o
 sistema atinge as métricas necessárias. Dentre os tipos de teste que podem ser
 realizados, é possível categorizá-los em quatro grupos principais:
 
-// TODO: Botar os 4 aqui!
+Injeção *Física*: Involve utilizar um ambiente físico genuíno para causar as falhas, o principal benefício desta técnica é replicar eventos reais que possam causar falhas, assim como poder injetar falhas em superfícies reais do dispositivo @FaultInjectionTechniques. O principal problema é que esta técnica é particularmente cara e requer auxílio de equipamentos e profissionais especializados, também não é possível injetar um tipo específico de dado para testar um caso específico. Na seção de *trabalhos relacionados* é possível observar um exemplo testa técnica em uso na pesquisa de íons pesados.
+
+Injeção *Lógica por Hardware*: Utiliza-se de um dispositivo adicional para injetar as falhas que controla o dispositivo alvo, possui como vantagem ser menos intrusivo e ainda permitir um algo grau de controle e simulação dos fenômenos físicos, desvantagens incluem uma área maior de circuito necessária, implementação de uma unidade extra e criação de canais de comunicação com o dispositivo alvo @FaultInjectionTechniques.
+
+Injeção *Lógica por Software*: Funções são executadas em software para injetar falhas em outras partes do programa, o método é pouco invasivo, de baixo custo, alta portabilidade e permite um controle muito elevado sobre os pontos de injeção e estilo de falha @FaultInjectionTechniques. Possui a desvantagem de aumentar o tempo médio de execução ao introduzir um overhead e espaço extra de memória para armazenar o código de injeção, também não reflete tão precisamente os fenômenos físicos.
+
+Injeção *Simulada*: O dispositivo é executado em um ambiente totalmente simulado, tem como vantagem não ser invasivo, altamente flexível e nem sequer necessitar de uma versão física do dispositivo, porém tipicamente requer software de simulação potencialmente caro assim como uma descrição do chip na forma de alguma linguagem de descrição de hardware, que raramente é disponibilizada.
 
 == Trabalhos Relacionados
 
