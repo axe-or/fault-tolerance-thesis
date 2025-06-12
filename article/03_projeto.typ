@@ -261,11 +261,22 @@ Serão realizados testes ponta a ponta com os dois programas de exemplo para gar
 
 === Campanha de Injeção de Falhas
 
-Para testar a injeção de falhas será utilizado primariamente mecanismos lógicos em software com o auxílio do depurador STLink. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
+Para testar a injeção de falhas será utilizado primariamente mecanismos lógicos
+em software com o auxílio do depurador STLink. As falhas serão de natureza
+transiente e focarão no segmento de memória com leitura e escrita.
 
-A injeção será feita de maneira automática com o depurador e também com o uso de uma task injetora que periodicamente corromperá $N$ bytes de memória controlada ou compartilhada por outras tasks. Será utilizado um contador global, acessado com instruções atômicas para registrar quantas falhas foram detectadas, naturalmente, o contador e a task de injeção estarão isentos da campanha. Durante a execução dos programas, espera-se que sejam detectados os resultados inconsistentes como dimensões de matriz incorretas, resultados de operações aritméticas distintas e reenvio de mensagens.
+A injeção será feita de maneira automática com o depurador e também com o uso
+de uma task injetora que periodicamente corromperá $N$ bytes de memória
+controlada ou compartilhada por outras tasks. Será utilizado um contador
+global, acessado com instruções atômicas para registrar quantas falhas foram
+detectadas, naturalmente, o contador e a task de injeção estarão isentos da
+campanha. Durante a execução dos programas, espera-se que sejam detectados os
+resultados inconsistentes como dimensões de matriz incorretas, resultados de
+operações aritméticas distintas e reenvio de mensagens.
 
-A injeção de falhas lógicas via software também será realizada durante a fase de desenvolvimento para validar as técnicas antes de seu deploy no microcontrolador.
+A injeção de falhas lógicas via software também será realizada durante a fase
+de desenvolvimento para validar as técnicas antes de seu deploy no
+microcontrolador.
 
 == Análise de riscos
 

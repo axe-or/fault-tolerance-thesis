@@ -236,7 +236,6 @@ correção deve ser tentada ou outro tratamento deve ser usado.
 
 === Redundância
 
-// TODO: Citar survey e alguma coisa do isosimov
 Adicionar redundância ao sistema é uma das formas mais intuitivas e mais
 antigas de aumentar a tolerância à falhas, a probabilidade de N falhas
 transientes ocorrendo simultaneamente em um sistema é mais baixa do que a
@@ -246,7 +245,7 @@ Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy)
 onde uma a tarefa é executada 3 vezes em paralelo, e uma porta de
 consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR
 é elegante em sua simplicidade e consegue atingir um bom grau de resiliência,
-porém com o custo adicional de triplicar o custo.
+porém com o custo adicional de triplicar o custo. @DependabilityInEmbeddedSystems
 
 #figure(caption: "Exemplo de redundância modular na execução de tarefas", image("assets/redundancia_tmr.png"))
 
@@ -319,14 +318,13 @@ int sum_squares(int values[COUNT]){
 ])
 
 
-
 === Re-execução
 
-// TODO: Citar isosimov ou outro
 Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha,
 a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que
 a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao
 re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa.
+@DependabilityInEmbeddedSystems
 
 Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em
 troca de um tempo menor de execução médio sem necessitar de componentes extras.
@@ -473,25 +471,49 @@ a CPU por uma quantidade longa de tempo.
 
 === Concorrência e Assincronia
 
-// TODO: Citar palestra do Rob Pike e alguma coisa do Joe Armstrong
+Será utilizado a definição de concorrência como a habilidade de um sistema de
+lidar com múltiplas tarefas computacionais dividindo seus recursos
+(particularmente tempo de CPU e memória). Isto é, um sistema não
+necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para
+possuir concorrência, mas para tornar paralelismo viável, o sistema necessita
+de mecanismos de concorrência @MakingReliableDistSystems.
 
-Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência @MakingReliableDistSystems.
+Uma característica central para a utilidade de concorrência mesmo em situações
+em que paralelismo é limitado ou impossível vai além da pura expressividade do
+programador, existem assimetrias grandes na velocidade de acesso de disco,
+memória, rede, e cachês da CPU. O processo de acessar um recurso é deve lidar
+com o fato de ser _assíncrono_. O uso de concorrência permite que uma tarefa
+seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema
+não fique excessivamente ocioso, esperar 20 milissegundos para um pacote de
+rede chegar é aceitável para um humano, mas é uma eternidade para um
+processador @ComputerOrganizationAndDesign. Implementar os mecanismos de
+concorrência adequados também permite lidar com interrupções de forma mais
+estruturada, um problema clássico de lidar com uma interrupção é restaurar a
+memória de pilha e registradores de forma adequada, interrupções introduzem um
+fluxo de programa não local, violando as garantias fortes de escopo e ponto de
+entrada fornecidas por funções.
 
-// TODO
-Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressividade do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e cachês da CPU. O processo de acessar um recurso é deve lidar com o fato de ser _assíncrono_. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocioso, esperar 20 milissegundos para um pacote de rede chegar é aceitável para um humano, mas é uma eternidade para um processador @ComputerOrganizationAndDesign. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
-
-É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de clock speed das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais @ComputerOrganizationAndDesign. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplas threads de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks @OperatingSystemConcepts.
+É uma tendência atual aumentar o número de núcleos em dispositivos, com
+velocidades de clock speed das CPUs possuindo ganhos marginais em relação ao
+impacto térmico, a maioria dos computadores de propósito geral (smartphones,
+tablets, desktops) tipicamente possuem 2 núcleos ou mais
+@ComputerOrganizationAndDesign. Essa tendência não se restringe apenas à
+computadores gerais, sistemas embarcados comerciais também podem se beneficiar
+tremendamente das possibilidades de concorrência providas por mais de um
+núcleo, porém, é importante ressaltar que o uso de estado compartilhado se
+torna muito mais sensível à erros em um ambiente com múltiplas threads de
+execução, e medidas devem ser tomadas para evitar condições de corridas e
+deadlocks @OperatingSystemConcepts.
 
 == Escalonamento tolerante à falhas
 
-// TODO: Isosimov e mais algunm survey
 Durante a execução de um sistema tolerante à falhas, existem alguns tipos
 principais de overheads que independente da presença de uma falha vão ocorrer e
 precisam ser considerados pelo escalonador.
 
 1. *Mudança de contexto*: Trocar entre tarefas possui um custo inerente pois é
   necessário salvar o estado da máquina e fazer alterações no TCB (Task control
-  block) da tarefa.
+  block) da tarefa @OperatingSystemConcepts.
 
 2. *Envio de mensagens*: Para comunicar entre tasks ou entre componentes
   fisicamente distintos do sistema, seja por bus ou por mecanismo de rede, existe
@@ -542,17 +564,34 @@ tarefas indicados com um símbolo circular representam pontos ordinários no
 grafo, já pontos com símbolos quadrados indicam as condições de transparência.
 @SchedAndOptOfDistributedFT
 
-Dado um grafo não ponderado direcionado acíclico com seus nós representando tarefas/processos, arestas representando o fluxo de execução e arestas nomeadas representando fluxo dependente da entrega de mensagens, será utilizado a notação $P_X (N)$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo $P_2 (1)$ indica a primeira execução da tarefa $P_2$, enquanto $P_1 (3)$ indica a terceira reexecução da tarefa $P_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X (N)$, mensagens, assim como tarefas, estão sujeitas à falhas e overheads de detecção, mas ao invés de re-execução, mensagens são re-enviadas. @SchedFTWithSoftAndHardConstraints
+Dado um grafo não ponderado direcionado acíclico com seus nós representando
+tarefas/processos, arestas representando o fluxo de execução e arestas nomeadas
+representando fluxo dependente da entrega de mensagens, será utilizado a
+notação $P_X (N)$, onde $X$ é o número identificador da tarefa, e $N$
+corresponde à sua $N$-ésima re-execução, por exemplo $P_2 (1)$ indica a
+primeira execução da tarefa $P_2$, enquanto $P_1 (3)$ indica a terceira
+reexecução da tarefa $P_1$. Uma notação similar será utilizada para mensagens
+entre tarefas, $m_X (N)$, mensagens, assim como tarefas, estão sujeitas à
+falhas e overheads de detecção, mas ao invés de re-execução, mensagens são
+re-enviadas. @SchedFTWithSoftAndHardConstraints
 
-Para melhor exemplificar a importância da detecção das falhas, será tomado como exemplo um grafo simples, com apenas 3 tarefas e uma mensagem. O grafo precisará tolerar uma falha transiente. O fluxo "ideal" (sem falhas) seria este:
+Para melhor exemplificar a importância da detecção das falhas, será tomado como
+exemplo um grafo simples, com apenas 3 tarefas e uma mensagem. O grafo
+precisará tolerar uma falha transiente. O fluxo "ideal" (sem falhas) seria
+este:
 
 #figure(caption: "Grafo com 3 processos e uma mensagem", image(height: 180pt, "assets/ftg_simples.png"))
 
-Ao incluir os diferentes desvios possíveis na presença de apenas _uma_ falha, temos o seguinte grafo, importante notar que falhas podem ocorrer tanto na tarefa quanto na transição de estado dependente de mensagem.
+Ao incluir os diferentes desvios possíveis na presença de apenas _uma_ falha,
+temos o seguinte grafo, importante notar que falhas podem ocorrer tanto na
+tarefa quanto na transição de estado dependente de mensagem.
 
 #figure(caption: "Mesmo grafo, mas tolerante à uma falha transiente", image(height: 240pt, "assets/ftg_expandido.png"))
 
-Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após sua deadline ter sido completa.
+Será introduzido transparência na tarefa $P_2$, isto é, será executada com
+redundância temporal ou modular de tal forma que as tarefas subsequentes
+pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após sua
+deadline ter sido completa.
 
 #figure(caption: [Introdução de transparência (freezing) em $P_2$], image(height: 240pt, "assets/ftg_transparencia.png"))
 
@@ -578,7 +617,14 @@ todos os pontos de transparência necessitam ser checados o que pode gerar um
 tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para
 garantir a possibilidade de reexecuções suficientes.
 
-=== Injeção de falhas
+== Injeção de falhas
+
+Para adequadamente testar a dependabilidade do sistema, é possível
+deliberadamente causar falhas com o propósito de catalogar e validar se o
+sistema atinge as métricas necessárias. Dentre os tipos de teste que podem ser
+realizados, é possível categorizá-los em quatro grupos principais:
+
+// TODO: Botar os 4 aqui!
 
 == Trabalhos Relacionados
 
