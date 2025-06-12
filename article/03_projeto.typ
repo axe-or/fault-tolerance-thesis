@@ -3,9 +3,7 @@
 A etapa mais fundamental do projeto é a implementação dos algoritmos e da API
 de resiliência, dado o contexto de real time, cuidados devem ser tomados no
 quesito da performance e uso de memória (que pode indiretamente degradar a CPU
-na presença de erros de cachê). .
-
-// TODO: Citar sobre coisa orientada a mensagem, pode ser ate documetation de outro RTOS
+na presença de erros de cachê).
 
 A arquitetura será primariamente orientada à passagem de mensagens, pois
 permite uma generalização para mecanismos de I/O assíncrono e possível
@@ -255,7 +253,9 @@ Para testar a injeção de falhas serão utilizados mecanismos lógicos
 em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza
 transiente e focarão no segmento de memória com leitura e escrita.
 
-As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a partir de um endereço base são escolhidos e escritos com dados pseudo aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático com escrita, o stack das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rounds (e.x: 1000) e terão suas métricas coletadas até o final dos rounds ou caso os erros cumulativos causem um reset total do sistema.
+As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a partir de um endereço base são escolhidos e escritos com dados pseudo aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático com escrita, o stack das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rounds (e.x: 200) e terão suas métricas coletadas até o final dos rounds ou caso os erros cumulativos causem um reset total do sistema.
+
+Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica.
 
 As combinações de técnicas escolhidas serão:
 
@@ -285,7 +285,8 @@ A escolha da injeção lógica com software permite que já sejam feitos testes 
 
 ==== Injeção Lógica com Hardware
 
-Utilizando do depurador
+// TODO: elaborar mais
+Utilizando do depurador dedicado do microcontrolador ST-Link, será feito o processo de injeção idêntico ao da injeção lógica com software, com exceção dos endereços para a coleta de métricas 
 
 == Análise de riscos
 
@@ -306,30 +307,20 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 - Gatilho: Teste em microcontrolador ou ambiente virtualizado
 - Mitigação: Utilizar outro profiler, inserir pontos de medição manualmente
 
-== Projeto para o TCC2
-
-=== Metodologia
-
-=== Cronograma
+=== Cronograma para o TCC3
 
 #set par(justify: false, leading: 0.5em)
 #figure(caption: "Cronograma para o TCC3", table(
   columns: (1fr,) + (auto,) * 6,
   table.header([*Atividade*], [*07/2025*], [*08/2025*], [*09/2025*], [*10/2025*], [*11/2025*], [*12/2025*]),
-  [Escrita da Monografia],               [`___X`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XX__`],
-  [Implementação dos Algoritmos],        [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
-  [Testes dos Algoritmos],               [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
-  [Implementação dos Programas Exemplo], [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
-  [Teste dos Programas Exemplo],         [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
-  
-  [Implementação da Injeção em Software], [`____`], [`____`], [`__XX`], [`XX__`],  [`____`], [`____`],
-  [Teste dos Programas Exemplo],          [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
-
-  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
-  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
-  [Fazer], [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`XXXX`],
+  [Escrita da Monografia],                           [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`X___`],
+  [Implementação dos Algoritmos],                    [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Testes dos Algoritmos],                           [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Implementação dos Programas Exemplo],             [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  [Teste dos Programas Exemplo],                     [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  [Implementação da Injeção com Software],           [`____`], [`____`], [`XXXX`], [`____`],  [`____`], [`____`],
+  [Implementação da Injeção com Hardware],           [`____`], [`____`], [`__XX`], [`XXX_`],  [`____`], [`____`],
+  [Execução microcontrolador e coleta das métricas], [`____`], [`____`], [`____`], [`__XX`],  [`XXXX`], [`____`],
+  [Revisão Textual],                                 [`____`], [`____`], [`____`], [`____`],  [`__XX`], [`XXXX`],
 ))
-
-=== Análise De Requisitos
-
 

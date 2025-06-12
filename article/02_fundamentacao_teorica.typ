@@ -132,7 +132,6 @@ mais flexíveis, com software é possível implementar lógica de detecção
 recuperação e estruturas de dados mais complexas, e até mesmo realizar
 atualizações remotas com o sistema ativo (live patching).
 
-// TODO: Citar paper de solucoes hybridas
 Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e
 software precisam ser consideradas, é possível utilizar hardware com
 hardening para um núcleo que realiza atividades críticas, e delegar núcleos
@@ -140,7 +139,7 @@ menos protegidos para atividades em que o tratamento em software é suficiente.
 Balancear a troca de espaço em chip, uso de memória, flexibilidade de
 implementação, tempo de execução, vazão de dados e garantias de transparência é
 indispensável para a criação de um sistema que seja resiliente à falhas e que
-forneça uma boa qualidade de serviço pelo menor custo possível.
+forneça uma boa qualidade de serviço pelo menor custo possível. @DependabilityInEmbeddedSystems
 
 == Mecanismos de Detecção
 

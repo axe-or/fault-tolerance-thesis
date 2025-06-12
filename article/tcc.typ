@@ -48,6 +48,12 @@ performance and tolerance against faults._
 	target: figure.where(kind: "formula"),
 )
 
+// Tables
+#outline(
+	title: "LISTA DE TABELAS",
+	target: figure.where(kind: table),
+)
+
 #pagebreak()
 
 // Table of Contents
