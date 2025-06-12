@@ -101,33 +101,9 @@ de caráter quantitativo e conclusões e observações derivadas do trabalho ser
 realizadas de maneira indutiva baseadas nas métricas de performance coletadas e
 comparadas.
 
-Uma implementação dos algoritmos na forma de uma prova de conceito será
-realizada dentro de um contexto com um host para facilitar prototipação e
-realizar uma pré análise e validar se a implementação está correta.
+Foi realizado uma pesquisa bibliográfica para a fundamentação e escolha das técnicas e dos materiais do trabalho, sendo esta primariamente focada em autores com obras associadas ao tema de tolerância assim como temas adjacentes relevantes como sistemas operacionais e interface hardware-software.
 
-=== Métodos
-
-Serão utilizados testes unitários e testes ponta a ponta para a validação dos
-algoritmos de detecção e técnicas de execução das tarefas, o trabalho será
-testado inicialmente em um ambiente virtualizado para ser posteriormente
-executado em um microcontrolador com FreeRTOS.
-
-Para a realização da análise será utilizado ferramentas de profiling nativas ao
-sistema operacional e de depurador externo. As principais métricas de interesse
-são relacionadas ao número de falhas detectadas e o impacto das técnicas em
-relação à versão sem tolerância.
-
-=== Materiais
-
-Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou
-Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
-"Bluepill") 32-bits da arquitetura ARMv7-M executando FreeRTOS. Para a injeção
-de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
-de depuração do hardware (STPLink) para também auxiliar na coleta das métricas.
-Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
-juntamente com as ferramentas anteriormente citadas, assim como
-AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
-durante o desenvolvimento.
+Após isso será realizado uma implementação e testes das técnicas escolhidas para validação, e uma campanha de injeção de falhas será realizada em um microcontrolador para a coleta final das métricas, este assunto será aprofundado na seção de *Projeto*.
 
 == Estrutura do Trabalho
 
