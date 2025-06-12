@@ -257,25 +257,29 @@ fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @Bo
 
 === Outros testes
 
-Serão realizados testes ponta a ponta com os dois programas de exemplo para garantir sua validade lógica antes de ser realizada sua execução definitiva. As técnicas de detecção também passarão por teste de integração juntamente ao teste dos programas com injeção de falhas baseadas em callbacks. O objetivo é produzir uma exemplo prova de conceito que já contém grande parte da implementação, para que erros inesperados e mudanças de design sejam feitas anteriormente dos testes com o microcontrolador para diminuir a quantidade de fricção na análise final (mas mantendo ainda um limite superior de uso de recursos). 
-
-// TODO COMPLETAR COM VALIDACAO do resto
+Serão realizados testes ponta a ponta com os dois programas de exemplo para garantir sua validade lógica antes de ser realizada sua execução definitiva. As técnicas de detecção também passarão por teste de integração juntamente ao teste dos programas com injeção de falhas em software. O objetivo é produzir uma exemplo prova de conceito que já contém grande parte da implementação, para que erros inesperados e mudanças de design sejam feitas anteriormente dos testes com o microcontrolador para diminuir a quantidade de fricção na análise final (mas mantendo ainda um limite superior de uso de recursos). Todos os testes são artefatos que serão distribuídos juntamente com o trabalho.
 
 === Campanha de Injeção de Falhas
+
+Para testar a injeção de falhas será utilizado primariamente mecanismos lógicos em software com o auxílio do depurador STLink. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
+
+A injeção será feita de maneira automática com o depurador e também com o uso de uma task injetora que periodicamente corromperá $N$ bytes de memória controlada ou compartilhada por outras tasks. Será utilizado um contador global, acessado com instruções atômicas para registrar quantas falhas foram detectadas, naturalmente, o contador e a task de injeção estarão isentos da campanha. Durante a execução dos programas, espera-se que sejam detectados os resultados inconsistentes como dimensões de matriz incorretas, resultados de operações aritméticas distintas e reenvio de mensagens.
+
+A injeção de falhas lógicas via software também será realizada durante a fase de desenvolvimento para validar as técnicas antes de seu deploy no microcontrolador.
 
 == Análise de riscos
 
 O trabalho é de risco baixo, dado que constrói em cima de fundações técnicas previamente exploradas, porém dentro dos principais riscos que possam alterar ou causar problemas durante a realização encontram-se:
 
 *Risco I*: Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.
-- Probabilidade e Impacto: Baixa | Médio
+- Probabilidade e Impacto: Baixa | Alto
 - Gatilho: Implementar interface no RTOS
 - Mitigação: Utilizar outro RTOS, modificar o RTOS escolhido, adaptar a interface
 
 *Risco II*: Problemas para injetar falhas com depurador.
 - Probabilidade e Impacto: Baixa | Alto
 - Gatilho: Teste em microcontrolador
-- Mitigação: Utilizar de outro depurador, manualmente injetar pontos de falhas no código
+- Mitigação: Utilizar de outro depurador, manualmente injetar pontos de falhas no código e depender de falhas lógicas em software
 
 *Risco III*: Dificuldade de coletar métricas de performance com profiler
 - Probabilidade e Impacto: Baixa | Médio
