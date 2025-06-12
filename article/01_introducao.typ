@@ -58,7 +58,6 @@ Neste caso, o impedimento da exportação certos tipos  tecnologias de PCBs e fi
 aumenta mais ainda a necessidade de compradores de outros países adquirirem
 alternativas comerciais mais comuns que já são complacentes com a regulação @ITARPCBCompliance.
 
-// TODO: Citar 1 coisa aqui
 O custo de utilizar técnicas de tolerância é sensível ao contexto da aplicação
 e ao nível de tolerância desejado, e no caso dos sistemas COTS, técnicas
 robustas de resiliência em hardware nem sempre estão disponíveis, sendo

@@ -126,7 +126,6 @@ elevado de espaço no silício possível degradação de performance geral e men
 flexibilidade. O processo de tornar o design e a implementação de um hardware
 com estas características é chamado de "hardening".
 
-// TODO: Mencionar NASA fazendo live patching
 Implementações em software não são capazes de fornecer todas as garantias
 fortes do hardware, em contrapartida, não ocupam espaço extra no chip e são
 mais flexíveis, com software é possível implementar lógica de detecção
@@ -357,7 +356,6 @@ mensagens.
 
 == Sistemas embarcados
 
-// TODO: citar livro aqui, tanembaum ou algo de embeededede
 Sistemas embarcados são uma família vasta de sistemas computacionais, algumas
 das principais características de sistemas embarcados são:
 
