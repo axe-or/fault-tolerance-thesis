@@ -38,9 +38,16 @@ performance and tolerance against faults._
 // Code listings & figures
 #outline(
 	title: "LISTA DE FIGURAS",
-	target: figure,
+	target: figure.where(kind: image).or(figure.where(kind: raw)),
 	depth: 1,
 )
+
+// Forumlas
+#outline(
+	title: "LISTA DE FÓRMULAS",
+	target: figure.where(kind: "formula"),
+)
+
 #pagebreak()
 
 // Table of Contents

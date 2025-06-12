@@ -15,7 +15,7 @@ volátil com consequências catastróficas caso um erro ocorra.
 
 Tornar um sistema tolerante à falhas é um problema multi facetado, ambas
 soluções em hardware e software necessitam ser abordadas para garantir a
-qualidade de serviço desejada, o *escalonador*, seja de um sistema operacional
+qualidade de serviço desejada, o escalonador, seja de um sistema operacional
 ou de um runtime, é crucial na execução concorrente de diversas tarefas, sendo
 então um candidato interessante para aprimorar sua resiliência com foco em
 reduzir desperdício dos nós computacionais @OperatingSystemConcepts. O processo de detecção das falhas e
@@ -42,7 +42,6 @@ ou energético), pode prover uma vantagem econômica para fabricantes e
 provedores assim como um benefício social na maior confiabilidade no caso de
 aplicações críticas. @DependabilityInEmbeddedSystems.
 
-// TODO: Fonte aqui eh mto importante, citar!
 Ademais, ocorreu nos últimos anos uma maior adoção de sistemas COTS (Commercial
 off the shelf), dado que estes sistemas podem ser mais baratos e fornecem uma
 solução "genérica" para problemas que anteriormente necessitariam de hardware
@@ -51,7 +50,6 @@ design especializado para o produto final, estes sistemas são excelentes para a
 fase de prototipação e validação do projeto, dado sua facilidade de acesso e
 flexibilidade.
 
-// TODO: Citar o site & regulamento
 Um outro fator que influencia na adoção do uso de COTS para certas aplicações
 que necessitam de tolerância à falhas são as regulações ITAR (International
 Traffic in Arms Regulations) imposta pelos Estados Unidos que restringe a
@@ -111,15 +109,36 @@ realizar uma pré análise e validar se a implementação está correta.
 
 === Métodos
 
-Serão utilizados testes unitários e testes ponta a ponta para a validação dos algoritmos de detecção e técnicas de execução das tarefas, o trabalho será testado inicialmente em um ambiente virtualizado para ser posteriormente executado em um microcontrolador com FreeRTOS.
+Serão utilizados testes unitários e testes ponta a ponta para a validação dos
+algoritmos de detecção e técnicas de execução das tarefas, o trabalho será
+testado inicialmente em um ambiente virtualizado para ser posteriormente
+executado em um microcontrolador com FreeRTOS.
 
-Para a realização da análise será utilizado ferramentas de profiling nativas ao sistema operacional e de depurador externo. As principais métricas de interesse são relacionadas ao número de falhas detectadas e o impacto das técnicas em relação à versão sem tolerância.
+Para a realização da análise será utilizado ferramentas de profiling nativas ao
+sistema operacional e de depurador externo. As principais métricas de interesse
+são relacionadas ao número de falhas detectadas e o impacto das técnicas em
+relação à versão sem tolerância.
 
 === Materiais
 
-Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou Clang), o alvo principal do trabalho será um microcontrolador 32-bits da arquitetura ARMv7-M executando FreeRTOS. Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta de depuração do hardware (STPLink) para também auxiliar na coleta das métricas. Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU juntamente com as ferramentas anteriormente citadas, assim como AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo durante o desenvolvimento.
+Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou
+Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
+"Bluepill") 32-bits da arquitetura ARMv7-M executando FreeRTOS. Para a injeção
+de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
+de depuração do hardware (STPLink) para também auxiliar na coleta das métricas.
+Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
+juntamente com as ferramentas anteriormente citadas, assim como
+AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
+durante o desenvolvimento.
 
 == Estrutura do Trabalho
 
-Na seção de fundamentação teórica serão explorados os tópicos centrais que constituem a premissa do trabalho, primariamente conceitos de detecção de falhas e escalonamento nos sistemas operacionais. Sistemas operacionais são um tópico particularmente vasto, portanto sua abordagem será mais focada apenas nos aspectos mais essenciais do trabalho. Após a fundamentação será discutido o projeto de como será realizado a pesquisa de tolerância à falhas, especialmente o plano de verificação da validade da pesquisa para a escrita final da monografia.
+Na seção de fundamentação teórica serão explorados os tópicos centrais que
+constituem a premissa do trabalho, primariamente conceitos de detecção de
+falhas e escalonamento nos sistemas operacionais. Sistemas operacionais são um
+tópico particularmente vasto, portanto sua abordagem será mais focada apenas
+nos aspectos mais essenciais do trabalho. Após a fundamentação será discutido o
+projeto de como será realizado a pesquisa de tolerância à falhas, especialmente
+o plano de verificação da validade da pesquisa para a escrita final da
+monografia.
 

@@ -41,9 +41,13 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
+  // Formulas
+  show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
+
+
 	// Code listings
   	set raw(theme: "assets/light.tmTheme")
-	show figure.where(kind: raw): (fig) => {
+	  show figure.where(kind: raw): (fig) => {
 		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
 		

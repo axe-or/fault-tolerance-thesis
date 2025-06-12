@@ -1,13 +1,54 @@
 = FUNDAMENTAÇÃO TEÓRICA
 
+== Definições Principais
+
+=== Qualidade de Serviço
+
+A qualidade de serviço de um sistema é o quão capaz ele é de prover sua
+funcionalidade desejada. Como é uma noção geral, que depende muito das
+interdependências particulares do sistema, será utilizada uma definição
+simples. A qualidade do serviço $Q$ do sistema é a média ponderada de seus serviços
+$S_0 ... S_n$ com os pesos de seus fatores de contribuição para a qualidade $q_0 ... q_n$.
+
+#figure(caption: [Medida da qualidade de serviço], kind: "formula", $
+  Q = (sum_(i = 0)^n S_i q_i) / (sum_(i = 0)^n q_i)
+$)
+
+É importante mencionar que existem outras formas de modelagem da função
+qualidade que levam em consideração o fluxo total de execução e a cadeia de
+interdependência entre tarefas e mensagens, porém, para os propósitos deste
+trabalho, a definição simples será uma aproximação suficiente.
+
+=== Disponibilidade
+
+A disponibilidade $D$ é a razão entre o tempo em que o sistema não consegue
+prover (ou tempo "indisponível") e o e seu tempo total de operação.
+
+#figure(caption: [Disponibilidade], kind: "formula", $
+  D = (t_d - t_i) / (t_d + t_i)
+$)
+
+Onde $t_i$ é o tempo indisponível e $t_d$ o tempo disponível do sistema.
+
+=== Confiabilidade
+
+=== Falhas e Erros
+
+Um _defeito_ é uma alteração não esperada causada por um fenômeno externo ou
+design incorreto. Um _erro_ é a diferença entre o resultado esperado e o
+resultado obtido. Já uma _falha_ é uma redução da qualidade de serviço.
+Defeitos podem causar erros que levam à falhas. Durante este trabalho, será
+focado na detecção de ambos defeitos (estados inesperados) assim como falhas
+(degradação de serviço), portanto os termos serão utilizados frequentemente de
+forma intercambiável significando apenas um estado inesperado do sistema que
+leva a degradação eventual, dado que a distinção particular entre falha e
+defeito não é de grande importância para a comparação das técnicas
+apresentadas.
+
 == Falhas e Tolerância
 
-Uma _falha_ pode ser compreendida como um defeito fora do controle do sistema
-que pode provocar comportamento que resulta degradação na sua qualidade de
-serviço neste caso, chamado "erro", seja ao afetar a validade dos resultados ou
-com uma degradação na forma de aumento de latência. @FaultTolerantSystems
 Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de
-ocorrência:
+ocorrência @FaultTolerantSystems.
 
 - Falhas *Transientes*: Ocorrem aleatoriamente e possuem um impacto temporário.
 
@@ -435,17 +476,35 @@ Para melhor exemplificar a importância da detecção das falhas, será tomado c
 
 #figure(caption: "Grafo com 3 processos e uma mensagem", image(height: 180pt, "assets/ftg_simples.png"))
 
-Ao incluir os diferentes desvios possíveis na presença de apenas _uma_ falha, temos o seguinte grafo, importante notar que falhas botem ocorrer tanto na tarefa quanto na transição de estado dependente de mensagem.
+Ao incluir os diferentes desvios possíveis na presença de apenas _uma_ falha, temos o seguinte grafo, importante notar que falhas podem ocorrer tanto na tarefa quanto na transição de estado dependente de mensagem.
 
 #figure(caption: "Mesmo grafo, mas tolerante à uma falha transiente", image(height: 240pt, "assets/ftg_expandido.png"))
 
-Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha não tivesse acontecido.
+Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após sua deadline ter sido completa.
 
 #figure(caption: [Introdução de transparência (freezing) em $P_2$], image(height: 240pt, "assets/ftg_transparencia.png"))
 
-Ao introduzir apenas um ponto de transparência é possível reduzir significativamente as possibilidades de execução do sistema, isso não é benéfico do ponto de vista especial para um escalonador baseado em tabelas, mas também do ponto de vista de confiabilidade o sistema torna-se mais previsível. Este exemplo é simples e tolera apenas uma falha transiente, porém processos complexos com múltiplas mensagens entre si causam um aumento exponencial de complexidade, especialmente caso seja necessário tolerar até $k$ falhas transientes.
+Introduzindo apenas um ponto de transparência é possível reduzir
+significativamente as possibilidades de execução do sistema, isso é
+particularmente benéfico para escalonadores ou handlers de falhas baseados em
+tabelas ou máquinas de estado finito, assim como é positivo para a
+previsibilidade do sistema, estabelecendo uma relação forte de pré-conclusão
+com sucesso ao respeitar a deadline de da tarefa transparente.
 
-Ao aplicar juntamente técnicas de escalonamento como a reexecução ou redundância modular é possível introduzir estes pontos de transparência estrategicamente, com o objetivo de melhorar a confiabilidade do sistema e torná-lo mais previsível. A introdução de transparência naturalmente não é gratuita, é feito um tradeoff entre garantias mais fortes no escalonador e menos imprevisibilidade na execução com o custo de maior uso da CPU e memória, todos os pontos de transparência necessitam ser checados o que pode gerar um tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para garantir a possibilidade de reexecuções suficientes.
+Este exemplo é simples e tolera apenas uma falha transiente, porém processos
+complexos com múltiplas mensagens entre si causam um aumento exponencial de
+complexidade, especialmente caso seja necessário tolerar até $k$ falhas
+transientes.
+
+É possível introduzir estes pontos de transparência com a técnica de reexecução
+ou com redundância modular (se a deadline conjunta das $N$ tarefas for
+determinística) , com o objetivo de melhorar a confiabilidade do sistema e
+torná-lo mais previsível. A introdução de transparência naturalmente não é
+gratuita, é feito um tradeoff entre garantias mais fortes no escalonador e
+menos imprevisibilidade na execução com o custo de maior uso da CPU e memória,
+todos os pontos de transparência necessitam ser checados o que pode gerar um
+tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para
+garantir a possibilidade de reexecuções suficientes.
 
 == Trabalhos Relacionados
 
@@ -511,5 +570,4 @@ diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O
 trabalho de Asghari et. al serve como um exemplo de uma possível extensão
 futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de
 diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
-
 
