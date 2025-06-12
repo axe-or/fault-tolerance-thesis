@@ -39,7 +39,7 @@ previsível não será utilizado mecanismo de exceção com stack unwinding ou R
 explicitamente com valores ou através de callbacks.
 
 Necessariamente, é preciso também presumir que testes sintéticos possam ao
-menos *aproximar* a performance do mundo real, ou ao menos prever o pior caso
+menos aproximar a performance do mundo real, ou ao menos prever o pior caso
 possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser
 um substituto para a medição em uma aplicação real, porém, uma bateria de
 testes com injeção artificial de falhas pode ser utilizada para verificar as
