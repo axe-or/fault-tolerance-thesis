@@ -1,19 +1,19 @@
-Fazer resumo
-Campanha de Injeção:
-	Software -> task de injeção em range de memória protegido e callbacks de injeção
-	STMCube -> depurador STLink etc.
+descrever mais metodos (fluxo)
+materiais trazer imagens
+icone/imagem das ferramentas 
+descritivo na tabela 1 (na verdade é quadro) -> descrever o porque daquelas combinações
+subtopico (visal geral) explicacao + imagem geral do projeto!
+envio (elf) do binario
+diagrama de sequencia e casos de uso (regras de negócio?)
+análise de risco sendo tabela
 
-Consideração Final:
-	Recapitular o panorama do que foi investigado
+melhorar bastante o resumo
+- contar historinha
+- problema, o que aborda etc
 
-fundamentação:
-	falar sobre técnicas de injeção, resumidamente: Física, software lógica, hardware e simulador
 
-Cronograma do TCC 2
-Requisitos do TCC 2?
 
-fundamentação:
-elaborar um pocuo mais sobre técnicas que usam o compilador para detectar jumps inválidos, não serão abordadas mas é bom mencionar
+
 
 
 
