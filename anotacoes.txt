@@ -1,10 +1,10 @@
 descrever mais nos metodos (fluxo)
-materiais trazer imagens -> icone/imagem das ferramentas 
 descritivo na tabela 1 (na verdade é quadro) -> descrever o porque daquelas combinações
 envio (elf) do binario
 diagrama de sequencia e casos de uso (regras de negócio?)
 análise de risco sendo tabela
-
+botar o site da STM eletronics como referencia
+botar nas imagens com fonte a citacao correspondente
 
 
 

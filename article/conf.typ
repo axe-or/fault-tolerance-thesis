@@ -40,6 +40,10 @@
 		size: 12pt,
 	)
 
+	set table(
+		fill: (x, y) => if y == 0 { luma(75%) },
+	)
+
 	// Headings
 	set heading(numbering: "1.1.")
 	show heading.where(level: 1): set text(size: 16pt)
@@ -48,45 +52,46 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
-	// Formulas
+	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
+	show figure.where(kind: raw): set figure(supplement: "Quadro")
+	show figure.where(kind: table): set figure(supplement: "Quadro")
+
+	// Images
 	show figure.where(kind: image): (fig) => {
 		box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
 			#fig.body
 		]
+	}
+
+	// Formulae
+	show figure.where(kind: "formula"): (fig) => {
+		let fig_num = array.at(counter(figure.where(kind: "formula")).get(), 0)
+		grid(
+			columns: (1fr, auto),
+			fig.body,
+			align(left, [(#fig_num)]),
+		)
+	}
+
+	// Tables
+	show figure.where(kind: table): (fig) => {
 		set align(left)
 		text(fig.caption)
+		fig.body
 	}
-	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
 
 	// Code listings
 	set raw(theme: "assets/light.tmTheme")
 	show figure.where(kind: raw): (fig) => {
+		set align(left)
 		set text(top-edge: 0.7em)
-		set par(first-line-indent: 0pt)
-		box(width: 90%, stroke: (paint: luma(0), thickness: 1.5pt), {
-			set align(left)
-				grid(
-					rows: (auto, auto),
-					box(
-						fill: luma(90%),
-						width: 100%,
-						inset: 5pt,
-						stroke: (bottom: luma(0)),
-					)[
-						#text(weight: "bold", fig.caption)
-					],
-					box(
-						fill: luma(98%),
-						width: 100%,
-						inset: (left: 16pt, right: 8pt, bottom: 8pt, top: 8pt),
-						align(left, [
-							#set par(first-line-indent: 0pt, leading: 0.5em)
-							#fig.body
-						]),
-					)
-				)
-			}
-		)
+
+		fig.caption
+		
+		set par(first-line-indent: 0pt, leading: 0.5em)
+		box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
+		#fig.body			
+		]
 	}
 
 

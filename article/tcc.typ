@@ -37,7 +37,7 @@ Para viabilizar tolerância à falhas é possível utilizar de diversos mecanism
 
 // Tables
 #outline(
-	title: "LISTA DE TABELAS",
+	title: "LISTA DE QUADROS",
 	target: figure.where(kind: table),
 )
 

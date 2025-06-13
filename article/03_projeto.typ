@@ -315,25 +315,20 @@ reservada previamente na seção estática da imagem do executável e será isen
 de falhas. Um dump da imagem será extraído e os contadores e métricas
 deserializados no host para análise.
 
-As combinações de técnicas escolhidas serão:
-
 #figure(caption: [Combinações de técnicas utilizadas], table(
-  columns: (auto, auto, auto, auto, auto),
+  columns: (auto, auto, auto, auto, auto, 1fr),
   // column-gutter: (auto, 4pt, auto),
-  table.header([*Redundância modular*], [*Reexecução*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
-  "-","-","-","-","-",
-  "-","-","-","-","✓",
-
-  "✓","-","-","-","✓",
-  "✓","-","-","✓","✓",
-  "✓","-","✓","-","✓",
-  "✓","-","✓","✓","✓",
-  
-  "-","✓","-","-","✓",
-  "-","✓","-","✓","✓",
-  "-","✓","✓","-","✓",
-  "-","✓","✓","✓","✓",
+  table.header([*Comb.*], [*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
+  "1", "-","-","-","-","-",
+  "2", "-","-","-","✓","✓",
+  "3", "✓","-","-","✓","✓",
+  "4", "✓","-","✓","✓","✓",
+  "5", "-","✓","-","✓","✓",
+  "6", "-","✓","✓","✓","✓",
+  // "7", "✓","✓","✓","✓","✓",
 ))
+
+A combinação 1 é apenas um grupo controle, para checar a execução sem tolerância alguma, já a combinação 2 visa comparar com as técnicas de tolerância que não envolvem modificação do processo de execução da task. As combinações 3 à 6  visam comparar Reexecução e Redundância modular, com e sem Heartbeat Signals (que incorrem em uma task adicional). Asserts e CRCs serão mantidos ativos em todas as execuções por 2 razões principais: Asserts serão utilizados para validar as chamadas virtuais da interface, e CRCs tornam falhas na transmissão de mensagens detectáveis, não seria proveitoso realizar passagem de mensagens para os Heartbeat Signals se as mensagens por si só não são confiáveis.
 
 ==== Injeção Lógica com Software
 
@@ -346,8 +341,8 @@ introduzido uma lista de injetores de falhas que as tasks podem invocar,
 primariamente para testes.
 
 A escolha da injeção lógica com software permite que já sejam feitos testes
-preliminares das técnicas durante o desenvolvimento, possivelmente previnindo
-certos tipos de erros de design. Uma outra vantagem é que será possível
+preliminares das técnicas durante o desenvolvimento, possivelmente mitigando
+certos erros de design. Uma outra vantagem é que será possível
 reutilizar parte da funcionalidade da geração de injeções e upsets para
 realizar testes com o depurador de hardware.
 
