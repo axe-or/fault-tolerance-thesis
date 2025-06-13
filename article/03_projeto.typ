@@ -83,9 +83,9 @@ Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
 Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
 de depuração do hardware (ST-LINK), a comunição do ST-LINK é feita via USB com o host e via JTAG com o microcontrolador alvo, também será usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
 
-#figure(caption: [ST-LINK/V2, Fonte: STMicrolectronics], image("assets/st_link.png"))
+#figure(caption: [ST-LINK/V2 #linebreak() Fonte: STMicrolectronics], image("assets/st_link.png"))
 
-#figure(caption: [STMCube IDE, Fonte: STMicrolectronics], image("assets/stmcube_ide.png"))
+#figure(caption: [STMCube IDE #linebreak() Fonte: STMicrolectronics], image("assets/stmcube_ide.png"))
 
 Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
 juntamente com as ferramentas anteriormente citadas, assim como

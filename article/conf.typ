@@ -48,16 +48,21 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
-  // Formulas
-  show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
-
+	// Formulas
+	show figure: (fig) => {
+		box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
+			#fig.body
+		]
+		set align(left)
+		text(fig.caption)
+	}
+	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
 
 	// Code listings
-  	set raw(theme: "assets/light.tmTheme")
-	  show figure.where(kind: raw): (fig) => {
+	set raw(theme: "assets/light.tmTheme")
+	show figure.where(kind: raw): (fig) => {
 		set text(top-edge: 0.7em)
 		set par(first-line-indent: 0pt)
-		
 		box(width: 90%, stroke: (paint: luma(0), thickness: 1.5pt), {
 			set align(left)
 				grid(
