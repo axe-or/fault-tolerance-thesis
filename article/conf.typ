@@ -159,7 +159,7 @@
 	bibliography(
     	"bibliografia.bib",
 		title: none,
-		style: "assets/ufrj-abnt.csl",
+		style: "assets/associacao-brasileira-de-normas-tecnicas.csl",
 		full: true,
 	)
 }

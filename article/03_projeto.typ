@@ -76,9 +76,17 @@ relação à versão sem tolerância.
 
 Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou
 Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
-"Bluepill") 32-bits da arquitetura ARMv7-M executando FreeRTOS. Para a injeção
-de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
-de depuração do hardware (STPLink) para também auxiliar na coleta das métricas.
+"Bluepill") 32-bits da arquitetura ARMv7-M.
+
+#figure(caption: [Diagrama do STM32F103C8T6 ("Bluepill"), Fonte: ARM Embed OS], image("assets/stm32_bluepill.png"))
+
+Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
+de depuração do hardware (ST-LINK), a comunição do ST-LINK é feita via USB com o host e via JTAG com o microcontrolador alvo, também será usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
+
+#figure(caption: [ST-LINK/V2, Fonte: STMicrolectronics], image("assets/st_link.png"))
+
+#figure(caption: [STMCube IDE, Fonte: STMicrolectronics], image("assets/stmcube_ide.png"))
+
 Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
 juntamente com as ferramentas anteriormente citadas, assim como
 AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
