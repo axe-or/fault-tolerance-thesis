@@ -94,41 +94,35 @@ durante o desenvolvimento.
 
 == Análise de Requisitos
 
-Após a seleção dos objetivo, foram coletados os requisitos funcionais e não funcionais, assim como suas regras de negócio, que são apresentados nos quadros seguintes.
+Após a seleção dos objetivo, foram coletados os requisitos funcionais e não funcionais, que são apresentados nos quadros seguintes.
 
 #figure(caption: [Requisitos funcionais], table(
-  columns: (auto, 1fr),
+	columns: (auto, 1fr),
 
-  table.header([*Requisito*], [*Descrição*]),
+	table.header([*Requisito*], [*Descrição*]),
 
-  [*RF 1*], [Todos os algoritmos da seção *Algoritmos e Técnicas* implementados],
-  [*RF 2*], [Implementação da interface para execução de tarefas com TF],
-  [*RF 3*], [Programa de exemplo implementado com diferentes técnicas e executado],
-  [*RF 4*], [Implementação da interface para as tarefas do programa de exemplo],
-  [*RF 5*], [Injeção de falhas lógicas em software (callbacks de injeção)],
-  [*RF 6*], [Injeção de falhas lógicas em hardware (ST-LINK + GDB)],
-  [*RF 7*], [Funções de medição e observabilidade das métricas: uso de CPU, uso de memória, falhasinjetadas, falhas detectadas, quantia de tasks instanciadas e cache hit rate (caso presente).],
-  [*RF 8*], [Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa.],
+	[*RF 1*], [Todos os algoritmos da seção *Algoritmos e Técnicas* implementados],
+	[*RF 2*], [Implementação da interface para execução de tarefas com TF],
+	[*RF 3*], [Programa de exemplo implementado com diferentes técnicas e executado],
+	[*RF 4*], [Implementação da interface para as tarefas do programa de exemplo],
+	[*RF 5*], [Injeção de falhas lógicas em software (callbacks de injeção)],
+	[*RF 6*], [Injeção de falhas lógicas em hardware (ST-LINK + GDB)],
+	[*RF 7*], [Funções de medição e observabilidade das métricas: uso de CPU, uso de memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas],
+	[*RF 8*], [Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa],
 ))
 
-=== Requisitos Não-Funcionais
+#figure(caption: [Requisitos Não-funcionais], table(
+	columns: (auto, 1fr),
 
-#figure(caption: [Requisitos funcionais], table(
-  columns: (auto, 1fr),
-
-  table.header([*Requisito*], [*Descrição*]),
+	table.header([*Requisito*], [*Descrição*]),
+	[*RNF 1*], [Trabalho deve ser realizado em C++ (versão 14 ou acima)],
+	[*RNF 2*], [Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M],
+	[*RNF 3*], [Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware abstraction layer), seja do RTOS ou de terceiros.],
+	[*RNF 4*], [Precisa fazer uso de múltiplos núcleos quando presentes],
+	[*RNF 5*], [Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas],
+	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
 ))
 
-+ Implementação deve ser realizada em uma linguagem que possua controle
-  granular de layout de memória e não necessite de suporte à floats em hardware. Neste trabalho será utilizado C++14 (ou acima)
-+ Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M
-
-+ Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware abstraction layer), seja do RTOS ou de terceiros.
-
-+ Precisa fazer uso de múltiplos núcleos quando presentes
-
-+ Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas
-+ V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos
 
 === Programas exemplos
 
@@ -375,20 +369,27 @@ quantia significativa da lógica de geração em software.
 
 O trabalho é de risco baixo, dado que constrói em cima de fundações técnicas previamente exploradas, porém dentro dos principais riscos que possam alterar ou causar problemas durante a realização encontram-se:
 
-*Risco I*: Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.
-- Probabilidade e Impacto: Baixa | Alto
-- Gatilho: Implementar interface no RTOS
-- Mitigação: Utilizar outro RTOS, modificar o RTOS escolhido, adaptar a interface
-
-*Risco II*: Problemas para injetar falhas com depurador.
+*Risco II*: 
 - Probabilidade e Impacto: Baixa | Alto
 - Gatilho: Teste em microcontrolador
-- Mitigação: Utilizar de outro depurador, manualmente injetar pontos de falhas no código e depender de falhas lógicas em software
+- Mitigação: 
 
-*Risco III*: Dificuldade de coletar métricas de performance com profiler
+*Risco III*: 
 - Probabilidade e Impacto: Baixa | Médio
 - Gatilho: Teste em microcontrolador ou ambiente virtualizado
-- Mitigação: Utilizar outro profiler, inserir pontos de medição manualmente
+- Mitigação: 
+
+#figure(caption: [Análise de riscos], table(
+	columns: (auto,) * 5,
+	// column-gutter: (auto, 4pt, auto),
+	table.header([*Risco*], [*Probabilidade*], [*Impacto*], [*Gatilho*], [*Contingência*]),
+	[Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.], [Baixo], [Alto], [Implementar interface no RTOS], [Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface],
+
+	[Problemas para injetar falhas com depurador em hardware], [Baixa], [Alto], [Realizar injeção no microcontrolador], [Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa],
+
+
+	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
+))
 
 === Cronograma para o TCC3
 

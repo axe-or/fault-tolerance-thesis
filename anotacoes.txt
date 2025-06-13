@@ -1,5 +1,4 @@
 descrever mais nos metodos (fluxo)
-descritivo na tabela 1 (na verdade é quadro) -> descrever o porque daquelas combinações
 envio (elf) do binario
 diagrama de sequencia e casos de uso (regras de negócio?)
 análise de risco sendo tabela
