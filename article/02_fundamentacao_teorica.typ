@@ -1,3 +1,5 @@
+#import "conf.typ": sourced_image
+
 = FUNDAMENTAÇÃO TEÓRICA
 
 == Definições Principais
@@ -80,7 +82,7 @@ difícil.
 
 Será utilizado o termo dependabilidade como uma propriedade que sumariza os
 atributos (conhecidos em inglês como critério RAMS): confiabilidade,
-disponibilidade, capacidade de manuntenção e segurança.
+disponibilidade, capacidade de manutenção e segurança.
 
 A tolerância à falhas impacta os atributos confiabilidade e disponibilidade
 positivamente, e pode em alguns casos melhorar a capacidade de manuntenção,
@@ -640,9 +642,10 @@ de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível
 detectar mais da metade das falhas funcionais apenas com técnicas de software
 no banco de registradores. @ReliabilityArmCortexUnderHeavyIons.
 
-#figure(
+#sourced_image(
 	image("assets/related_works_heavy_ion_reliability.png"),
-	caption: "Análise de resiliência, dividida por categoria",
+	caption: [Análise de resiliência, dividida por categoria],
+  source: "ReliabilityArmCortexUnderHeavyIons",
 )
 
 Uma outra observação foi que a quantia de falhas injetadas para ocasionar um
@@ -664,9 +667,11 @@ tolerância com menor uso de CPU em relação à redundância tripla utilizando 
 técnicas em software combinado com um par de processadores com auto checagem
 (PSP).
 
-#figure(
-	image("assets/related_works_psp_perf.png"),
+
+#sourced_image(
 	caption: [Utilização de CPU para diferentes implementações de tolerância],
+  source: "ApplicationLevelFT",
+	image("assets/related_works_psp_perf.png"),
 )
 
 O trabalho demonstra também a viabilidade de prover interfaces mais abstratas

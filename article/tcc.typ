@@ -1,4 +1,4 @@
-#import "conf.typ": conf
+#import "conf.typ": conf, sourced_image
 
 #show: conf.with(
 	title: "Exploração de detecção de falhas em tempo real com técnicas no escalonador",
@@ -28,19 +28,21 @@ Para viabilizar tolerância à falhas é possível utilizar de diversos mecanism
 	target: figure.where(kind: image).or(figure.where(kind: raw)),
 	depth: 1,
 )
+#pagebreak()
+
+// Tables
+#outline(
+	title: "LISTA DE QUADROS",
+	target: figure.where(kind: "quadro"),
+)
+#pagebreak()
+
 
 // Forumlas
 #outline(
 	title: "LISTA DE FÓRMULAS",
 	target: figure.where(kind: "formula"),
 )
-
-// Tables
-#outline(
-	title: "LISTA DE QUADROS",
-	target: figure.where(kind: table),
-)
-
 #pagebreak()
 
 // Table of Contents

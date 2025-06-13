@@ -6,6 +6,8 @@
 	research_area: "<SEM ÁREA>",
 	supervisor: "<SEM ORIENTADOR>",
 ) = {
+
+
 	// Page
 	set page(
 		paper: "a4",
@@ -24,6 +26,10 @@
 		},
 	)
 
+	// Citation tweaks
+	show cite.where(form: "normal") : c => upper(c)
+	show figure: set cite(form: "prose")
+	
 	// Paragraph
 	set par(
 		justify: true,
@@ -43,7 +49,7 @@
 	set table(
 		fill: (x, y) => if y == 0 { luma(75%) },
 	)
-
+	
 	// Headings
 	set heading(numbering: "1.1.")
 	show heading.where(level: 1): set text(size: 16pt)
@@ -52,19 +58,9 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
-	show figure: set cite(form: "prose")
-
 	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
 	show figure.where(kind: table)
 			.or(figure.where(kind: raw)) : set figure(kind: "quadro", supplement: "Quadro")
-
-	// Images
-	show figure.where(kind: image): (fig) => box()[
-		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
-			#fig.body
-		]
-		#align(left, fig.caption)
-	]
 
 	// Formulae
 	show figure.where(kind: "formula"): (fig) => {
@@ -98,7 +94,14 @@
 			]
 		]
 	}
-
+	
+	// Images
+	show figure.where(kind: image): (fig) => box()[
+		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
+			#fig.body
+		]
+		#align(left, fig.caption)
+	]
 
 	// Front page
 	[
@@ -175,7 +178,14 @@
     	"bibliografia.bib",
 		title: none,
 		style: "assets/associacao-brasileira-de-normas-tecnicas.csl",
-		full: true,
 	)
 }
 
+#let sourced_image(body, caption: "", source: "") = {
+	set par(justify: false, first-line-indent: 0pt)
+	let fig = figure(caption: caption, body)
+	box()[
+		#fig
+		Fonte: #cite(label(source), form: "prose")
+	]
+}
