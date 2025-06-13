@@ -94,41 +94,40 @@ durante o desenvolvimento.
 
 == Análise de Requisitos
 
-=== Requisitos Funcionais
+Após a seleção dos objetivo, foram coletados os requisitos funcionais e não funcionais, assim como suas regras de negócio, que são apresentados nos quadros seguintes.
 
-+ Algoritmos da seção *Algoritmos e Técnicas* implementados.
+#figure(caption: [Requisitos funcionais], table(
+  columns: (auto, 1fr),
 
-+ Interface para execução com diferentes políticas de resiliência das tarefas definidas
+  table.header([*Requisito*], [*Descrição*]),
 
-+ Programa de exemplo implementado com diferentes técnicas e executado
-
-+ Implementação da interface para as tarefas do programa de exemplo
-
-+ Injeção de falhas na memória com um depurador (GDB)
-
-+ Fila MPMC (Multi producer, Multi consumer) para passagem de mensagens com checagem de erro
-
-+ Funções de medição e observabilidade das métricas: uso de CPU, uso de
-  memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas e
-  cache hit rate (caso presente).
-
-+ Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa.
+  [*RF 1*], [Todos os algoritmos da seção *Algoritmos e Técnicas* implementados],
+  [*RF 2*], [Implementação da interface para execução de tarefas com TF],
+  [*RF 3*], [Programa de exemplo implementado com diferentes técnicas e executado],
+  [*RF 4*], [Implementação da interface para as tarefas do programa de exemplo],
+  [*RF 5*], [Injeção de falhas lógicas em software (callbacks de injeção)],
+  [*RF 6*], [Injeção de falhas lógicas em hardware (ST-LINK + GDB)],
+  [*RF 7*], [Funções de medição e observabilidade das métricas: uso de CPU, uso de memória, falhasinjetadas, falhas detectadas, quantia de tasks instanciadas e cache hit rate (caso presente).],
+  [*RF 8*], [Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa.],
+))
 
 === Requisitos Não-Funcionais
 
-+ Implementação deve ser realizada em uma linguagem que possua controle
-  granular de layout de memória e não necessite de suporte à floats em hardware. Neste trabalho será utilizado C++ (Versão 14 ou acima)
+#figure(caption: [Requisitos funcionais], table(
+  columns: (auto, 1fr),
 
+  table.header([*Requisito*], [*Descrição*]),
+))
+
++ Implementação deve ser realizada em uma linguagem que possua controle
+  granular de layout de memória e não necessite de suporte à floats em hardware. Neste trabalho será utilizado C++14 (ou acima)
 + Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M
 
-+ Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware
-  abstraction layer), seja do RTOS ou de terceiros.
++ Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware abstraction layer), seja do RTOS ou de terceiros.
 
 + Precisa fazer uso de múltiplos núcleos quando presentes
 
-+ Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS
-  preemptivo sem mudanças significativas
-
++ Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas
 + V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos
 
 === Programas exemplos

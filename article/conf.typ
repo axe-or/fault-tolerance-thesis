@@ -53,15 +53,16 @@
 	show heading: set block(below: 18pt, above: 18pt)
 
 	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
-	show figure.where(kind: raw): set figure(supplement: "Quadro")
-	show figure.where(kind: table): set figure(supplement: "Quadro")
+	show figure.where(kind: table)
+			.or(figure.where(kind: raw)) : set figure(kind: "quadro", supplement: "Quadro")
 
 	// Images
-	show figure.where(kind: image): (fig) => {
-		box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
+	show figure.where(kind: image): (fig) => box()[
+		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
 			#fig.body
 		]
-	}
+		#align(left, fig.caption),
+	]
 
 	// Formulae
 	show figure.where(kind: "formula"): (fig) => {
@@ -85,12 +86,12 @@
 	show figure.where(kind: raw): (fig) => {
 		set align(left)
 		set text(top-edge: 0.7em)
-
-		fig.caption
-		
-		set par(first-line-indent: 0pt, leading: 0.5em)
-		box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
-		#fig.body			
+		box()[
+			#fig.caption
+			#set par(first-line-indent: 0pt, leading: 0.5em)
+			#box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
+				#fig.body			
+			]
 		]
 	}
 
