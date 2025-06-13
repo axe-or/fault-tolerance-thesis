@@ -271,17 +271,35 @@ fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @Bo
 
 === Outros testes
 
-Serão realizados testes ponta a ponta com os dois programas de exemplo para garantir sua validade lógica antes de ser realizada sua execução definitiva. As técnicas de detecção também passarão por teste de integração juntamente ao teste dos programas com injeção de falhas em software. O objetivo é produzir uma exemplo prova de conceito que já contém grande parte da implementação, para que erros inesperados e mudanças de design sejam feitas anteriormente dos testes com o microcontrolador para diminuir a quantidade de fricção na análise final (mas mantendo ainda um limite superior de uso de recursos). Todos os testes são artefatos que serão distribuídos juntamente com o trabalho.
+Serão realizados testes ponta a ponta com os dois programas de exemplo para
+garantir sua validade lógica antes de ser realizada sua execução definitiva. As
+técnicas de detecção também passarão por teste de integração juntamente ao
+teste dos programas com injeção de falhas em software. O objetivo é produzir
+uma exemplo prova de conceito que já contém grande parte da implementação, para
+que erros inesperados e mudanças de design sejam feitas anteriormente dos
+testes com o microcontrolador para diminuir a quantidade de fricção na análise
+final (mas mantendo ainda um limite superior de uso de recursos). Todos os
+testes são artefatos que serão distribuídos juntamente com o trabalho.
 
 === Campanha de Injeção de Falhas
 
-Para testar a injeção de falhas serão utilizados mecanismos lógicos
-em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza
-transiente e focarão no segmento de memória com leitura e escrita.
+Para testar a injeção de falhas serão utilizados mecanismos lógicos em software
+e em hardware com com o auxílio do depurador STLink. As falhas serão de
+natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a partir de um endereço base são escolhidos e escritos com dados pseudo aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático com escrita, o stack das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rounds (e.x: 200) e terão suas métricas coletadas até o final dos rounds ou caso os erros cumulativos causem um reset total do sistema.
+As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a
+partir de um endereço base são escolhidos e escritos com dados pseudo
+aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático
+com escrita, o stack das tarefas e registradores de propósito geral. Os
+programas exemplo serão executados por um número fixo de rounds (e.x: 200) e
+terão suas métricas coletadas até o final dos rounds ou caso os erros
+cumulativos causem um reset total do sistema.
 
-Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica.
+Falhas detectadas serão armazenadas com contadores atômicos, com um contador
+dedicado para cada tipo de técnica. A região de coleta das métricas será
+reservada previamente na seção estática da imagem do executável e será isenta
+de falhas. Um dump da imagem será extraído e os contadores e métricas
+deserializados no host para análise.
 
 As combinações de técnicas escolhidas serão:
 
@@ -305,14 +323,45 @@ As combinações de técnicas escolhidas serão:
 
 ==== Injeção Lógica com Software
 
-Será criado uma task com um "micro heap" associado à mesma, a task executará de forma paralela à todas as outras, a cada ciclo de preempção, a task injetora acessa sua fila de candidatos e invoca um callback associado para causar N bytes de corrupção de memória. É importante notar que por consistência, será necessário "fixar" esta tarefa monitora em um núcleo. Como complemento, será introduzido uma lista de injetores de falhas que as tasks podem invocar, primariamente para testes.
+Será criado uma task com um "micro heap" associado à mesma, a task executará de
+forma paralela à todas as outras, a cada ciclo de preempção, a task injetora
+acessa sua fila de candidatos e invoca um callback associado para causar N
+bytes de corrupção de memória. É importante notar que por consistência, será
+necessário "fixar" esta tarefa monitora em um núcleo. Como complemento, será
+introduzido uma lista de injetores de falhas que as tasks podem invocar,
+primariamente para testes.
 
-A escolha da injeção lógica com software permite que já sejam feitos testes preliminares das técnicas durante o desenvolvimento, possivelmente certos tipos de erros de design.
+A escolha da injeção lógica com software permite que já sejam feitos testes
+preliminares das técnicas durante o desenvolvimento, possivelmente certos tipos
+de erros de design. Uma outra vantagem é que será possível reutilizar parte da
+funcionalidade da geração de injeções e upsets para realizar testes com o
+depurador de hardware.
+
+#figure(caption: "Rascunho da estrutura de métricas", ```cpp
+#include <atomic>
+
+using AtomicInt = std::atomic<int32_t>;
+
+struct Fault_Metrics {
+  AtomicInt assertion_counter;
+  AtomicInt watchdog_counter;
+  AtomicInt crc_counter;
+  AtomicInt modular_redundancy_consensus_checks;
+  AtomicInt reexecution_consensus_check;
+};
+```)
 
 ==== Injeção Lógica com Hardware
 
-// TODO: elaborar mais
-Utilizando do depurador dedicado do microcontrolador ST-Link, será feito o processo de injeção idêntico ao da injeção lógica com software, com exceção dos endereços para a coleta de métricas, será utilizada uma sessão estilo GDB (GNU Debugger) para executar os comandos remotamente, é possível gerar uma lista de falhas dinamicamente ou anteriormente e simplesmente enviar periodicamente para o debugger via standard input ou utilizando sua funcionalidade de scripting com Python.
+Utilizando do depurador dedicado do microcontrolador (ST-Link), serão injetadas
+as mesmas falhas, com exceção dos endereços para a coleta de métricas, será
+utilizada uma sessão do deuprador GDB (GNU Debugger) que é fornecida pelo
+ST-Link para executar os comandos remotamente, para automatizar a injeção assim
+como na versão lógica baseada em software, será emitido a lista de comandos
+para o depurador executar com um programa externo, que pode reutilizar uma
+quantia significativa da lógica de geração em software.
+
+// TODO: Botar diagrama aqui do processo basico
 
 == Análise de riscos
 
