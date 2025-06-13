@@ -16,6 +16,10 @@ de memória, apesar deste custo poder ser amortizado com a utilização de filas
 concorrentes bem implementadas e com a criação de um perfil de uso para melhor
 ajuste do sistema.
 
+== Visão Geral
+
+#figure(caption: "Visão Geral do projeto", image("assets/visao_geral.png"))
+
 == Metodologia
 
 === Métodos

@@ -2,14 +2,11 @@ descrever mais nos metodos (fluxo)
 materiais trazer imagens
 icone/imagem das ferramentas 
 descritivo na tabela 1 (na verdade é quadro) -> descrever o porque daquelas combinações
-subtopico (visal geral) explicacao + imagem geral do projeto!
+subtopico (visal geral) explicacao
 envio (elf) do binario
 diagrama de sequencia e casos de uso (regras de negócio?)
 análise de risco sendo tabela
 
-melhorar bastante o resumo
-- contar historinha
-- problema, o que aborda etc
 
 
 
