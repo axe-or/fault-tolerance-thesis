@@ -332,10 +332,10 @@ introduzido uma lista de injetores de falhas que as tasks podem invocar,
 primariamente para testes.
 
 A escolha da injeção lógica com software permite que já sejam feitos testes
-preliminares das técnicas durante o desenvolvimento, possivelmente certos tipos
-de erros de design. Uma outra vantagem é que será possível reutilizar parte da
-funcionalidade da geração de injeções e upsets para realizar testes com o
-depurador de hardware.
+preliminares das técnicas durante o desenvolvimento, possivelmente previnindo
+certos tipos de erros de design. Uma outra vantagem é que será possível
+reutilizar parte da funcionalidade da geração de injeções e upsets para
+realizar testes com o depurador de hardware.
 
 #figure(caption: "Rascunho da estrutura de métricas", ```cpp
 #include <atomic>
@@ -343,11 +343,11 @@ depurador de hardware.
 using AtomicInt = std::atomic<int32_t>;
 
 struct Fault_Metrics {
-  AtomicInt assertion_counter;
-  AtomicInt watchdog_counter;
-  AtomicInt crc_counter;
-  AtomicInt modular_redundancy_consensus_checks;
-  AtomicInt reexecution_consensus_check;
+    AtomicInt assertion_counter;
+    AtomicInt watchdog_counter;
+    AtomicInt crc_counter;
+    AtomicInt modular_redundancy_consensus_checks;
+    AtomicInt reexecution_consensus_check;
 };
 ```)
 
