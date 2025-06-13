@@ -305,14 +305,14 @@ As combinações de técnicas escolhidas serão:
 
 ==== Injeção Lógica com Software
 
-Será criado uma task com um "micro heap" associado à mesma, a task executará de forma paralela à todas as outras, a cada ciclo de preempção, a task injetora acessa sua fila de candidatos e invoca um callback associado para causar N bytes de corrupção de memória. É importante notar que por consistência, será necessário "fixar" esta tarefa monitora em um grupo. Como complemento, será introduzido uma lista de injetores de falhas que as tasks podem invocar, primariamente para testes.
+Será criado uma task com um "micro heap" associado à mesma, a task executará de forma paralela à todas as outras, a cada ciclo de preempção, a task injetora acessa sua fila de candidatos e invoca um callback associado para causar N bytes de corrupção de memória. É importante notar que por consistência, será necessário "fixar" esta tarefa monitora em um núcleo. Como complemento, será introduzido uma lista de injetores de falhas que as tasks podem invocar, primariamente para testes.
 
 A escolha da injeção lógica com software permite que já sejam feitos testes preliminares das técnicas durante o desenvolvimento, possivelmente certos tipos de erros de design.
 
 ==== Injeção Lógica com Hardware
 
 // TODO: elaborar mais
-Utilizando do depurador dedicado do microcontrolador ST-Link, será feito o processo de injeção idêntico ao da injeção lógica com software, com exceção dos endereços para a coleta de métricas 
+Utilizando do depurador dedicado do microcontrolador ST-Link, será feito o processo de injeção idêntico ao da injeção lógica com software, com exceção dos endereços para a coleta de métricas, será utilizada uma sessão estilo GDB (GNU Debugger) para executar os comandos remotamente, é possível gerar uma lista de falhas dinamicamente ou anteriormente e simplesmente enviar periodicamente para o debugger via standard input ou utilizando sua funcionalidade de scripting com Python.
 
 == Análise de riscos
 
