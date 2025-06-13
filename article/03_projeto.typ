@@ -16,9 +16,47 @@ de memória, apesar deste custo poder ser amortizado com a utilização de filas
 concorrentes bem implementadas e com a criação de um perfil de uso para melhor
 ajuste do sistema.
 
-== Visão Geral
+== Visão Geral e Premissas
+
+=== Visão Geral
 
 #figure(caption: "Visão Geral do projeto", image("assets/visao_geral.png"))
+
+A análise final será realizada com os mecanismos de tolerância já implementados no FreeRTOS, serão executados 2 programas de exemplo com diferentes combinações de técnicas, métricas do uso médio de CPU, memória e número de falhas detectadas e por quais técnicas serão todas armazenadas em um segmento de memória previamente definido, será tomado um cuidado adicional para não injetar falhas neste segmento, ou alterar endereços de memória para que apontem para este segmento, pois será utilizado um dump da imagem com as métricas para a análise e escrita do resto da monografia.
+
+O PC (host) será responsável por orquestrar o processo de injeção, será utilizado o ST-Link para manipular a memória e registradores do microcontrolador, a interface de uso será feita pela sessão de GDB exposta pelo driver do ST-Link e pela IDE STM32Cube. As técnicas representadas no diagrama são para propósito ilustrativo da arquitetura, e não necessariamente correspondem a segmentos de memória dedicados. O uso de Asserts é realizado no código das tasks ativas, mas não existe nenhum "módulo de asserts", dado que esta técnica é profundamente contextual.
+
+=== Premissas
+
+Será partido do ponto que ao menos o processador que executa o scheduler terá
+registradores de controle (Stack Pointer, Program Counter, Return Address) que
+sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos
+reforçados com análise de fluxo do programa e adicionar redundância aos
+registradores, isso adiciona um grau a mais de complexidade que foge do escopo
+do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
+fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
+à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons. Portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e resultados dos co-processadores.
+
+Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais
+previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI
+(Runtime Type Information), ao invés, erros de validação devem ser cuidados
+explicitamente com valores ou através de callbacks.
+
+Necessariamente, é preciso também presumir que testes sintéticos possam ao
+menos aproximar a performance do mundo real, ou ao menos prever o pior caso
+possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser
+um substituto para a medição em uma aplicação real, porém, uma bateria de
+testes com injeção artificial de falhas pode ser utilizada para verificar as
+tendências e overheads relativos introduzidos, mesmo que não necessariamente
+reflitam as medidas absolutas do produto final.
+
+Portanto, será assumido que os resultados extraídos de injeção de falhas
+artificiais, apesar de menos condizentes com os valores absolutos de uma
+aplicação e não sendo substitutos adequados na fase de aprovação de um produto
+real, são ao menos capazes para realizar uma análise quanto ao overhead
+proporcional introduzido, e devido à sua facilidade de realização e
+profundidade de inspeção possível, serão priorizados inicialmente neste
+projeto.
 
 == Metodologia
 
@@ -45,42 +83,6 @@ Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
 juntamente com as ferramentas anteriormente citadas, assim como
 AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
 durante o desenvolvimento.
-
-== Visão Geral e Premissas
-
-=== Premissas
-
-Será partido do ponto que ao menos o processador que executa o scheduler terá
-registradores de controle (Stack Pointer, Program Counter, Return Address) que
-sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos
-reforçados com análise de fluxo do programa e adicionar redundância aos
-registradores, isso adiciona um grau a mais de complexidade que foge do escopo
-do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
-fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
-à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons. Portanto, todos os testes subsequentes assumirão ao
-menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e
-resultados dos co-processadores.
-
-Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais
-previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI
-(Runtime Type Information), ao invés, erros de validação devem ser cuidados
-explicitamente com valores ou através de callbacks.
-
-Necessariamente, é preciso também presumir que testes sintéticos possam ao
-menos aproximar a performance do mundo real, ou ao menos prever o pior caso
-possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser
-um substituto para a medição em uma aplicação real, porém, uma bateria de
-testes com injeção artificial de falhas pode ser utilizada para verificar as
-tendências e overheads relativos introduzidos, mesmo que não necessariamente
-reflitam as medidas absolutas do produto final.
-
-Portanto, será assumido que os resultados extraídos de injeção de falhas
-artificiais, apesar de menos condizentes com os valores absolutos de uma
-aplicação e não sendo substitutos adequados na fase de aprovação de um produto
-real, são ao menos capazes para realizar uma análise quanto ao overhead
-proporcional introduzido, e devido à sua facilidade de realização e
-profundidade de inspeção possível, serão priorizados inicialmente neste
-projeto.
 
 == Análise de Requisitos
 
