@@ -1,4 +1,5 @@
 #import "conf.typ": sourced_image
+// NOTE: No TCC3 trocar os tempos verbais dessa seção toda!
 
 = PROJETO
 
@@ -63,16 +64,17 @@ projeto.
 == Metodologia
 
 === Métodos
+Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em software, duas das técnicas são diretamente associadas à interface de tarefa, uma serve como tarefa supervisora e as outras duas servem como suporte. Os detalhas específicos de cada técnica serão abordados na seção de *Algoritmos e Técnicas*.
 
-Serão utilizados testes unitários e testes ponta a ponta para a validação dos
-algoritmos de detecção e técnicas de execução das tarefas, o trabalho será
-testado inicialmente em um ambiente virtualizado para ser posteriormente
-executado em um microcontrolador com FreeRTOS.
+Para executar a injeção lógica em software será utilizado um ambiente virtual (QEMU) emulando a mesma arquitetura de processador juntamente com o debugger GDB e funções de injeção implementadas diretamente nos programas utilizando callbacks para disparar uma falha, a emissão de falhas ocorrerá periodicamente de forma parametrizada. A injeção lógica em software não é o objetivo final do trabalho mas serve como uma validação prévia durante o processo de desenvolvimento assim como uma possível contingência.
 
-Para a realização da análise será utilizado ferramentas de profiling nativas ao
-sistema operacional e de depurador externo. As principais métricas de interesse
-são relacionadas ao número de falhas detectadas e o impacto das técnicas em
-relação à versão sem tolerância.
+A injeção lógica em hardware é realizada com ferramentas do próprio fabricante do microcontrolador (detalhas na seção seguinte), o fluxo geral da injeção consiste em carregar o binário executável (no formato ELF) no micro controlador utilizando o ST-LINK, após isso, o programa será iniciado e será feita uma injeção de falhas via sessão do depurador GDB associado ao link.
+
+A coleta de métricas é realizada com os mecanismos de profiling do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tasks, seu espaço de memória utilizado e o número de falhas detectadas (e causadas) será armazenado em uma estrutura singleton que residirá em um segmento de memória que é deliberadamente isento de falhas, servindo similarmente à uma "caixa preta" do sistema.
+
+Para simular uma carga de trabalho mais condizente com a aplicações reais, serão utilizados 2 programas de exemplo, um processador de sinal digital assíncrono e um programa que realiza uma convolução bidimensional, estes programas são executados e expostos à falhas que espera-se que os mecanismos de tolerância sejam capazes de detectar. Detalhamento destes programas pode ser encontrado no capítulo do *Plano de Verificação*.
+
+Visando a reutilização de código e abstração, será utilizada uma interface que generaliza um objeto de tarefa, como um objeto que realiza despache dinâmico necessita de uma tabela de despache virtual (V-Table), é necessário tomar cuidado adicional pois a própria tabela pode ser sujeita à falhas. Será aplicado uma replicação simples dos ponteiros de função da V-Table, com o custo de overhead de 2 comparações por chamada de método. Espera-se que este overhead não será significativo pois os métodos da interface não são chamados com uma frequência alta.
 
 === Materiais
 
@@ -134,7 +136,6 @@ Após a seleção dos objetivo, foram coletados os requisitos funcionais e não 
 	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
 ))
 
-
 === Programas exemplos
 
 Serão utilizados 2 programas de teste durante a execução das falhas, um realizará um filtro passa-banda com no domínio da frequência (transformada de Fourier) e outro aplicará uma convolução bidimensional.
@@ -148,6 +149,7 @@ múltiplas interrupções causadas por timers ou IO.
 Já o segundo programa, de natureza mais simples, visa causar alto estresse em termos de loads,juntamente com muitas operações aritméticas, mas com menos ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas em um caso mais extremo que requer muito processamento.
 
 ==== Processador de Sinal digital
+
 A aplicação recebe um vetor de valores de forma periódica
 simulando um sensor externo, uma tarefa receberá o lote e realizará uma transformada rápida de Fourier, após concluir, enviará o payload para outra tarefa que aplica um filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que realiza a FFT inversa e despeja os resultados para depuração.
 

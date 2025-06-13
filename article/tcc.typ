@@ -3,7 +3,7 @@
 #show: conf.with(
 	title: "Exploração de detecção de falhas em tempo real com técnicas no escalonador",
 	local: "Itajaí (SC)",
-	data: "25 de Março",
+	data: "13 de Junho",
 	author: "Marcos Augusto Fehlauer Pereira",
     research_area: "Tolerância à Falhas, Sistemas Operacionais",
 	supervisor: "Felipe Viel",

@@ -27,7 +27,7 @@
 	)
 
 	// Citation tweaks
-	show cite.where(form: "normal") : c => upper(c)
+	//show cite.where(form: "normal") : c => upper(c)
 	show figure: set cite(form: "prose")
 	
 	// Paragraph
