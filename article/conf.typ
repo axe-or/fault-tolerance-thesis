@@ -6,8 +6,6 @@
 	research_area: "<SEM ÁREA>",
 	supervisor: "<SEM ORIENTADOR>",
 ) = {
-
-
 	// Page
 	set page(
 		paper: "a4",
@@ -41,7 +39,7 @@
 	)
 
 	set text(
-		font: ("Times New Roman", "Liberation Serif"),	
+		font: ("Liberation Serif", "Times New Roman"),	
 		lang: "pt",
 		size: 12pt,
 	)
