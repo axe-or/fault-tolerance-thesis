@@ -49,7 +49,7 @@
 	show heading: set block(below: 18pt, above: 18pt)
 
 	// Formulas
-	show figure: (fig) => {
+	show figure.where(kind: image): (fig) => {
 		box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
 			#fig.body
 		]
