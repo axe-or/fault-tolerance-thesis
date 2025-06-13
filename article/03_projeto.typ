@@ -218,15 +218,16 @@ Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos
 using FT_Handler = bool (*)(FT_Task*);
 
 struct FT_Task_Info {
-    Task_Id    id;
-    FT_Handler handler;
-    Time_Point started_at;
-    Time_Point deadline; // 0 - Sem deadline
+	Task_Id    id;
+	FT_Handler handler;
+	Time_Point started_at;
+	Time_Point deadline; // 0 - Sem deadline
 };
 
 struct FT_Task {
-  virtual Task_Id execute(void* param) = 0;
-  virtual FT_Task_Info info() = 0;
+	virtual Task_Id execute(void* param) = 0;
+	virtual void attach_heartbeat_watchdog(uint32_t* sequence_addr, Time_Point interval);
+	virtual FT_Task_Info info() = 0;
 };
 ```]
 
