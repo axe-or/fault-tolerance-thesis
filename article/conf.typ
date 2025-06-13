@@ -52,6 +52,8 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
+	show figure: set cite(form: "prose")
+
 	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
 	show figure.where(kind: table)
 			.or(figure.where(kind: raw)) : set figure(kind: "quadro", supplement: "Quadro")
@@ -61,7 +63,7 @@
 		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
 			#fig.body
 		]
-		#align(left, fig.caption),
+		#align(left, fig.caption)
 	]
 
 	// Formulae
@@ -77,8 +79,10 @@
 	// Tables
 	show figure.where(kind: table): (fig) => {
 		set align(left)
-		text(fig.caption)
-		fig.body
+		box()[
+			#fig.caption
+			#fig.body
+		]
 	}
 
 	// Code listings

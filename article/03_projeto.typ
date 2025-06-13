@@ -78,14 +78,14 @@ Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou
 Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
 "Bluepill") 32-bits da arquitetura ARMv7-M.
 
-#figure(caption: [Diagrama do STM32F103C8T6 ("Bluepill"), Fonte: ARM Embed OS], image("assets/stm32_bluepill.png"))
+#figure(caption: [Diagrama do STM32F103C8T6 ("Bluepill") #linebreak() Fonte: @STMBoardProductPage ], image("assets/stm32_bluepill.png"))
 
 Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
 de depuração do hardware (ST-LINK), a comunição do ST-LINK é feita via USB com o host e via JTAG com o microcontrolador alvo, também será usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
 
-#figure(caption: [ST-LINK/V2 #linebreak() Fonte: STMicrolectronics], image("assets/st_link.png"))
+#figure(caption: [ST-LINK/V2 #linebreak() Fonte: @STLinkProductPage ], image("assets/st_link.png"))
 
-#figure(caption: [STMCube IDE #linebreak() Fonte: STMicrolectronics], image("assets/stmcube_ide.png"))
+#figure(caption: [STMCube IDE #linebreak() Fonte: @STMCubeProductPage], image("assets/stmcube_ide.png"))
 
 Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU
 juntamente com as ferramentas anteriormente citadas, assim como
@@ -368,16 +368,6 @@ quantia significativa da lógica de geração em software.
 == Análise de riscos
 
 O trabalho é de risco baixo, dado que constrói em cima de fundações técnicas previamente exploradas, porém dentro dos principais riscos que possam alterar ou causar problemas durante a realização encontram-se:
-
-*Risco II*: 
-- Probabilidade e Impacto: Baixa | Alto
-- Gatilho: Teste em microcontrolador
-- Mitigação: 
-
-*Risco III*: 
-- Probabilidade e Impacto: Baixa | Médio
-- Gatilho: Teste em microcontrolador ou ambiente virtualizado
-- Mitigação: 
 
 #figure(caption: [Análise de riscos], table(
 	columns: (auto,) * 5,
