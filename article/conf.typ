@@ -35,7 +35,7 @@
 	)
 
 	set text(
-		font: ("Times New Roman", "Nimbus Roman"),	
+		font: ("Times New Roman", "Liberation Serif"),	
 		lang: "pt",
 		size: 12pt,
 	)

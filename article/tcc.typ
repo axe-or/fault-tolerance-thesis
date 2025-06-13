@@ -5,6 +5,7 @@
 	local: "Itajaí (SC)",
 	data: "25 de Março",
 	author: "Marcos Augusto Fehlauer Pereira",
+    research_area: "Tolerância à Falhas, Sistemas Operacionais",
 	supervisor: "Felipe Viel",
 )
 
