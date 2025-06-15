@@ -25,7 +25,6 @@
 	)
 
 	// Citation tweaks
-	//show cite.where(form: "normal") : c => upper(c)
 	show figure: set cite(form: "prose")
 	
 	// Paragraph
@@ -56,13 +55,13 @@
 	show heading.where(level: 4): set text(size: 12pt)
 	show heading: set block(below: 18pt, above: 18pt)
 
-	show figure.where(kind: "formula"): set figure(supplement: "Fórmula")
+	show figure.where(kind: "equation"): set figure(supplement: "Equação")
 	show figure.where(kind: table)
 			.or(figure.where(kind: raw)) : set figure(kind: "quadro", supplement: "Quadro")
 
-	// Formulae
-	show figure.where(kind: "formula"): (fig) => {
-		let fig_num = array.at(counter(figure.where(kind: "formula")).get(), 0)
+	// Equations
+	show figure.where(kind: "equation"): (fig) => {
+		let fig_num = array.at(counter(figure.where(kind: "equation")).get(), 0)
 		grid(
 			columns: (1fr, auto),
 			fig.body,
@@ -95,10 +94,10 @@
 	
 	// Images
 	show figure.where(kind: image): (fig) => box()[
+		#align(center, fig.caption)
 		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
 			#fig.body
 		]
-		#align(left, fig.caption)
 	]
 
 	// Front page
@@ -179,7 +178,7 @@
 	)
 }
 
-#let sourced_image(body, caption: "", source: "") = {
+#let sourced_image(body, caption: "", source: "") = context {
 	set par(justify: false, first-line-indent: 0pt)
 	let fig = figure(caption: caption, body)
 	box()[

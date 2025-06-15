@@ -1,4 +1,14 @@
-descrever mais nos metodos (fluxo)
+diminuir algumas das figuras
+data na capa
+
+analise comparativas dos trab realcionados:
+- tabela comparativa no trab relacionados
+- comparar coisas tipo, tecnicas usadas, se tem OS, se eh baremetal, linguagem etc
+- texto explicativo assim como a tabela
+explicar o FreeRTOS como tecnologia usada
+área do CNPQ, trocar na capa a sub-capa
+
+tacar editora dos livros nas referencias tbm
 diagrama de sequencia e casos de uso (regras de negócio?)
 
 

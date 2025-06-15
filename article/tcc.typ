@@ -3,7 +3,7 @@
 #show: conf.with(
 	title: "Exploração de detecção de falhas em tempo real com técnicas no escalonador",
 	local: "Itajaí (SC)",
-	data: "13 de Junho",
+	data: "15 de Junho",
 	author: "Marcos Augusto Fehlauer Pereira",
     research_area: "Tolerância à Falhas, Sistemas Operacionais",
 	supervisor: "Felipe Viel",
@@ -46,8 +46,8 @@ Many mechanisms may be used to achieve fault tolerance, among them, there are th
 
 // Forumlas
 #outline(
-	title: "LISTA DE FÓRMULAS",
-	target: figure.where(kind: "formula"),
+	title: "LISTA DE EQUAÇÕES",
+	target: figure.where(kind: "equation"),
 )
 #pagebreak()
 
@@ -60,10 +60,13 @@ Many mechanisms may be used to achieve fault tolerance, among them, there are th
 #pagebreak()
 
 #include "01_introducao.typ"
+#pagebreak()
 
 #include "02_fundamentacao_teorica.typ"
+#pagebreak()
 
 #include "03_projeto.typ"
+#pagebreak()
 
 #include "04_consideracoes_finais.typ"
 

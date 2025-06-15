@@ -26,7 +26,7 @@ simples. A qualidade do serviço $Q$ do sistema pode ser aproximada pela média
 ponderada de seus serviços $S_0 ... S_n$ com os pesos de seus fatores de
 contribuição para a qualidade total $q_0 ... q_n$ @SchedAndOptOfDistributedFT.
 
-#figure(caption: [Aproximação da Qualidade de Serviço], kind: "formula", $
+#figure(caption: [Aproximação da Qualidade de Serviço], kind: "equation", $
   Q = (sum_(i = 0)^n S_i q_i) / (sum_(i = 0)^n q_i)
 $)
 
@@ -43,7 +43,7 @@ modelar essa métrica é necessário um modelo estatístico que é particular da
 aplicação, independente do modelo escolhido, a confiabilidade é dita como uma
 função do tempo, da taxa de falhas $lambda$ e das probabilidades de falha externas. @FaultInjectionTechniques
 
-#figure(caption: [Confiabilidade], kind: "formula", $
+#figure(caption: [Confiabilidade], kind: "equation", $
   R(t) = f(t, lambda, ...)
 $)
 
@@ -52,7 +52,7 @@ $)
 A disponibilidade (do inglês Availability) $A$ é a razão entre o tempo em que o sistema não consegue
 prover seu serviço (downtime) e o e seu tempo total de operação @FaultInjectionTechniques.
 
-#figure(caption: [Disponibilidade], kind: "formula", $
+#figure(caption: [Disponibilidade], kind: "equation", $
   A = t_u / (t_u + t_d)
 $)
 
@@ -67,7 +67,7 @@ sobre a disponibilidade de equipamentos (ou especialistas humanos) para a
 realização do reparo. Asssim como a confiabilidade, é descrita por uma
 distribuição de probabilidade particular da aplicação.
 
-#figure(caption: [Capacidade de manuntenção], kind: "formula", $
+#figure(caption: [Capacidade de manuntenção], kind: "equation", $
   M(t) = f(t, lambda, ...)
 $)
 
@@ -645,7 +645,7 @@ no banco de registradores. @ReliabilityArmCortexUnderHeavyIons.
 #sourced_image(
 	image("assets/related_works_heavy_ion_reliability.png"),
 	caption: [Análise de resiliência, dividida por categoria],
-  source: "ReliabilityArmCortexUnderHeavyIons",
+	source: "ReliabilityArmCortexUnderHeavyIons",
 )
 
 Uma outra observação foi que a quantia de falhas injetadas para ocasionar um
@@ -670,7 +670,7 @@ técnicas em software combinado com um par de processadores com auto checagem
 
 #sourced_image(
 	caption: [Utilização de CPU para diferentes implementações de tolerância],
-  source: "ApplicationLevelFT",
+	source: "ApplicationLevelFT",
 	image("assets/related_works_psp_perf.png"),
 )
 
@@ -698,4 +698,20 @@ diferença sendo o enfoque na análise fina dos grafos de controle de fluxo. O
 trabalho de Asghari et. al serve como um exemplo de uma possível extensão
 futura da pesquisa apresentada aqui, servindo como uma fonte compreensiva de
 diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
+
+=== Análise Comparativa dos trabalhos
+
+#figure(caption: "Comparação com Trabalhos Relacionados", table(
+	columns: (auto, auto, auto, auto),
+
+	table.header([*Trabalho*], [*Sistema*], [*$mu$C*], [*Injeção*], [*Detecção*]),
+
+	[*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [], [], [],
+
+	[*Application-Level Fault Tolerance in Real-Time Embedded System*], [], [], [],
+
+	[*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [], [], [],
+
+	[*Este Trabalho*], [FreeRTOS], [], [],
+))
 
