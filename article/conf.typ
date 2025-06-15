@@ -94,10 +94,14 @@
 	
 	// Images
 	show figure.where(kind: image): (fig) => box()[
+		#set align(center)
 		#align(center, fig.caption)
-		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt, width: 100%)[
+		#h(1fr)
+		#box(stroke: (paint: black, thickness: 1pt), inset: 2pt)[
 			#fig.body
 		]
+		#h(1fr)
+
 	]
 
 	// Front page

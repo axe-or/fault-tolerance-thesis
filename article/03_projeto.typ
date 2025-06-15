@@ -154,7 +154,7 @@ A aplicação recebe um vetor de valores de forma periódica
 simulando um sensor externo, uma tarefa receberá o lote e realizará uma transformada rápida de Fourier, após concluir, enviará o payload para outra tarefa que aplica um filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que realiza a FFT inversa e despeja os resultados para depuração.
 
 #figure(caption: "Resumo do fluxo do programa exemplo com FFT",
-  image("assets/diagrama_sequencia_fft.png", height: 33%))
+  image("assets/diagrama_sequencia_fft.png", height: 240pt))
 
 ==== Convolução Bidimensional
 
@@ -371,7 +371,7 @@ struct Fault_Metrics {
 
 Utilizando do depurador dedicado do microcontrolador (ST-Link), serão injetadas
 as mesmas falhas, com exceção dos endereços para a coleta de métricas, será
-utilizada uma sessão do deuprador GDB (GNU Debugger) que é fornecida pelo
+utilizada uma sessão do depurador GDB (GNU Debugger) que é fornecida pelo
 ST-Link para executar os comandos remotamente, para automatizar a injeção assim
 como na versão lógica baseada em software, será emitido a lista de comandos
 para o depurador executar com um programa externo, que pode reutilizar uma

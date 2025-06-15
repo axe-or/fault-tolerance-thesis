@@ -247,7 +247,7 @@ consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR
 é elegante em sua simplicidade e consegue atingir um bom grau de resiliência,
 porém com o custo adicional de triplicar o custo. @DependabilityInEmbeddedSystems
 
-#figure(caption: "Exemplo de redundância modular na execução de tarefas", image("assets/redundancia_tmr.png"))
+#figure(caption: "Exemplo de redundância modular na execução de tarefas", image("assets/redundancia_tmr.png", height: 180pt))
 
 Sistemas distribuídos também podem aproveitar de sua redundância natural por
 serem sistemas com múltiplos nós computacionais, falhas transientes em um nó
@@ -340,7 +340,7 @@ temporariamente guardados e passam então por um consenso. Similar à técnica d
 redundância modular, mas sacrificando tempo ao invés de múltiplas instâncias
 concorrentes.
 
-#figure(caption: "Exemplo de reexecução com consenso", image("assets/redundancia_reexec.png"))
+#figure(caption: "Exemplo de reexecução com consenso", image("assets/redundancia_reexec.png", height: 140pt))
 
 === Correção de Erro
 
@@ -659,7 +659,7 @@ detectar e mitigar erros de memória mais rapidamente
 Neste trabalho são apresentadas técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface.
 O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas
 sim de prover uma biblioteca na forma de classes representando threads
-resilientes @ApplicationLevelFT. Um caso de estudo de sistema de filtragem de
+resilientes @ApplicationLevelFT. Um caso de estudo de um sistema de filtragem de
 radar é utilizado como projeto.
 
 Os pesquisadores demonstraram resultados favoráveis para uma forma híbrida de
@@ -702,16 +702,16 @@ diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
 === Análise Comparativa dos trabalhos
 
 #figure(caption: "Comparação com Trabalhos Relacionados", table(
-	columns: (auto, auto, auto, auto),
+	columns: (auto,) * 5,
 
-	table.header([*Trabalho*], [*Sistema*], [*$mu$C*], [*Injeção*], [*Detecção*]),
+	table.header([*Trabalho*], [*Sistema*], [*Hardware*], [*Injeção*], [*Técnicas*]),
 
-	[*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [], [], [],
+	[*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [Bare Metal & FreeRTOS], [CY8CKIT-059], [Física & Lógica em Software], [Redundância de Registradores, Deadlines, Redução de Registradores, Asserts],
 
-	[*Application-Level Fault Tolerance in Real-Time Embedded System*], [], [], [],
+	[*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
 
-	[*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [], [], [],
+	[*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [], [], [], [],
 
-	[*Este Trabalho*], [FreeRTOS], [], [],
+	[*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e  Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
 ))
 
