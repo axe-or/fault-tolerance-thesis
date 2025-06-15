@@ -386,7 +386,7 @@ distinção entre estas categorias é explicada na seção seguinte.
 
 Um sistema operacional é um conjunto conjunto de software que permitem o
 gerenciamento e interação com os recursos da máquina através de uma camada de
-abstração, no contexto deste trabalho, o componente fundamental é o *kernel*, a
+abstração, no contexto deste trabalho, o componente fundamental é o kernel, a
 parte sistema operacional que sempre está executando, o trabalho principal do
 kernel é permitir a coexistência de diferentes tarefas no sistema que precisam
 acessar as capacidades do hardware, especialmente tempo na CPU e memória, o
@@ -703,6 +703,8 @@ diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
 
 Ao realizar uma análise comparativa referente às técnicas de tolerância, o tipo de injeção, hardware e o sistema operacional escolhido, é possível sumarizar a relação dos trabalhos da seguinte forma:
 
+O trabalho 2 pode ser considerado o mais similar, apesar de utilizar de um hardware bem distinto, nele é criado uma interface de tolerância à falhas na linguagem C++ e são realizados testes focados primariamente na comparação do overhead gerado pelas técnicas e o modelo de execução apresentado trabalha fortemente em conjunto com o escalonador do RTOS. O trabalho 1 é o segundo mais similar, a escolha do FreeRTOS juntamente com a escolha de hardware também baseada na arquitetura ARMv7-M sendo o maior ponto de congruência, também apresenta similaridade conceitual nas técnicas utilizadas, porém é mais focado na introdução de redundância no banco de registradores e não no modelo de execução das tasks. O trabalho 3 é o mais distinto, utiliza-se uma técnica de análise de fluxo para criar pontos de recuperação e detectar falhas, a similaridade principal é na fundamentação teórica e no método de injeção de falhas, os pesquisadores utilizaram de injeção lógica em hardware e forneceram uma fundamentação focada em técnicas associadas à execução do programa, porém com um grau de granularidade e complexidade superior.
+
 #figure(caption: "Comparação com Trabalhos Relacionados", table(
 	columns: (auto,) * 6,
 
@@ -718,5 +720,4 @@ Ao realizar uma análise comparativa referente às técnicas de tolerância, o t
 ))
 
 
-O trabalho 2 pode ser considerado o mais similar, apesar de utilizar de um hardware bem distinto, nele é criado uma interface de tolerância à falhas na linguagem C++ e são realizados testes focados primariamente na comparação do overhead gerado pelas técnicas e o modelo de execução apresentado trabalha fortemente em conjunto com o escalonador do RTOS. O trabalho 1 é o segundo mais similar, a escolha do FreeRTOS juntamente com a escolha de hardware também baseada na arquitetura ARMv7-M sendo o maior ponto de congruência, também apresenta similaridade conceitual nas técnicas utilizadas, porém é mais focado na introdução de redundância no banco de registradores e não no modelo de execução das tasks. O trabalho 3 é o mais distinto, utiliza-se uma técnica de análise de fluxo para criar pontos de recuperação e detectar falhas, a similaridade principal é na fundamentação teórica e no método de injeção de falhas, os pesquisadores utilizaram de injeção lógica em hardware e forneceram uma fundamentação focada em técnicas associadas à execução do programa, porém com um grau de granularidade e complexidade superior.
 
