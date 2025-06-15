@@ -5,7 +5,7 @@
 	local: "Itajaí (SC)",
 	data: "15 de Junho",
 	author: "Marcos Augusto Fehlauer Pereira",
-    research_area: "Tolerância à Falhas, Sistemas Operacionais",
+    research_area: "Sistemas Operacionais, Sistemas de Tempo Real",
 	supervisor: "Felipe Viel",
 )
 

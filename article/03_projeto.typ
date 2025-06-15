@@ -105,6 +105,8 @@ juntamente com as ferramentas anteriormente citadas, assim como
 AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
 durante o desenvolvimento.
 
+O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser extensivamente testado e documentado e prover um escalonador totalmente preemptivo com um custo espacial relativamente pequeno, além disso, os contribuidores do FreeRTOS mantém uma lista grande de ports para diferentes arquiteturas e controladores, facilitando drasticamente o trabalho ao não ter que criar uma HAL do zero.
+
 == Análise de Requisitos
 
 Após a seleção dos objetivo, foram coletados os requisitos funcionais e não funcionais, que são apresentados nos quadros seguintes.

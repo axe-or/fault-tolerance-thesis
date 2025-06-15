@@ -701,17 +701,21 @@ diversas técnicas de análise de basic blocks e detecção de fluxo defeituoso.
 
 === Análise Comparativa dos trabalhos
 
+Ao realizar uma análise comparativa referente às técnicas de tolerância, o tipo de injeção, hardware e o sistema operacional escolhido, é possível sumarizar a relação dos trabalhos da seguinte forma:
+
 #figure(caption: "Comparação com Trabalhos Relacionados", table(
-	columns: (auto,) * 5,
+	columns: (auto,) * 6,
 
-	table.header([*Trabalho*], [*Sistema*], [*Hardware*], [*Injeção*], [*Técnicas*]),
+	table.header([*N*], [*Trabalho*], [*Sistema*], [*Hardware*], [*Injeção*], [*Técnicas*]),
 
-	[*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [Bare Metal & FreeRTOS], [CY8CKIT-059], [Física & Lógica em Software], [Redundância de Registradores, Deadlines, Redução de Registradores, Asserts],
+	[1], [*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [Bare Metal, #linebreak()FreeRTOS], [CY8CKIT-059], [Física & Lógica em Software], [Redundância de Registradores, Deadlines, Redução de Registradores, Asserts],
 
-	[*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
+	[2], [*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
 
-	[*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [], [], [], [],
+	[3], [*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [MicroC/OS-ii], [MPC555 Evaluation Board], [Lógica em Hardware], [Análise de fluxo de controle e de dados com sensibilidade à deadlines],
 
-	[*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e  Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
+	[-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
 ))
 
+
+O trabalho 2 pode ser considerado o mais similar, apesar de utilizar de um hardware bem distinto, nele é criado uma interface de tolerância à falhas na linguagem C++ e são realizados testes focados primariamente na comparação do overhead gerado pelas técnicas e o modelo de execução apresentado trabalha fortemente em conjunto com o escalonador do RTOS. O trabalho 1 é o segundo mais similar, a escolha do FreeRTOS juntamente com a escolha de hardware também baseada na arquitetura ARMv7-M sendo o maior ponto de congruência, também apresenta similaridade conceitual nas técnicas utilizadas, porém é mais focado na introdução de redundância no banco de registradores e não no modelo de execução das tasks. O trabalho 3 é o mais distinto, utiliza-se uma técnica de análise de fluxo para criar pontos de recuperação e detectar falhas, a similaridade principal é na fundamentação teórica e no método de injeção de falhas, os pesquisadores utilizaram de injeção lógica em hardware e forneceram uma fundamentação focada em técnicas associadas à execução do programa, porém com um grau de granularidade e complexidade superior.
