@@ -84,12 +84,7 @@ Explorar o uso de técnicas de escalonamento de tempo real com detecção de err
 
 === Objetivos Específicos
 
-- Identificar métodos de detecção de erro de execução em nível de software:
-  - CRCs para mensagens
-  - Heartbeat Signal
-  - Asserts
-  - Redundância Modular (replicar tarefas)
-  - Replicação Temporal (reexecutar tarefas)
+- Selecionar técnicas de detecção de falhas em nível de software
 - Aplicar como prova de conceito em um RTOS as técnicas selecionadas
 - Avaliar por meio de métricas a técnica durante a execução em um RTOS
 - Avaliar por meio de métricas a técnica em nível de memória em um RTOS

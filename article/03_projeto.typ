@@ -156,11 +156,15 @@ A aplicação recebe um vetor de valores de forma periódica
 simulando um sensor externo, uma tarefa receberá o lote e realizará uma transformada rápida de Fourier, após concluir, enviará o payload para outra tarefa que aplica um filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que realiza a FFT inversa e despeja os resultados para depuração.
 
 #figure(caption: "Resumo do fluxo do programa exemplo com FFT",
-  image("assets/diagrama_sequencia_fft.png", height: 240pt))
+  image("assets/diagrama_sequencia_fft.png", height: 300pt))
 
 ==== Convolução Bidimensional
 
 O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma imagem providenciada como input, será aplicado um kernel de blur gaussiano de ordem $N$, onde $N$ será testado com os valores: ${3, 5, 7}$ em uma imagem de dimensões arbitrárias (mas com limite superior de tamanho). O objetivo deste programa é testar situações com alto estresse de memória e processamento, o processo de convolução envolve operações de janelamento com multiplicações e adições, devido à quantidade maior de dados, espera-se que esse algoritmo represente algo mais próximo de um pior-caso em termos de acessos à memória.
+
+#figure(caption: "Fluxo da convolução Bidimensional com redundância de tarefas",
+  image("assets/convolucao_2d.png", height: 450pt))
+
 
 === Algoritmos e Técnicas
 
