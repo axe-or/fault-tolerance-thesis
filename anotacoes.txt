@@ -9,8 +9,6 @@ diagrama de sequencia e casos de uso (regras de negócio?)
 
 
 
-
-
 plano de trabalho ?
 + Implementar os algoritmos fora do RTOS para testar sua validade lógica e
   executar sanitizadores de memória e condições de corridas
