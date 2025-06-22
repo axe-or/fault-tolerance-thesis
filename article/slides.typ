@@ -60,6 +60,20 @@ Definições segundo a IEEE
     Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais genérico, representando um estado do sistema que causa uma degradação da qualidade de serviço.
 ]
 
+// Code listings
+#set raw(theme: "assets/light.tmTheme")
+#show figure.where(kind: raw): (fig) => {
+    set align(left)
+    set text(top-edge: 0.7em)
+    box()[
+        #fig.caption
+        #set par(first-line-indent: 0pt, leading: 0.5em)
+        #box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
+            #fig.body			
+        ]
+    ]
+}
+
 = Definições Principais
  
 
@@ -87,13 +101,48 @@ Falhas podem ser classificadas em 3 grupos de acordo com seu padrão de ocorrên
 #center_sentence[
     Este trabalho focará na tolerância à falhas transientes.
 ]
+
 = Mecanismos de Detecção
+- CRC (Cyclic Redundancy Check): Um valor de checagem é criado com base em um polinômio gerador e verificado
+
+- Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível
+
+#align(center)[
+```cpp
+void assert(bool predicate, string message){
+    [[unlikely]]
+        if(!predicate){
+        // Opcional: imprimir uma mensagem de erro
+        log_error(message);
+        trap(); // Emitir exceção
+    }
+}
+```
+]
+
+= Mecanismos de Detecção
+- Heartbeat signal: Sinal de Checagem, tipicamente baseado em uma deadline
+
+#image("assets/heartbeat_signal.png")
 
 = Mecanismos de Tratamento
+*Redundância*: Pode ser inserida em diversos estágios, depende do fato que é menos provável que uma falha ocorra em $N$ lugares dentro de um período $t$.
+
+#image("assets/redundancia_tmr.png")
+
+= Mecanismos de Tratamento
+
+*Reexecução*: Um tipo de redundância temporal, pode ser utilizado para condições de transparência, depende do fato que é improvável que uma falha transiente ocorra $N$ vezes em sucessão.
+
+#image("assets/redundancia_reexec.png")
 
 = Sistemas Embarcados
 
 = Sistemas Operacionais de Tempo Real
+
+Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem escalonadores totalmente preemptivos. Tipicamente possuem poucas features, dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
+
+#image("assets/freertos_task_diagram.png")
 
 = Escalonador
 
