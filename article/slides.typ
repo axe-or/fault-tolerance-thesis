@@ -13,6 +13,10 @@
 )
 #show heading: set text(fill: colors.heading)
 
+#set table(
+    fill: (x, y) => if y == 0 { luma(75%) },
+)
+
 #set text(size: 20pt)
 
 #let slide_counter = counter("slide")
@@ -73,6 +77,8 @@ Definições segundo a IEEE
         ]
     ]
 }
+
+#show image: set align(center)
 
 = Definições Principais
  
@@ -142,11 +148,32 @@ void assert(bool predicate, string message){
 
 Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem escalonadores totalmente preemptivos. Tipicamente possuem poucas features, dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
 
+
+== Escalonador
+
+Componente do Sistema Operacional responsável por gerenciar o tempo da CPU entre das tarefas.
+
 #image("assets/freertos_task_diagram.png")
 
-= Escalonador
+= Escalonamento Tolerante à Falhas
+
+Grafo tolerante à falhas de um programa simples (3 processos, 1 mensagem)
+#image("assets/ftg_simples.png", height: 1fr)
 
 = Escalonamento Tolerante à Falhas
+
+Mesmo grafo, tolerando até uma falha transiente
+#image("assets/ftg_expandido.png", height: 1fr)
+
+= Escalonamento Tolerante à Falhas
+
+Com condição de transparência (através de reexecução) inserida.
+
+#image("assets/ftg_transparencia.png", height: 1fr)
+
+#center_sentence[
+    Inserir condições de transparência pode drasticamente reduzir a complexidade do grafo de execução.
+]
 
 = Injeção de Falhas
 
@@ -157,14 +184,61 @@ Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem es
 = Trabalhos Relacionados III
 
 = Projeto: Visão Geral e Premissas
+#image("assets/visao_geral.png", height: 1fr)
 
 = Métodos
 
 = Materiais
 
+- STLink: Depurador de hardware
+- STM32F103C8T6 "Bluepill": Microcontrolador para a execução do código
+- GCC: Compilador
+- STCubeIDE, QEMU: IDE e ferramenta de virtualização para auxílio
+
+#box(height: 300pt)[
+#grid(
+    columns: (1fr,2fr),
+    image("assets/stm32_small.png"),
+    grid(
+        columns: (auto,) * 2,
+        image("assets/st_link.png"),
+        image("assets/qemu_logo.png", height: 50%),
+        image("assets/gcc_logo.png", height: 50%),
+        align(horizon, image("assets/freertos_logo.png")),
+    )
+)
+]
+
 = Requisitos Funcionais
 
+#table(
+	columns: (auto, 1fr),
+
+	table.header([*Requisito*], [*Descrição*]),
+
+	[*RF 1*], [Todos os algoritmos da seção *Algoritmos e Técnicas* implementados],
+	[*RF 2*], [Implementação da interface para execução de tarefas com TF],
+	[*RF 3*], [Programa de exemplo implementado com diferentes técnicas e executado],
+	[*RF 4*], [Implementação da interface para as tarefas do programa de exemplo],
+	[*RF 5*], [Injeção de falhas lógicas em software (callbacks de injeção)],
+	[*RF 6*], [Injeção de falhas lógicas em hardware (ST-LINK + GDB)],
+	[*RF 7*], [Funções de medição e observabilidade das métricas: uso de CPU, uso de memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas],
+	[*RF 8*], [Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa],
+)
+
 = Requisitos Não Funcionais
+
+#table(
+	columns: (auto, 1fr),
+
+	table.header([*Requisito*], [*Descrição*]),
+	[*RNF 1*], [Trabalho deve ser realizado em C++ (versão 14 ou acima)],
+	[*RNF 2*], [Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M],
+	[*RNF 3*], [Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware abstraction layer), seja do RTOS ou de terceiros.],
+	[*RNF 4*], [Precisa fazer uso de múltiplos núcleos quando presentes],
+	[*RNF 5*], [Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas],
+	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
+)
 
 = Programas Exemplo: Processador de Sinal digital
 
