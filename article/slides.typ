@@ -23,9 +23,9 @@
 #show heading: set block(below: 0.5em)
 
 #show heading.where(level: 1): (h) => context {
-    if array.at(slide_counter.get(), 0) > 0 {
-        pagebreak()
-    }
+    // if array.at(slide_counter.get(), 0) > 0 {
+    // }
+    pagebreak()
     slide_counter.step()
 
     set text(size: 28pt)
@@ -43,17 +43,40 @@
     word.slice(1)
 }
 
+// Main title
+
+
+#let title = [Detecção de erros em sistema operacional de tempo real]
+#let author = [Marcos Augusto Fehlauer Pereira]
+#let university = [Universidade do Vale do Itajaí (UNIVALI)]
+#let supervisor = [Felipe Viel]
+#let course = [Escola Politécnica - Ciência da computação]
+
+#[
+    #v(2fr)
+    #align(center, text(weight: "bold", size: 28pt, upper(title)))
+    
+    #line(length: 100%, stroke: colors.heading)
+
+    #align(center, university)
+    #align(center, course)
+    #v(1.5fr)
+    #align(right)[Aluno: #author #linebreak() Orientador: #supervisor]
+    #v(2fr)
+
+]
+
 = Introdução
 
 = Definições Principais
 
-Definições segundo a IEEE
+Definições segundo a IEEE:
 
-- *Erro*:
+- *Erro*: A diferença entre um valor esperado e um valor obtido.
 
-- *Defeito*:
+- *Defeito*: Estado irregular do sistema, que pode provocar (ou não) erros que levam à falhas
 
-- *Falha*:
+- *Falha*: Incapacidade do sistema de cumprir sua função designada, constituindo uma degradação de sua qualidade de serviço.
 
 #let center_sentence(body) = {
     set text(style: "italic")
@@ -61,7 +84,7 @@ Definições segundo a IEEE
 }
 
 #center_sentence[
-    Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais genérico, representando um estado do sistema que causa uma degradação da qualidade de serviço.
+    Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais abrangente, representando um estado ou evento no sistema que causa uma degradação da qualidade de serviço.
 ]
 
 // Code listings
@@ -79,6 +102,9 @@ Definições segundo a IEEE
 }
 
 #show image: set align(center)
+#show raw: set align(center)
+#show table: set align(center)
+#show table: set align(horizon)
 
 = Definições Principais
  
@@ -113,7 +139,7 @@ Falhas podem ser classificadas em 3 grupos de acordo com seu padrão de ocorrên
 
 - Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível
 
-#align(center)[
+#align(horizon)[
 ```cpp
 void assert(bool predicate, string message){
     [[unlikely]]
@@ -177,6 +203,25 @@ Com condição de transparência (através de reexecução) inserida.
 
 = Injeção de Falhas
 
+#show text: set align(left)
+
+#table(
+    columns: (auto,) * 3,
+    table.header([*Técnica*], [*Vantagens*], [*Desvantagens*]),
+    
+    [Física], [
+        - Alta fidelidade à falhas reais
+        - Possível injetar em partes pré definidas do chip
+    ], [
+        - Alto custo monetário
+        - Menos controle sobre o tipo particular de falha
+        - Requisita de especialistas
+    ],
+    [Lógica em Hardware], [], [],
+    [Lógica em Software], [], [],
+    [Simulada], [], [],
+)
+
 = Trabalhos Relacionados I
 
 = Trabalhos Relacionados II
@@ -195,7 +240,7 @@ Com condição de transparência (através de reexecução) inserida.
 - GCC: Compilador
 - STCubeIDE, QEMU: IDE e ferramenta de virtualização para auxílio
 
-#box(height: 300pt)[
+#box(height: 350pt)[
 #grid(
     columns: (1fr,2fr),
     image("assets/stm32_small.png"),
@@ -240,9 +285,13 @@ Com condição de transparência (através de reexecução) inserida.
 	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
 )
 
-= Programas Exemplo: Processador de Sinal digital
+= Teste 1: Processador de Sinal digital
 
-= Programas Exemplo: Convolução Bidimensional
+#image("assets/diagrama_sequencia_fft.png", height: 1fr)
+
+= Teste 2: Convolução Bidimensional
+
+#image("assets/convolucao_2d.png", height: 1fr)
 
 = Algoritmos e Técnicas
 
