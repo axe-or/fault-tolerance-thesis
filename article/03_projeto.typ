@@ -64,17 +64,49 @@ projeto.
 == Metodologia
 
 === Métodos
-Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em software, duas das técnicas são diretamente associadas à interface de tarefa, uma serve como tarefa supervisora e as outras duas servem como suporte. Os detalhas específicos de cada técnica serão abordados na seção de *Algoritmos e Técnicas*.
 
-Para executar a injeção lógica em software será utilizado um ambiente virtual (QEMU) emulando a mesma arquitetura de processador juntamente com o debugger GDB e funções de injeção implementadas diretamente nos programas utilizando callbacks para disparar uma falha, a emissão de falhas ocorrerá periodicamente de forma parametrizada. A injeção lógica em software não é o objetivo final do trabalho mas serve como uma validação prévia durante o processo de desenvolvimento assim como uma possível contingência.
+Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em
+software, duas das técnicas são diretamente associadas à interface de tarefa,
+uma serve como tarefa supervisora e as outras duas servem como suporte. Os
+detalhas específicos de cada técnica serão abordados na seção de *Algoritmos e
+Técnicas*.
 
-A injeção lógica em hardware é realizada com ferramentas do próprio fabricante do microcontrolador (detalhas na seção seguinte), o fluxo geral da injeção consiste em carregar o binário executável (no formato ELF) no micro controlador utilizando o ST-LINK, após isso, o programa será iniciado e será feita uma injeção de falhas via sessão do depurador GDB associado ao link.
+Para executar a injeção lógica em software será utilizado um ambiente virtual
+(QEMU) emulando a mesma arquitetura de processador juntamente com o debugger
+GDB e funções de injeção implementadas diretamente nos programas utilizando
+callbacks para disparar uma falha, a emissão de falhas ocorrerá periodicamente
+de forma parametrizada. A injeção lógica em software não é o objetivo final do
+trabalho mas serve como uma validação prévia durante o processo de
+desenvolvimento assim como uma possível contingência.
 
-A coleta de métricas é realizada com os mecanismos de profiling do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tasks, seu espaço de memória utilizado e o número de falhas detectadas (e causadas) será armazenado em uma estrutura singleton que residirá em um segmento de memória que é deliberadamente isento de falhas, servindo similarmente à uma "caixa preta" do sistema.
+A injeção lógica em hardware é realizada com ferramentas do próprio fabricante
+do microcontrolador (detalhas na seção seguinte), o fluxo geral da injeção
+consiste em carregar o binário executável (no formato ELF) no micro controlador
+utilizando o ST-LINK, após isso, o programa será iniciado e será feita uma
+injeção de falhas via sessão do depurador GDB associado ao link.
 
-Para simular uma carga de trabalho mais condizente com a aplicações reais, serão utilizados 2 programas de exemplo, um processador de sinal digital assíncrono e um programa que realiza uma convolução bidimensional, estes programas são executados e expostos à falhas que espera-se que os mecanismos de tolerância sejam capazes de detectar. Detalhamento destes programas pode ser encontrado no capítulo do *Plano de Verificação*.
+A coleta de métricas é realizada com os mecanismos de profiling do sistema
+FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução
+das tasks, seu espaço de memória utilizado e o número de falhas detectadas (e
+causadas) será armazenado em uma estrutura singleton que residirá em um
+segmento de memória que é deliberadamente isento de falhas, servindo
+similarmente à uma "caixa preta" do sistema.
 
-Visando a reutilização de código e abstração, será utilizada uma interface que generaliza um objeto de tarefa, como um objeto que realiza despache dinâmico necessita de uma tabela de despache virtual (V-Table), é necessário tomar cuidado adicional pois a própria tabela pode ser sujeita à falhas. Será aplicado uma replicação simples dos ponteiros de função da V-Table, com o custo de overhead de 2 comparações por chamada de método. Espera-se que este overhead não será significativo pois os métodos da interface não são chamados com uma frequência alta.
+Para simular uma carga de trabalho mais condizente com a aplicações reais,
+serão utilizados 2 programas de exemplo, um processador de sinal digital
+assíncrono e um programa que realiza uma convolução bidimensional, estes
+programas são executados e expostos à falhas que espera-se que os mecanismos de
+tolerância sejam capazes de detectar. Detalhamento destes programas pode ser
+encontrado no capítulo do *Plano de Verificação*.
+
+Visando a reutilização de código e abstração, será utilizada uma interface que
+generaliza um objeto de tarefa, como um objeto que realiza despache dinâmico
+necessita de uma tabela de despache virtual (V-Table), é necessário tomar
+cuidado adicional pois a própria tabela pode ser sujeita à falhas. Será
+aplicado uma replicação simples dos ponteiros de função da V-Table, com o custo
+de overhead de 2 comparações por chamada de método. Espera-se que este overhead
+não será significativo pois os métodos da interface não são chamados com uma
+frequência alta.
 
 === Materiais
 
@@ -176,7 +208,7 @@ O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma im
 - Redundância Modular: Uma mesma task será disparada diversas vezes, em sua
   conclusão, será realizado um consenso dentre as respostas.
 
-- Replicação temporal: Uma mesma task será re-executada N-vezes, tendo suas N
+- Replicação Temporal: Uma mesma task será re-executada N-vezes, tendo suas N
   respostas catalogadas e verificadas, a resposta correta será decidida por
   consenso.
 
@@ -212,7 +244,6 @@ struct FT_Message {
     Time_Point deadline; // 0 - Sem deadline de entrega
     Payload    payload;
 };
-
 ```
 ])
 
@@ -232,7 +263,7 @@ struct FT_Task_Info {
 
 struct FT_Task {
 	virtual Task_Id execute(void* param) = 0;
-	virtual void attach_heartbeat_watchdog(uint32_t* sequence_addr, Time_Point interval);
+	virtual void attach_heartbeat_watchdog(uint32_t* sequence_addr, Time_Point interval) = 0;
 	virtual FT_Task_Info info() = 0;
 };
 ```]
@@ -396,7 +427,6 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 	[Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.], [Baixo], [Alto], [Implementar interface no RTOS], [Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface],
 
 	[Problemas para injetar falhas com depurador em hardware], [Baixa], [Alto], [Realizar injeção no microcontrolador], [Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa],
-
 
 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
 ))

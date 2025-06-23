@@ -65,28 +65,15 @@
 }
 
 #show image: set align(center)
-#show raw: set align(center)
 #show table: set align(center)
 #show table: set align(horizon)
 
 /*
   TODO:
-  - introducao
-  - botar os 3 trabalho relacionado
-
-  - metodologia
-    - metodos
-
-  - premissas
-
-  - algoritmos & tecnicas
-  - interface
   - plano de verificacao (testes unitarios + execucao)
 
   - Campanha de injecao de falhas: software logico, hardware logico
-  - analise de risco
   - cons. final
-  - como grama
 */
 
 // Main title
@@ -385,16 +372,44 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 = Premissas
 
+- Registradores de controle (Stack Pointer, Return Address, Program Counter,
+  Thread Pointer) serão isentos de falhas. É possível adicionar redundância
+  nestes registradores com salvamentos manuais e `-ffixed-registers`, mas esta
+  técnica foi otimida para manter o escopo do trabalho.
+
+- Será assumido que testes sintéticos possam ao menos aproximar a medição de um
+  cenário com falhas físicas.
+
+- Não será utilizado RTTI ou exceções baseadas em stack unwinding, para reduzir
+  o tamanho do código e evitar fluxo de controle não localizado ou com limite
+  de tempo não determinístico.
+
 = Métodos
+
+- Técnicas de detecção e tolerância baseadas em software.
+
+- Injeção lógica baseada em software para teste preliminar, baseada em callbacks de injeção e inserção manual com GDB.
+
+- Injeção lógica em hardware para teste final com depurador de hardware
+
+- Métricas coletadas com o profiler do FreeRTOS e mecanismos de código (contadores)
+
+- Interface de tarefa com fortificação em sua V-Table, visando abstrair os
+  detalhes de implementação das técnicas
+
+- Arquitetura orientada à passagem de mensagens
+
+- Serão desenvolvidos dois programas de teste simples, para servir de exemplo
+  para a coleta das métricas.
 
 = Materiais
 
 - STLink: Depurador de hardware
 - STM32F103C8T6 "Bluepill": Microcontrolador para a execução do código
-- GCC: Compilador
+- GCC: Compilador para a linguagem C++ (Versão 14 ou acima)
 - STCubeIDE, QEMU: IDE e ferramenta de virtualização para auxílio
 
-#box(height: 350pt)[
+#box(height: 320pt)[
 #grid(
     columns: (1fr,2fr),
     image("assets/stm32_small.png"),
@@ -440,17 +455,72 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
 )
 
-= Teste 1: Processador de Sinal digital
+= Algoritmos e Técnicas
+
+- CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
+
+- Heartbeat Signal: Um sinal periódico será enviado para a tarefa em
+  paralelo, a tarefa necessita responder ao sinal dentro de uma deadline pré determinada com o contador do sinal incrementado.
+
+- Redundância Modular: Uma mesma task será disparada diversas vezes, em sua
+  conclusão, será realizado um consenso dentre as respostas.
+
+- Replicação Temporal: Uma mesma task será re-executada N-vezes, tendo suas N
+  respostas catalogadas e verificadas, a resposta correta será decidida por
+  consenso.
+
+- Asserts: Serão utilizados asserts para checar invariantes específicas ao
+  algoritmo, especialmente na entrada e na saída das funções.
+
+= Interface
+
+Exemplo ilustrativo de uma mensagem
+
+```cpp
+// Deve ser o suficiente para conter o valor de um timer monotônico
+using Time_Point = size_t;
+
+using Task_Id = unsigned int;
+
+template<typename Payload>
+struct FT_Message {
+    uint32_t   check_value;
+    Task_Id    sender;
+    Task_Id    receiver;
+    Time_Point sent_at;
+    Time_Point deadline; // 0 - Sem deadline de entrega
+    Payload    payload;
+};
+```
+
+= Interface
+
+Interface básica de uma tarefa
+
+```cpp
+using FT_Handler = bool (*)(FT_Task*);
+
+struct FT_Task_Info {
+	Task_Id    id;
+	FT_Handler handler;
+	Time_Point started_at;
+	Time_Point deadline; // 0 - Sem deadline
+};
+
+struct FT_Task {
+	virtual Task_Id execute(void* param) = 0;
+	virtual void attach_heartbeat_watchdog(uint32_t* sequence_addr, Time_Point interval) = 0;
+	virtual FT_Task_Info info() = 0;
+};
+```
+
+= Programa Teste 1: Processador de Sinal digital
 
 #image("assets/diagrama_sequencia_fft.png", height: 1fr)
 
-= Teste 2: Convolução Bidimensional
+= Programa Teste 2: Convolução Bidimensional
 
 #image("assets/convolucao_2d.png", height: 1fr)
-
-= Algoritmos e Técnicas
-
-= Interface
 
 = Plano de Verificação
 
@@ -458,6 +528,31 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 = Análise de Riscos
 
+#table(
+	columns: (auto,) * 5,
+
+	table.header([*Risco*], [*Probabilidade*], [*Impacto*], [*Gatilho*], [*Contingência*]),
+	[Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.], [Baixo], [Alto], [Implementar interface no RTOS], [Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface],
+
+	[Problemas para injetar falhas com depurador em hardware], [Baixa], [Alto], [Realizar injeção no microcontrolador], [Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa],
+
+	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
+)
+
 = Considerações Finais
 
-= Cronograma
+= Cronograma do TCC3
+
+#table(
+  columns: (1fr,) + (auto,) * 6,
+  table.header([*Atividade*], [*07/2025*], [*08/2025*], [*09/2025*], [*10/2025*], [*11/2025*], [*12/2025*]),
+  [Escrita da Monografia],                           [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`X___`],
+  [Implementação dos Algoritmos],                    [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Testes dos Algoritmos],                           [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  [Implementação dos Programas Exemplo],             [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  [Teste dos Programas Exemplo],                     [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  [Implementação da Injeção com Software],           [`____`], [`____`], [`XXXX`], [`____`],  [`____`], [`____`],
+  [Implementação da Injeção com Hardware],           [`____`], [`____`], [`__XX`], [`XXX_`],  [`____`], [`____`],
+  [Execução microcontrolador e coleta das métricas], [`____`], [`____`], [`____`], [`__XX`],  [`XXXX`], [`____`],
+  [Revisão Textual],                                 [`____`], [`____`], [`____`], [`____`],  [`__XX`], [`XXXX`],
+)
