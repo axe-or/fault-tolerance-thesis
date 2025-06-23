@@ -1,8 +1,8 @@
 #set page(
     "presentation-4-3",
     margin: (
-        left: 2cm,
-        top: 1cm,
+        left: 1.5cm,
+        top: 1.5cm,
         bottom: 0.5cm,
         right: 1cm,
     ),
@@ -271,6 +271,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 #show text: set align(left)
 #show list: set align(left)
 #set par(leading: 8pt)
+#set text(size: 19pt)
 
 #table(
     columns: (auto,) * 3,
@@ -361,6 +362,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 = Comparação dos Trabalhos Relacionados
 
+#[
 #set text(size: 15.5pt)
 #table(
 	columns: (auto,) * 6,
@@ -375,6 +377,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 	[-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
 )
+]
 
 
 = Visão Geral
