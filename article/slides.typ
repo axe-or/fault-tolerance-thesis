@@ -46,7 +46,6 @@
 /*
   TODO:
   - introducao
-  - Definicoes de sistema embarcado
   - botar os 3 trabalho relacionado
 
   - metodologia
@@ -189,10 +188,24 @@ void assert(bool predicate, string message){
 
 = Sistemas Embarcados
 
+- Família vasta de sistemas computacionais que capacitam um dispositivo maior.
+- Características comuns: Especificidade, Limitação de Recursos, Critério temporal (Soft ou Hard real time)
+
+#grid(
+  columns: (1fr,) * 2,
+  gutter: 8pt,
+
+  align(horizon, image("assets/sdn_router.png")),
+  image("assets/nf15b_plane.png"),
+  image("assets/uc_keyboard.png"),
+  image("assets/abs.png"),
+)
+
 = Sistemas Operacionais de Tempo Real
 
-Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem escalonadores totalmente preemptivos. Tipicamente possuem poucas features, dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
-
+Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem
+escalonadores totalmente preemptivos. Tipicamente possuem poucas features,
+dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
 
 == Escalonador
 
@@ -222,24 +235,55 @@ Com condição de transparência (através de reexecução) inserida.
 
 = Injeção de Falhas
 
+Tipos de injeção e suas desvantagens (Mamone, 2018)
 #[
 #show text: set align(left)
+#show list: set align(left)
+#set par(leading: 8pt)
 
 #table(
     columns: (auto,) * 3,
     table.header([*Técnica*], [*Vantagens*], [*Desvantagens*]),
 
-    [Física], [
+    [Física],
+    [
     - Alta fidelidade à falhas reais
-    - Possível injetar em partes pré definidas do chip
-    ], [
-    - Alto custo monetário
-    - Menos controle sobre o tipo particular de falha
-    - Requisita de especialistas
+    - Possível injetar em partes específicas do chip
     ],
-    [Lógica em Hardware], [], [],
-    [Lógica em Software], [], [],
-    [Simulada], [], [],
+    [
+    - Alto custo
+    - Menos controle sobre o tipo particular de falha
+    - Especialistas para lidar com equipamentos
+    ],
+
+    [Lógica em Hardware], [
+    - Boa aproximação de falhas reais
+    - Altamente precisa e oferece controle sobre dados injetados
+    - Overhead pequeno no tempo de execução
+    ],
+    [
+    - Necessita de uma unidade extra(depurador/injetor)
+    - Necessita de um sistema de comunicação
+    - Pode necessitar de pinos ou modificações adicionais no sistema alvo
+    ],
+
+    [Lógica em Software],
+    [
+    - Baixo custo
+    - Flexível e precisa
+    - Altamente portável
+    ], [
+    - Overhead no tamanho do código e no tempo de execução
+    ],
+    [Simulada], [
+    - Zero intrusividade
+    - Hardware alvo não necessário
+    - Flexível e precisa
+    ],
+    [
+      - Custo de ferramenta de simulação pode ser alto
+      - Nem sempre uma descrição HDL do sistema está acessível
+    ],
     )
 ]
 
