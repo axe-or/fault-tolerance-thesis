@@ -43,6 +43,32 @@
     word.slice(1)
 }
 
+#let center_sentence(body) = {
+    set text(style: "italic")
+    v(12pt)
+    align(center, body)
+    v(8pt)
+}
+
+// Code listings
+#set raw(theme: "assets/light.tmTheme")
+#show figure.where(kind: raw): (fig) => {
+    set align(left)
+    set text(top-edge: 0.7em)
+    box()[
+        #fig.caption
+        #set par(first-line-indent: 0pt, leading: 0.5em)
+        #box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
+            #fig.body
+        ]
+    ]
+}
+
+#show image: set align(center)
+#show raw: set align(center)
+#show table: set align(center)
+#show table: set align(horizon)
+
 /*
   TODO:
   - introducao
@@ -86,46 +112,41 @@
 
 = Introdução
 
-= Definições Principais
+- Sistemas embarcados estão presentes diveras áreas, tipicamente utilizando de um sistema operacional de tempo real
+- É provável que a adoção destes sistemas, particularmente sistemas COTS continue à crescer
 
-Definições segundo a IEEE:
+== Problematização
 
-- *Erro*: A diferença entre um valor esperado e um valor obtido.
+- Existem diversas técnicas para tornar um sistema tolerante à falhas, mas seus tradeoffs nem sempre são claros.
+- Pode ser vantajoso de um ponto de vista competitivo e social, que estes sistemas apresentem melhor dependabilidade.
+- Portanto, é necessário conhecer os tradeoffs feitos visando facilitar a implementação e escolha correta de técnicas para garantir qualidade de serviço.
 
-- *Defeito*: Estado irregular do sistema, que pode provocar (ou não) erros que levam à falhas
+= Introdução
 
-- *Falha*: Incapacidade do sistema de cumprir sua função designada, constituindo uma degradação de sua qualidade de serviço.
+== Solução Proposta
 
-#let center_sentence(body) = {
-    set text(style: "italic")
-    align(horizon, align(center, body))
-}
+- Implementar técnicas de tolerância à falhas próximas do escalonador do
+  sistema operacional, analisar o impacto de performance causado e fornecer uma
+  interface para o uso das técnicas.
+
+
+== Objetivo Geral
 
 #center_sentence[
-    Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais abrangente, representando um estado ou evento no sistema que causa uma degradação da qualidade de serviço.
+  Explorar o uso de técnicas de escalonamento de tempo real com detecção de erros.
 ]
 
-// Code listings
-#set raw(theme: "assets/light.tmTheme")
-#show figure.where(kind: raw): (fig) => {
-    set align(left)
-    set text(top-edge: 0.7em)
-    box()[
-        #fig.caption
-        #set par(first-line-indent: 0pt, leading: 0.5em)
-        #box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
-            #fig.body
-        ]
-    ]
-}
+== Objetivos Específicos
 
-#show image: set align(center)
-#show raw: set align(center)
-#show table: set align(center)
-#show table: set align(horizon)
+- Selecionar técnicas de detecção de falhas em nível de software
+
+- Aplicar como prova de conceito em um RTOS as técnicas selecionadas
+
+- Avaliar por meio de métricas a técnica durante a execução em um RTOS
+
+- Avaliar por meio de métricas a técnica uso de memória em um RTOS
 
 = Definições Principais
-
 
 *Dependabilidade*: Propriedade do sistema que pode ser sumarizada pelos critérios RAMS
 
@@ -137,6 +158,19 @@ Definições segundo a IEEE:
 
 - #initialism("Safety") (Segurança): Probabilidade do sistema funcione ou não sem causar danos à integridade humana ou à outros patrimônios
 
+= Definições Principais
+
+Definições em português segundo a IEEE:
+
+- *Erro* (_Error_): A diferença entre um valor esperado e um valor obtido.
+
+- *Defeito* (_Fault_): Estado irregular do sistema, que pode provocar (ou não) erros que levam à falhas
+
+- *Falha* (_Failure_): Incapacidade observável do sistema de cumprir sua função designada, constituindo uma degradação total ou parcial de sua qualidade de serviço.
+
+#center_sentence[
+    Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais abrangente, representando um estado ou evento no sistema que causa uma degradação da qualidade de serviço.
+]
 
 = Falhas
 
@@ -153,22 +187,19 @@ Falhas podem ser classificadas em 3 grupos de acordo com seu padrão de ocorrên
 ]
 
 = Mecanismos de Detecção
-- CRC (Cyclic Redundancy Check): Um valor de checagem é criado com base em um polinômio gerador e verificado
+- CRC (Cyclic Redundancy Check): Um valor de checagem é criado com base em um polinômio gerador e verificado, utilizado primariamente para verificar integridade de pacotes ou mensagens.
 
-- Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível
+- Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível, pode ser automaticamente inserido como pós e pré condição na chamada de funções
 
-#align(horizon)[
 ```cpp
 void assert(bool predicate, string message){
     [[unlikely]]
-        if(!predicate){
-        // Opcional: imprimir uma mensagem de erro
-        log_error(message);
+    if(!predicate){
+        log_error(message); // Opcional: imprimir uma mensagem de erro
         trap(); // Emitir exceção
     }
 }
 ```
-]
 
 = Mecanismos de Detecção
 - Heartbeat signal: Sinal de Checagem, tipicamente baseado em uma deadline
@@ -287,11 +318,64 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     )
 ]
 
-= Trabalhos Relacionados I
+= Trabalhos Relacionados 1
+*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*
+
+- Utiliza injeção física de íons pesados e injeção emulada em hardware posteriormente
+
+- Utiliza de redundância nos registradores e usa menos registradores
+
+- Resultados favoráveis para detecção em software
+
+- Usa do sistema FreeRTOS
+
+- Observou-se que a memória é 2 ordens de magnitude mais suscetível à falhas transientes
+
+#image("assets/related_works_heavy_ion_reliability.png", height: 1fr)
 
 = Trabalhos Relacionados II
+*Application-Level Fault Tolerance in Real-Time Embedded System*
+
+- Cria interface de alto nível para TF no sistema operacional BOSS
+
+- Resultados favoráveis para a detecção, foi possível adquirir resiliência
+  desejada com um par de processadorres com auto checagem (PSP)
+
+- Utiliza de injeção lógica e simulada em software em um setup de múltiplas máquinas
+
+#image("assets/related_works_psp_perf.png", height: 1fr)
 
 = Trabalhos Relacionados III
+
+*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*
+
+- Utiliza de checagens de jump e análise de controle de fluxo do programa
+
+- Depende pesadamente de adicional do compilador
+
+- Forma mais distinta de detecção em software deste trabalho
+
+- Complementa análise de fluxo com checagem de deadlines
+
+- Utiliza de injeção lógica em hardware
+
+= Comparação dos Trabalhos Relacionados
+
+#set text(size: 15.5pt)
+#table(
+	columns: (auto,) * 6,
+
+	table.header([*N*], [*Trabalho*], [*Sistema*], [*Hardware*], [*Injeção*], [*Técnicas*]),
+
+	[1], [*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*], [Bare Metal, #linebreak()FreeRTOS], [CY8CKIT-059], [Física & Lógica em Software], [Redundância de Registradores, Deadlines, Redução de Registradores, Asserts],
+
+	[2], [*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
+
+	[3], [*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [MicroC/OS-ii], [MPC555 Evaluation Board], [Lógica em Hardware], [Análise de fluxo de controle e de dados com sensibilidade à deadlines],
+
+	[-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
+)
+
 
 = Visão Geral
 #image("assets/visao_geral.png", height: 1fr)
