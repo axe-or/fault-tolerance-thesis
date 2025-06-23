@@ -325,7 +325,9 @@ inseridos, não há como realizar um teste "genérico" externo à aplicação ge
 com múltiplas threads se comunicando e causando estresse de memória na fila. A
 fila MPMC escolhida é baseada em uma implementação lockless do algoritmo. @BoundedMPMCQueue
 
-*Programa exemplo*: Será testado em um ambiente hosted primeiro a implementação dos componentes complexos (FFT, convolução, passa-banda), sendo comparados com resultados implementações já bem estabelecidas.
+*Programa exemplo*: Será testado em um ambiente hosted primeiro a implementação
+dos componentes complexos (FFT, convolução, passa-banda), sendo comparados com
+resultados implementações já bem estabelecidas.
 
 === Outros testes
 
@@ -372,7 +374,16 @@ deserializados no host para análise.
   // "7", "✓","✓","✓","✓","✓",
 ))
 
-A combinação 1 é apenas um grupo controle, para checar a execução sem tolerância alguma, já a combinação 2 visa comparar com as técnicas de tolerância que não envolvem modificação do processo de execução da task. As combinações 3 à 6  visam comparar Reexecução e Redundância modular, com e sem Heartbeat Signals (que incorrem em uma task adicional). Asserts e CRCs serão mantidos ativos em todas as execuções por 2 razões principais: Asserts serão utilizados para validar as chamadas virtuais da interface, e CRCs tornam falhas na transmissão de mensagens detectáveis, não seria proveitoso realizar passagem de mensagens para os Heartbeat Signals se as mensagens por si só não são confiáveis.
+A combinação 1 é apenas um grupo controle, para checar a execução sem
+tolerância alguma, já a combinação 2 visa comparar com as técnicas de
+tolerância que não envolvem modificação do processo de execução da task. As
+combinações 3 à 6  visam comparar Reexecução e Redundância modular, com e sem
+Heartbeat Signals (que incorrem em uma task adicional). Asserts e CRCs serão
+mantidos ativos em todas as execuções por 2 razões principais: Asserts serão
+utilizados para validar as chamadas virtuais da interface, e CRCs tornam falhas
+na transmissão de mensagens detectáveis, não seria proveitoso realizar passagem
+de mensagens para os Heartbeat Signals se as mensagens por si só não são
+confiáveis.
 
 ==== Injeção Lógica com Software
 

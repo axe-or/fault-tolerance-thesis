@@ -66,7 +66,6 @@
 
 #show image: set align(center)
 #show table: set align(center)
-#show table: set align(horizon)
 
 /*
   TODO:
@@ -209,6 +208,7 @@ void assert(bool predicate, string message){
 - Família vasta de sistemas computacionais que capacitam um dispositivo maior.
 - Características comuns: Especificidade, Limitação de Recursos, Critério temporal (Soft ou Hard real time)
 
+#box(height: 180pt)[
 #grid(
   columns: (1fr,) * 2,
   gutter: 8pt,
@@ -218,6 +218,7 @@ void assert(bool predicate, string message){
   image("assets/uc_keyboard.png"),
   image("assets/abs.png"),
 )
+]
 
 = Sistemas Operacionais de Tempo Real
 
@@ -524,7 +525,45 @@ struct FT_Task {
 
 = Plano de Verificação
 
+- Testes unitários para:
+  - CRC
+  - Heartbeat Signal
+  - Redundância Modular
+  - Replicação temporal
+  - Fila de Mensagens (MPMC bounded queue)
+  - FFT, iFFT, Passa-Banda (Programa exemplo 1)
+  - Convolução (Programa exemplo 2)
+
+- Testes de integração e ponta-a-ponta para os programas de exemplo
+
+- Teste com injeção baseada em software para garantir funcionamento preliminar
+
+- Teste e análise final com injeção lógica em hardware
+
+- É possível reutilizar uma boa parte da lógica de emissão de falhas em
+  software para o depurador de hardware
+
 = Campanha de Injeção de Falhas
+
+- Sujeitos à falhas: Maioria da memória, Registradores de propósito geral
+
+- Falhas injetadas: Bit flips com XOR, números aleatórios. Simulando corrupções de memória
+
+- Método de injeção: Task auxiliar durante testes e desenvolvimento, Comandos via sessão GDB para alterar valores no controlador via STLink
+
+Combinações de técnicas a serem usadas:
+#table(
+  columns: (auto, auto, auto, auto, auto, 1fr),
+  // column-gutter: (auto, 4pt, auto),
+  table.header([*Comb.*], [*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
+  "1", "-","-","-","-","-",
+  "2", "-","-","-","✓","✓",
+  "3", "✓","-","-","✓","✓",
+  "4", "✓","-","✓","✓","✓",
+  "5", "-","✓","-","✓","✓",
+  "6", "-","✓","✓","✓","✓",
+  // "7", "✓","✓","✓","✓","✓",
+)
 
 = Análise de Riscos
 
@@ -540,6 +579,18 @@ struct FT_Task {
 )
 
 = Considerações Finais
+
+- RTOSes são de grande importância e aumentar sua dependabilidade pode ser benéfico
+
+- Integrar a detecção e tolerância à falhas com o processo de escalonamento através de uma interface permite criar abstrações para melhorias incrementais
+
+- O escopo da campanha de falhas do trabalho serão os erros de memória, causados por evento externo ou erro de design
+
+- Dentre as principais limitações do trabalho:
+
+  - Não será realizado teste físico
+
+  - Não será realizado análise de fluxo para pegar corrupções mais sofisticadas de fluxo.
 
 = Cronograma do TCC3
 
