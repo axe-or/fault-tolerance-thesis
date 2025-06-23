@@ -43,8 +43,28 @@
     word.slice(1)
 }
 
-// Main title
+/*
+  TODO:
+  - introducao
+  - Definicoes de sistema embarcado
+  - botar os 3 trabalho relacionado
 
+  - metodologia
+    - metodos
+
+  - premissas
+
+  - algoritmos & tecnicas
+  - interface
+  - plano de verificacao (testes unitarios + execucao)
+
+  - Campanha de injecao de falhas: software logico, hardware logico
+  - analise de risco
+  - cons. final
+  - como grama
+*/
+
+// Main title
 
 #let title = [Detecção de erros em sistema operacional de tempo real]
 #let author = [Marcos Augusto Fehlauer Pereira]
@@ -55,7 +75,7 @@
 #[
     #v(2fr)
     #align(center, text(weight: "bold", size: 28pt, upper(title)))
-    
+
     #line(length: 100%, stroke: colors.heading)
 
     #align(center, university)
@@ -63,7 +83,6 @@
     #v(1.5fr)
     #align(right)[Aluno: #author #linebreak() Orientador: #supervisor]
     #v(2fr)
-
 ]
 
 = Introdução
@@ -96,7 +115,7 @@ Definições segundo a IEEE:
         #fig.caption
         #set par(first-line-indent: 0pt, leading: 0.5em)
         #box(stroke: (paint: black, thickness: 1pt), inset: 8pt, width: 100%)[
-            #fig.body			
+            #fig.body
         ]
     ]
 }
@@ -107,7 +126,7 @@ Definições segundo a IEEE:
 #show table: set align(horizon)
 
 = Definições Principais
- 
+
 
 *Dependabilidade*: Propriedade do sistema que pode ser sumarizada pelos critérios RAMS
 
@@ -203,24 +222,26 @@ Com condição de transparência (através de reexecução) inserida.
 
 = Injeção de Falhas
 
+#[
 #show text: set align(left)
 
 #table(
     columns: (auto,) * 3,
     table.header([*Técnica*], [*Vantagens*], [*Desvantagens*]),
-    
+
     [Física], [
-        - Alta fidelidade à falhas reais
-        - Possível injetar em partes pré definidas do chip
+    - Alta fidelidade à falhas reais
+    - Possível injetar em partes pré definidas do chip
     ], [
-        - Alto custo monetário
-        - Menos controle sobre o tipo particular de falha
-        - Requisita de especialistas
+    - Alto custo monetário
+    - Menos controle sobre o tipo particular de falha
+    - Requisita de especialistas
     ],
     [Lógica em Hardware], [], [],
     [Lógica em Software], [], [],
     [Simulada], [], [],
-)
+    )
+]
 
 = Trabalhos Relacionados I
 
@@ -228,8 +249,10 @@ Com condição de transparência (através de reexecução) inserida.
 
 = Trabalhos Relacionados III
 
-= Projeto: Visão Geral e Premissas
+= Visão Geral
 #image("assets/visao_geral.png", height: 1fr)
+
+= Premissas
 
 = Métodos
 
@@ -254,6 +277,7 @@ Com condição de transparência (através de reexecução) inserida.
 )
 ]
 
+// TODO: tacar isso pra baixo?
 = Requisitos Funcionais
 
 #table(
