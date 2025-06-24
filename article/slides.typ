@@ -67,14 +67,6 @@
 #show image: set align(center)
 #show table: set align(center)
 
-/*
-  TODO:
-  - plano de verificacao (testes unitarios + execucao)
-
-  - Campanha de injecao de falhas: software logico, hardware logico
-  - cons. final
-*/
-
 // Main title
 
 #let title = [Detecção de erros em sistema operacional de tempo real]
@@ -114,7 +106,6 @@
 - Implementar técnicas de tolerância à falhas próximas do escalonador do
   sistema operacional, analisar o impacto de performance causado e fornecer uma
   interface para o uso das técnicas.
-
 
 == Objetivo Geral
 
@@ -157,6 +148,35 @@ Definições em português segundo a IEEE:
 #center_sentence[
     Para os propósitos deste trabalho, o termo "Falha" será utilizado como um termo mais abrangente, representando um estado ou evento no sistema que causa uma degradação da qualidade de serviço.
 ]
+
+= Sistemas Embarcados
+
+- Família vasta de sistemas computacionais que capacitam um dispositivo maior.
+- Características comuns: Especificidade, Limitação de Recursos, Critério temporal (Soft ou Hard real time)
+
+#box(height: 140pt)[
+#grid(
+  columns: (1fr,) * 2,
+  gutter: 8pt,
+
+  align(horizon, image("assets/sdn_router.png")),
+  image("assets/nf15b_plane.png"),
+  image("assets/uc_keyboard.png"),
+  image("assets/abs.png"),
+)
+]
+
+= Sistemas Operacionais de Tempo Real
+
+Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem
+escalonadores totalmente preemptivos. Tipicamente possuem poucas features,
+dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
+
+== Escalonador
+
+Componente do Sistema Operacional responsável por gerenciar o tempo da CPU entre das tarefas.
+
+#image("assets/freertos_task_diagram.png")
 
 = Falhas
 
@@ -202,35 +222,6 @@ void assert(bool predicate, string message){
 *Reexecução*: Um tipo de redundância temporal, pode ser utilizado para condições de transparência, depende do fato que é improvável que uma falha transiente ocorra $N$ vezes em sucessão.
 
 #image("assets/redundancia_reexec.png")
-
-= Sistemas Embarcados
-
-- Família vasta de sistemas computacionais que capacitam um dispositivo maior.
-- Características comuns: Especificidade, Limitação de Recursos, Critério temporal (Soft ou Hard real time)
-
-#box(height: 180pt)[
-#grid(
-  columns: (1fr,) * 2,
-  gutter: 8pt,
-
-  align(horizon, image("assets/sdn_router.png")),
-  image("assets/nf15b_plane.png"),
-  image("assets/uc_keyboard.png"),
-  image("assets/abs.png"),
-)
-]
-
-= Sistemas Operacionais de Tempo Real
-
-Sistemas comumente usados para diversos tipos de sistemas embarcados, possuem
-escalonadores totalmente preemptivos. Tipicamente possuem poucas features,
-dependendo apenas de uma HAL (_Hardware Abstraction Layer_)
-
-== Escalonador
-
-Componente do Sistema Operacional responsável por gerenciar o tempo da CPU entre das tarefas.
-
-#image("assets/freertos_task_diagram.png")
 
 = Escalonamento Tolerante à Falhas
 
