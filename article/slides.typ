@@ -109,18 +109,18 @@
 == Solução Proposta
 
 - Implementar técnicas de tolerância à falhas próximas do escalonador do
-  sistema operacional, analisar o impacto de performance causado e fornecer uma
+  sistema operacional, analisar o impacto de performance causado e criar uma
   interface para o uso das técnicas.
 
 = Objetivos
 
-== Objetivo Geral
+== Geral
 
 #center_sentence[
   Explorar o uso de técnicas de escalonamento de tempo real com detecção de erros.
 ]
 
-== Objetivos Específicos
+== Específicos
 
 - Selecionar técnicas de detecção de falhas em nível de software
 
@@ -141,6 +141,10 @@
 - #initialism("Maintainability") (Capacidade de Manutenção): Probabilidade de que um sistema em um estado quebrado consiga ser reparado com sucesso, antes de um tempo $t$.
 
 - #initialism("Safety") (Segurança): Probabilidade do sistema funcione ou não sem causar danos à integridade humana ou à outros patrimônios
+
+#center_sentence[
+  Tolerar falhas influencia positivamente nos critétrios *R* e *A*, melhorando a dependabilidade.
+]
 
 = Definições Principais
 
@@ -311,51 +315,6 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     )
 ]
 
-/*
-
-= Trabalhos Relacionados 1
-*Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*
-
-- Utiliza injeção física de íons pesados e injeção emulada em hardware posteriormente
-
-- Utiliza de redundância nos registradores e usa menos registradores
-
-- Resultados favoráveis para detecção em software
-
-- Usa do sistema FreeRTOS
-
-- Observou-se que a memória é 2 ordens de magnitude mais suscetível à falhas transientes
-
-#image("assets/related_works_heavy_ion_reliability.png", height: 1fr)
-
-= Trabalhos Relacionados II
-*Application-Level Fault Tolerance in Real-Time Embedded System*
-
-- Cria interface de alto nível para TF no sistema operacional BOSS
-
-- Resultados favoráveis para a detecção, foi possível adquirir resiliência
-  desejada com um par de processadorres com auto checagem (PSP)
-
-- Utiliza de injeção lógica e simulada em software em um setup de múltiplas máquinas
-
-#image("assets/related_works_psp_perf.png", height: 1fr)
-
-= Trabalhos Relacionados III
-
-*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*
-
-- Utiliza de checagens de jump e análise de controle de fluxo do programa
-
-- Depende pesadamente de adicional do compilador
-
-- Forma mais distinta de detecção em software deste trabalho
-
-- Complementa análise de fluxo com checagem de deadlines
-
-- Utiliza de injeção lógica em hardware
-
-*/
-
 
 = Comparação dos Trabalhos Relacionados
 
@@ -375,7 +334,6 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 	[-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
 )
 ]
-
 
 = Visão Geral
 #image("assets/visao_geral.png", height: 1fr)
@@ -439,40 +397,6 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 - Executar e coletar métricas com injeção lógica em software
 
 - Executar e coletar métricas com injeção lógica em hardware
-
-/*
-= Requisitos Funcionais
-
-#table(
-	columns: (auto, 1fr),
-
-	table.header([*Requisito*], [*Descrição*]),
-
-	[*RF 1*], [Todos os algoritmos da seção *Algoritmos e Técnicas* implementados],
-	[*RF 2*], [Implementação da interface para execução de tarefas com TF],
-	[*RF 3*], [Programa de exemplo implementado com diferentes técnicas e executado],
-	[*RF 4*], [Implementação da interface para as tarefas do programa de exemplo],
-	[*RF 5*], [Injeção de falhas lógicas em software (callbacks de injeção)],
-	[*RF 6*], [Injeção de falhas lógicas em hardware (ST-LINK + GDB)],
-	[*RF 7*], [Funções de medição e observabilidade das métricas: uso de CPU, uso de memória, falhas injetadas, falhas detectadas, quantia de tasks instanciadas],
-	[*RF 8*], [Interface de resiliência precisa ter uso de memória com limite superior determinado em tempo de compilação ou imediatamente no início do programa],
-)
-
-= Requisitos Não Funcionais
-
-#table(
-	columns: (auto, 1fr),
-
-	table.header([*Requisito*], [*Descrição*]),
-	[*RNF 1*], [Trabalho deve ser realizado em C++ (versão 14 ou acima)],
-	[*RNF 2*], [Deve ser compatível com arquitetura ARMv7-M ou ARMv8-M],
-	[*RNF 3*], [Deve ser capaz de rodar em um microcontrolador utilizando um HAL (Hardware abstraction layer), seja do RTOS ou de terceiros.],
-	[*RNF 4*], [Precisa fazer uso de múltiplos núcleos quando presentes],
-	[*RNF 5*], [Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas],
-	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
-)
-
-*/
 
 = Algoritmos e Técnicas
 
