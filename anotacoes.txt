@@ -1,43 +1,7 @@
+- junta em um único slide os que possuem os grafos de execução normal e os dois de tf
+- tenta ser mais pontual no texto de métodos
+- nos slides de requisitos, tenta ser trabalhar com uma frase que resume todos eles
+- sumarizar problematizacao
 
 
 
-
-
-plano de trabalho ?
-+ Implementar os algoritmos fora do RTOS para testar sua validade lógica e
-  executar sanitizadores de memória e condições de corridas
-
-+ Realizar teste com debugger em ambiente virtualizado com o RTOS
-
-+ Teste final em microcontrolador ARM rodando um RTOS com injeção de falhas e
-  coleta das métricas
-
-+ Análise das métricas e comparação com as projeções dos testes virtuais
-
-
-gravar um .wav e enviar e bota https://www.ocenaudio.com/
-
-numerar paginas
-
-Leonardo R. Gobatto leonardo.gobatto@inf.ufrgs.br - fernanda.lima@inf.ufrgs.br
-
-
-O trabalho como um todo é de risco baixo, porém é importante ressaltar os seguin-
-tes obstáculos:
-Risco I: Inadequação das interfaces do sistema operacional para mecanismos de de-
-tecção
-• Probabilidade: Baixa
-• Gatilho: Adaptar algoritmos da prova de conceito para o sistema operacional.
-• Mitigação: Utilizar outro sistema operacional (FreeRTOS, Zephyr, Linux+RT_PATCH,
-etc.) ou modificar o sistema alvo diretamente em último caso.
-
-Risco II: Dificuldade de coletar métricas de performance
-• Probabilidade: Baixa
-• Gatilho: Medição após algoritmo implementado
-• Mitigação: Utilizar depurador de kernel e métricas externas de VMs como QEMU
-Risco III: Dificuldade de teste com barramento físico (problema de integração com
-driver)
-• Probabilidade: Baixa / Média
-• Gatilho: Teste com hardware
-• Mitigação: Procurar driver ou barramento alternativo(melhor) ou simular barra-
-mento com software (menos ideal).

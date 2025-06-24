@@ -21,6 +21,7 @@
 
 #let slide_counter = counter("slide")
 #show heading: set block(below: 0.5em)
+#show heading.where(level: 2): set block(below: 1em)
 
 #show heading.where(level: 1): (h) => context {
     pagebreak()
@@ -88,22 +89,30 @@
 
 = Introdução
 
-- Sistemas embarcados estão presentes diveras áreas, tipicamente utilizando de um sistema operacional de tempo real
-- É provável que a adoção destes sistemas, particularmente sistemas COTS continue à crescer
+- Sistemas embarcados estão presentes diveras áreas, tipicamente utilizando de
+  um sistema operacional de tempo real
+
+- É provável que a adoção destes sistemas, particularmente sistemas COTS
+  continue a crescer
 
 == Problematização
 
-- Existem diversas técnicas para tornar um sistema tolerante à falhas, mas seus tradeoffs nem sempre são claros.
-- Pode ser vantajoso de um ponto de vista competitivo e social, que estes sistemas apresentem melhor dependabilidade.
-- Portanto, é necessário conhecer os tradeoffs feitos visando facilitar a implementação e escolha correta de técnicas para garantir qualidade de serviço.
+- Existem diversas técnicas para tornar um sistema tolerante à falhas, mas seus
+  tradeoffs nem sempre são claros.
 
-= Introdução
+- Pode ser vantajoso de um ponto de vista competitivo e social, que estes
+  sistemas apresentem melhor dependabilidade.
+
+- Portanto, é necessário conhecer os tradeoffs de performance em relação ao seu
+  ganho de tolerância.
 
 == Solução Proposta
 
 - Implementar técnicas de tolerância à falhas próximas do escalonador do
   sistema operacional, analisar o impacto de performance causado e fornecer uma
   interface para o uso das técnicas.
+
+= Objetivos
 
 == Objetivo Geral
 
@@ -191,9 +200,13 @@ Falhas podem ser classificadas em 3 grupos de acordo com seu padrão de ocorrên
 ]
 
 = Mecanismos de Detecção
-- CRC (Cyclic Redundancy Check): Um valor de checagem é criado com base em um polinômio gerador e verificado, utilizado primariamente para verificar integridade de pacotes ou mensagens.
+- CRC (Cyclic Redundancy Check): Um valor de checagem é criado com base em um
+  polinômio gerador e verificado, utilizado primariamente para verificar
+  integridade de pacotes ou mensagens.
 
-- Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível, pode ser automaticamente inserido como pós e pré condição na chamada de funções
+- Asserts: Checagem de uma condição invariante que dispara uma falha, simples e
+  muito flexível, pode ser automaticamente inserido como pós e pré condição na
+  chamada de funções
 
 ```cpp
 void assert(bool predicate, string message){
@@ -223,13 +236,15 @@ void assert(bool predicate, string message){
 
 = Escalonamento Tolerante à Falhas
 
-Grafo tolerante à falhas de um programa simples (3 processos, 1 mensagem)
-#image("assets/ftg_simples.png", height: 1fr)
+Grafo tolerante à falhas de um programa simples (3 processos, 1 mensagem) e sua
+versão que tolera até uma falha transiente.
 
-= Escalonamento Tolerante à Falhas
-
-Mesmo grafo, tolerando até uma falha transiente
-#image("assets/ftg_expandido.png", height: 1fr)
+#align(center, grid(
+  columns: (auto, auto),
+  column-gutter: 40pt,
+  image("assets/ftg_simples.png", height: 1fr),
+  image("assets/ftg_expandido.png", height: 1fr),
+))
 
 = Escalonamento Tolerante à Falhas
 
@@ -368,29 +383,24 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 = Premissas
 
 - Registradores de controle (Stack Pointer, Return Address, Program Counter,
-  Thread Pointer) serão isentos de falhas. É possível adicionar redundância
-  nestes registradores com salvamentos manuais e `-ffixed-registers`, mas esta
-  técnica foi otimida para manter o escopo do trabalho.
+  Thread Pointer) serão isentos de falhas diretas.
 
 - Será assumido que testes sintéticos possam ao menos aproximar a medição de um
   cenário com falhas físicas.
 
-- Não será utilizado RTTI ou exceções baseadas em stack unwinding, para reduzir
-  o tamanho do código e evitar fluxo de controle não localizado ou com limite
-  de tempo não determinístico.
+- Não será utilizado RTTI ou exceções baseadas em stack unwinding.
 
 = Métodos
 
 - Técnicas de detecção e tolerância baseadas em software.
 
-- Injeção lógica baseada em software para teste preliminar, baseada em callbacks de injeção e inserção manual com GDB.
+- Injeção lógica em software durante desenvolvimento.
 
-- Injeção lógica em hardware para teste final com depurador de hardware
+- Injeção lógica em hardware para teste final com depurador de hardware.
 
 - Métricas coletadas com o profiler do FreeRTOS e mecanismos de código (contadores)
 
-- Interface de tarefa com fortificação em sua V-Table, visando abstrair os
-  detalhes de implementação das técnicas
+- Interface de tarefa com fortificação em sua V-Table
 
 - Arquitetura orientada à passagem de mensagens
 
@@ -417,6 +427,18 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     )
 )
 ]
+
+= Requisitos
+
+- Implementar os Algoritmos e Técnicas propostos
+
+- Implementar os programas de teste
+
+- Implementar interface de tarefa com TF
+
+- Executar e coletar métricas com injeção lógica em software
+
+- Executar e coletar métricas com injeção lógica em hardware
 
 /*
 = Requisitos Funcionais
@@ -454,20 +476,15 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 = Algoritmos e Técnicas
 
-- CRC: Será implementado o CRC32 para a checagem do payload de mensagens.
+- CRC
 
-- Heartbeat Signal: Um sinal periódico será enviado para a tarefa em
-  paralelo, a tarefa necessita responder ao sinal dentro de uma deadline pré determinada com o contador do sinal incrementado.
+- Heartbeat Signal
 
-- Redundância Modular: Uma mesma task será disparada diversas vezes, em sua
-  conclusão, será realizado um consenso dentre as respostas.
+- Redundância Modular
 
-- Replicação Temporal: Uma mesma task será re-executada N-vezes, tendo suas N
-  respostas catalogadas e verificadas, a resposta correta será decidida por
-  consenso.
+- Replicação Temporal
 
-- Asserts: Serão utilizados asserts para checar invariantes específicas ao
-  algoritmo, especialmente na entrada e na saída das funções.
+- Asserts
 
 = Interface
 
@@ -550,7 +567,6 @@ struct FT_Task {
 Combinações de técnicas a serem usadas:
 #table(
   columns: (auto, auto, auto, auto, auto, 1fr),
-  // column-gutter: (auto, 4pt, auto),
   table.header([*Comb.*], [*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
   "1", "-","-","-","-","-",
   "2", "-","-","-","✓","✓",
@@ -558,7 +574,6 @@ Combinações de técnicas a serem usadas:
   "4", "✓","-","✓","✓","✓",
   "5", "-","✓","-","✓","✓",
   "6", "-","✓","✓","✓","✓",
-  // "7", "✓","✓","✓","✓","✓",
 )
 
 = Análise de Riscos
@@ -573,20 +588,6 @@ Combinações de técnicas a serem usadas:
 
 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
 )
-
-= Considerações Finais
-
-- RTOSes são de grande importância e aumentar sua dependabilidade pode ser benéfico
-
-- Integrar a detecção e tolerância à falhas com o processo de escalonamento através de uma interface permite criar abstrações para melhorias incrementais
-
-- O escopo da campanha de falhas do trabalho serão os erros de memória, causados por evento externo ou erro de design
-
-- Dentre as principais limitações do trabalho:
-
-  - Não será realizado teste físico
-
-  - Não será realizado análise de fluxo para pegar corrupções mais sofisticadas de fluxo.
 
 = Cronograma do TCC3
 
@@ -603,3 +604,17 @@ Combinações de técnicas a serem usadas:
   [Execução microcontrolador e coleta das métricas], [`____`], [`____`], [`____`], [`__XX`],  [`XXXX`], [`____`],
   [Revisão Textual],                                 [`____`], [`____`], [`____`], [`____`],  [`__XX`], [`XXXX`],
 )
+
+= Considerações Finais
+
+- RTOSes são de grande importância e aumentar sua dependabilidade pode ser benéfico
+
+- Integrar a detecção e tolerância à falhas com o processo de escalonamento através de uma interface permite criar abstrações para melhorias incrementais
+
+- O escopo da campanha de falhas do trabalho serão os erros de memória, causados por evento externo ou erro de design
+
+- Dentre as principais limitações do trabalho:
+
+  - Não será realizado teste físico
+
+  - Não será realizado análise de fluxo para pegar corrupções mais sofisticadas de fluxo.
