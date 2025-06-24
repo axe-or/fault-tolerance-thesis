@@ -89,7 +89,7 @@
 
 = Introdução
 
-- Sistemas embarcados estão presentes diveras áreas, tipicamente utilizando de
+- Sistemas embarcados estão presentes diversas áreas, tipicamente utilizando de
   um sistema operacional de tempo real
 
 - É provável que a adoção destes sistemas, particularmente sistemas COTS
