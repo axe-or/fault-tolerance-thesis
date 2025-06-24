@@ -23,8 +23,6 @@
 #show heading: set block(below: 0.5em)
 
 #show heading.where(level: 1): (h) => context {
-    // if array.at(slide_counter.get(), 0) > 0 {
-    // }
     pagebreak()
     slide_counter.step()
 
@@ -298,6 +296,8 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     )
 ]
 
+/*
+
 = Trabalhos Relacionados 1
 *Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection*
 
@@ -338,6 +338,9 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 - Complementa análise de fluxo com checagem de deadlines
 
 - Utiliza de injeção lógica em hardware
+
+*/
+
 
 = Comparação dos Trabalhos Relacionados
 
@@ -415,7 +418,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 )
 ]
 
-// TODO: tacar isso pra baixo?
+/*
 = Requisitos Funcionais
 
 #table(
@@ -446,6 +449,8 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 	[*RNF 5*], [Deve ser capaz de executar em cima do escalonador do FreeRTOS ou outro RTOS preemptivo sem mudanças significativas],
 	[*RNF 6*], [V-Tables das interfaces devem possuir redundância para evitar pulos corrompidos ao chamar métodos],
 )
+
+*/
 
 = Algoritmos e Técnicas
 
