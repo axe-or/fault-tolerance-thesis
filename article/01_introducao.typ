@@ -80,10 +80,12 @@ relaxadas.
 
 === Objetivo Geral
 
+// TODO: refazer
 Explorar o uso de técnicas de escalonamento de tempo real com detecção de erros.
 
 === Objetivos Específicos
 
+// TODO: refazer, ultimossao redundantes
 - Selecionar técnicas de detecção de falhas em nível de software
 - Aplicar como prova de conceito em um RTOS as técnicas selecionadas
 - Avaliar por meio de métricas a técnica durante a execução em um RTOS
@@ -96,9 +98,15 @@ de caráter quantitativo e conclusões e observações derivadas do trabalho ser
 realizadas de maneira indutiva baseadas nas métricas de performance coletadas e
 comparadas.
 
-Foi realizado uma pesquisa bibliográfica para a fundamentação e escolha das técnicas e dos materiais do trabalho, sendo esta primariamente focada em autores com obras associadas ao tema de tolerância assim como temas adjacentes relevantes como sistemas operacionais e interface hardware-software.
+Foi realizado uma pesquisa bibliográfica para a fundamentação e escolha das
+técnicas e dos materiais do trabalho, sendo esta primariamente focada em
+autores com obras associadas ao tema de tolerância assim como temas adjacentes
+relevantes como sistemas operacionais e interface hardware-software.
 
-Após isso será realizado uma implementação e testes das técnicas escolhidas para validação, e uma campanha de injeção de falhas será realizada em um microcontrolador para a coleta final das métricas, este assunto será aprofundado na seção de *Projeto*.
+Após isso será realizado uma implementação e testes das técnicas escolhidas
+para validação, e uma campanha de injeção de falhas será realizada em um
+microcontrolador para a coleta final das métricas, este assunto será
+aprofundado na seção de *Projeto*.
 
 == Estrutura do Trabalho
 

@@ -437,6 +437,7 @@ de sistemas embarcados. Exemplos incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 == Escalonador
 
+// TODO: Termos em ingles
 O escalonador (scheduler) é o componente do sistema operacional responsável
 por gerenciar múltiplas tarefas que desejam executar @OperatingSystemConcepts,
 sendo um componente extramente crucial, a implementação do escalonador deve

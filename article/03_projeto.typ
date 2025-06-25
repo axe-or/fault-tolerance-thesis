@@ -23,14 +23,30 @@ ajuste do sistema.
 
 === Visão Geral
 
+// TODO: Mudar o diagrama de ordem, talvez deixar o paragrafo menos denso
 #figure(caption: "Visão Geral do projeto", image("assets/visao_geral.png"))
 
-A análise final será realizada com os mecanismos de tolerância já implementados no FreeRTOS, serão executados 2 programas de exemplo com diferentes combinações de técnicas, métricas do uso médio de CPU, memória e número de falhas detectadas e por quais técnicas serão todas armazenadas em um segmento de memória previamente definido, será tomado um cuidado adicional para não injetar falhas neste segmento, ou alterar endereços de memória para que apontem para este segmento, pois será utilizado um dump da imagem com as métricas para a análise e escrita do resto da monografia.
+A análise final será realizada com os mecanismos de tolerância já implementados
+no FreeRTOS, serão executados 2 programas de exemplo com diferentes combinações
+de técnicas, métricas do uso médio de CPU, memória e número de falhas
+detectadas e por quais técnicas serão todas armazenadas em um segmento de
+memória previamente definido, será tomado um cuidado adicional para não injetar
+falhas neste segmento, ou alterar endereços de memória para que apontem para
+este segmento, pois será utilizado um dump da imagem com as métricas para a
+análise e escrita do resto da monografia.
 
-O PC (host) será responsável por orquestrar o processo de injeção, será utilizado o ST-Link para manipular a memória e registradores do microcontrolador, a interface de uso será feita pela sessão de GDB exposta pelo driver do ST-Link e pela IDE STM32Cube. As técnicas representadas no diagrama são para propósito ilustrativo da arquitetura, e não necessariamente correspondem a segmentos de memória dedicados. O uso de Asserts é realizado no código das tasks ativas, mas não existe nenhum "módulo de asserts", dado que esta técnica é profundamente contextual.
+O PC (host) será responsável por orquestrar o processo de injeção, será
+utilizado o ST-Link para manipular a memória e registradores do
+microcontrolador, a interface de uso será feita pela sessão de GDB exposta pelo
+driver do ST-Link e pela IDE STM32Cube. As técnicas representadas no diagrama
+são para propósito ilustrativo da arquitetura, e não necessariamente
+correspondem a segmentos de memória dedicados. O uso de Asserts é realizado no
+código das tasks ativas, mas não existe nenhum "módulo de asserts", dado que
+esta técnica é profundamente contextual.
 
 === Premissas
 
+// TODO: Termos em ingles
 Será partido do ponto que ao menos o processador que executa o scheduler terá
 registradores de controle (Stack Pointer, Program Counter, Return Address) que
 sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos
@@ -38,7 +54,11 @@ reforçados com análise de fluxo do programa e adicionar redundância aos
 registradores, isso adiciona um grau a mais de complexidade que foge do escopo
 do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
 fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
-à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons. Portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e resultados dos co-processadores.
+à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons.
+
+Portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de
+tolerância do núcleo monitor, tendo foco na detecção de falhas de memória,
+passagem de mensagens e resultados dos co-processadores.
 
 Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais
 previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI
@@ -65,6 +85,7 @@ projeto.
 
 === Métodos
 
+// TODO: Trocar a ordem, sumarizar, mais diagramas, melhorar coesao
 Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em
 software, duas das técnicas são diretamente associadas à interface de tarefa,
 uma serve como tarefa supervisora e as outras duas servem como suporte. Os
@@ -110,6 +131,10 @@ frequência alta.
 
 === Materiais
 
+// TODO: Trocar a ordem, sumarizar, mais diagramas, melhorar coesao
+// deixar um pouco mais segmentado e com conexoes entre os topicos, aqui e em metodos.
+// referenciar as figuras
+
 Será utilizada a linguagem C++ (Versão 14 ou acima) com o compilador GCC (ou
 Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
 "Bluepill") 32-bits da arquitetura ARMv7-M.
@@ -119,8 +144,10 @@ Clang), o alvo principal do trabalho será um microcontrolador (STM32F103C8T6
   source: "STMBoardProductPage",
   image("assets/stm32_bluepill.png"))
 
-Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com uma ferramenta
-de depuração do hardware (ST-LINK), a comunição do ST-LINK é feita via USB com o host e via JTAG com o microcontrolador alvo, também será usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
+Para a injeção de falhas será utilizado um depurador como o GDB em conjunto com
+uma ferramenta de depuração do hardware (ST-LINK), a comunição do ST-LINK é
+feita via USB com o host e via JTAG com o microcontrolador alvo, também será
+usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
 
 #sourced_image(
   caption: [ST-LINK/V2],
@@ -137,11 +164,17 @@ juntamente com as ferramentas anteriormente citadas, assim como
 AddressSanitizer e ThreadSanitizer para auxiliar na detecção de erros mais cedo
 durante o desenvolvimento.
 
-O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser extensivamente testado e documentado e prover um escalonador totalmente preemptivo com um custo espacial relativamente pequeno, além disso, os contribuidores do FreeRTOS mantém uma lista grande de ports para diferentes arquiteturas e controladores, facilitando drasticamente o trabalho ao não ter que criar uma HAL do zero.
+O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser
+extensivamente testado e documentado e prover um escalonador totalmente
+preemptivo com um custo espacial relativamente pequeno, além disso, os
+contribuidores do FreeRTOS mantém uma lista grande de ports para diferentes
+arquiteturas e controladores, facilitando drasticamente o trabalho ao não ter
+que criar uma HAL do zero.
 
 == Análise de Requisitos
 
-Após a seleção dos objetivo, foram coletados os requisitos funcionais e não funcionais, que são apresentados nos quadros seguintes.
+// TODO: Refazer essa porra toda
+Após a seleção dos objetivos, foram coletados os requisitos funcionais e não funcionais, que são apresentados nos quadros seguintes.
 
 #figure(caption: [Requisitos funcionais], table(
 	columns: (auto, 1fr),
@@ -172,7 +205,9 @@ Após a seleção dos objetivo, foram coletados os requisitos funcionais e não 
 
 === Programas exemplos
 
-Serão utilizados 2 programas de teste durante a execução das falhas, um realizará um filtro passa-banda com no domínio da frequência (transformada de Fourier) e outro aplicará uma convolução bidimensional.
+Serão utilizados 2 programas de teste durante a execução das falhas, um
+realizará um filtro passa-banda com no domínio da frequência (transformada de
+Fourier) e outro aplicará uma convolução bidimensional.
 
 A escolha da primeira aplicação serve primariamente testar uma
 operação que dependa de múltiplos acessos e modificações à memória e que possa
@@ -180,12 +215,18 @@ demonstrar capacidades de processamento assíncronas (padrão
 produtor/consumidor), que são particularmente importantes ao se lidar com
 múltiplas interrupções causadas por timers ou IO.
 
-Já o segundo programa, de natureza mais simples, visa causar alto estresse em termos de loads,juntamente com muitas operações aritméticas, mas com menos ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas em um caso mais extremo que requer muito processamento.
+Já o segundo programa, de natureza mais simples, visa causar alto estresse em
+termos de loads,juntamente com muitas operações aritméticas, mas com menos
+ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas
+em um caso mais extremo que requer muito processamento.
 
 ==== Processador de Sinal digital
 
-A aplicação recebe um vetor de valores de forma periódica
-simulando um sensor externo, uma tarefa receberá o lote e realizará uma transformada rápida de Fourier, após concluir, enviará o payload para outra tarefa que aplica um filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que realiza a FFT inversa e despeja os resultados para depuração.
+A aplicação recebe um vetor de valores de forma periódica simulando um sensor
+externo, uma tarefa receberá o lote e realizará uma transformada rápida de
+Fourier, após concluir, enviará o payload para outra tarefa que aplica um
+filtro passa-banda, que por sua vez, envia o payload para uma última tarefa que
+realiza a FFT inversa e despeja os resultados para depuração.
 
 #figure(caption: "Resumo do fluxo do programa exemplo com FFT",
   image("assets/diagrama_sequencia_fft.png", height: 300pt))
@@ -196,7 +237,6 @@ O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma im
 
 #figure(caption: "Fluxo da convolução Bidimensional com redundância de tarefas",
   image("assets/convolucao_2d.png", height: 450pt))
-
 
 === Algoritmos e Técnicas
 
@@ -220,6 +260,7 @@ O segundo programa de teste consiste em aplicar uma convolução 2D sobre uma im
 Uma tarefa (task) é uma unidade de trabalho com espaço de stack dedicado e uma
 deadline de conclusão.
 
+// TODO: Trocar por desenho
 O "corpo" de um tarefa é simplesmente a função que executa após a task ter sido
 inicializada. Será utilizado uma assinatura simples permitindo a passagem de um
 parâmetro opaco por referência. Este parâmetro pode ser o argumento primordial
@@ -228,6 +269,7 @@ da task ou um contexto de execução. Tarefas são expressas na forma da interfa
 necessidade da tarefa. O fornecimento de uma interface genérica, apesar de
 introduzir um pouco de overhead com a indireção por meio de tabela de despache
 dinâmico permite maior flexibilidade.
+
 
 #figure(caption: "Mensagens e IDs", [
 ```cpp
@@ -247,9 +289,18 @@ struct FT_Message {
 ```
 ])
 
-Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos aqui é importante, o payload _precisa_ ser o último membro para serialização de estruturas de tamanho arbitrário. O valor `check_value` é o valor de checagem do CRC que será utilizado para detectar corrupções e é computado com base em todos os outros campos. Os campos `sender` e `receiver` servem a função de remetente e destinatário, mesmo nos casos em que há apenas um destinatário ou remetente, a informação adicional serve como uma camada extra que pode ser assegurada com asserts (e também é representada no valor de checagem). Já os pontos de tempo servem para definir uma deadline de entrega, caso exista.
+// TODO: Termos em ingles
+Uma mensagem é um wrapper ao redor um payload qualquer, o ordenamento dos tipos
+aqui é importante, o payload _precisa_ ser o último membro para serialização de
+estruturas de tamanho arbitrário. O valor `check_value` é o valor de checagem
+do CRC que será utilizado para detectar corrupções e é computado com base em
+todos os outros campos. Os campos `sender` e `receiver` servem a função de
+remetente e destinatário, mesmo nos casos em que há apenas um destinatário ou
+remetente, a informação adicional serve como uma camada extra que pode ser
+assegurada com asserts (e também é representada no valor de checagem). Já os
+pontos de tempo servem para definir uma deadline de entrega, caso exista.
 
-
+// TODO: Trocar por desenho
 #figure(caption: "Interface básica de uma tarefa")[
 ```cpp
 using FT_Handler = bool (*)(FT_Task*);
@@ -387,6 +438,8 @@ confiáveis.
 
 ==== Injeção Lógica com Software
 
+// TODO: Diagrama do fluxo de injecao, separar diagrama das metricas?
+
 Será criado uma task com um "micro heap" associado à mesma, a task executará de
 forma paralela à todas as outras, a cada ciclo de preempção, a task injetora
 acessa sua fila de candidatos e invoca um callback associado para causar N
@@ -416,6 +469,7 @@ struct Fault_Metrics {
 ```)
 
 ==== Injeção Lógica com Hardware
+// TODO: Diagrama do fluxo de injecao
 
 Utilizando do depurador dedicado do microcontrolador (ST-Link), serão injetadas
 as mesmas falhas, com exceção dos endereços para a coleta de métricas, será
@@ -442,6 +496,7 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
 ))
 
+// TODO: Deixar mais refinado, apos ajeitar o resto
 === Cronograma para o TCC3
 
 #set par(justify: false, leading: 0.5em)
