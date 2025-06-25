@@ -6,16 +6,7 @@
 
 === Falhas e Erros
 
-Um _defeito_ é uma alteração não esperada causada por um fenômeno externo ou
-design incorreto. Um _erro_ é a diferença entre o resultado esperado e o
-resultado obtido. Já uma _falha_ é uma redução da qualidade de serviço.
-Defeitos podem causar erros que levam à falhas. Durante este trabalho, será
-focado na detecção de ambos defeitos (estados inesperados) assim como falhas
-(degradação de serviço), portanto os termos serão utilizados frequentemente de
-forma intercambiável significando apenas um estado inesperado do sistema que
-leva a degradação eventual, dado que a distinção particular entre falha e
-defeito não é de grande importância para a comparação das técnicas
-apresentadas.
+Um _defeito_ é uma alteração não esperada causada por um fenômeno externo ou design incorreto. Um _erro_ é a diferença entre o resultado esperado e o resultado obtido. Já uma _falha_ é uma redução da qualidade de serviço. Defeitos podem causar erros que levam à falhas. Durante este trabalho, será focado na detecção de ambos defeitos (estados inesperados) assim como falhas (degradação de serviço), portanto os termos serão utilizados frequentemente de forma intercambiável significando apenas um estado inesperado do sistema que leva a degradação eventual, dado que a distinção particular entre falha e defeito não é de grande importância para a comparação das técnicas apresentadas.
 
 === Qualidade de Serviço
 
@@ -30,10 +21,7 @@ contribuição para a qualidade total $q_0 ... q_n$ @SchedAndOptOfDistributedFT.
   Q = (sum_(i = 0)^n S_i q_i) / (sum_(i = 0)^n q_i)
 $)
 
-É importante mencionar que existem outras formas de modelagem da função
-qualidade que levam em consideração o fluxo total de execução e a cadeia de
-interdependência entre tarefas e mensagens, porém, para os propósitos deste
-trabalho, a definição simples será uma aproximação suficiente.
+É importante mencionar que existem outras formas de modelagem da função qualidade que levam em consideração o fluxo total de execução e a cadeia de interdependência entre tarefas e mensagens, porém, para os propósitos deste trabalho, a definição simples será uma aproximação suficiente.
 
 === Confiabilidade
 
@@ -49,8 +37,7 @@ $)
 
 === Disponibilidade
 
-A disponibilidade (do inglês Availability) $A$ é a razão entre o tempo em que o sistema não consegue
-prover seu serviço (downtime) e o e seu tempo total de operação @FaultInjectionTechniques.
+A disponibilidade (do inglês Availability) $A$ é a razão entre o tempo em que o sistema não consegue prover seu serviço (downtime) e o e seu tempo total de operação @FaultInjectionTechniques.
 
 #figure(caption: [Disponibilidade], kind: "equation", $
   A = t_u / (t_u + t_d)
@@ -60,12 +47,7 @@ Onde $t_d$ é o downtime e $t_u$ é o uptime do sistema.
 
 === Capacidade de manutenção
 
-É a probabilidade de que um sistema em um estado quebrado consiga ser reparado
-com sucesso, antes de um tempo $t$ @FaultInjectionTechniques, a modelagem
-precisa deste atributo necessita de conhecimento particular sobre a aplicação e
-sobre a disponibilidade de equipamentos (ou especialistas humanos) para a
-realização do reparo. Asssim como a confiabilidade, é descrita por uma
-distribuição de probabilidade particular da aplicação.
+É a probabilidade de que um sistema em um estado quebrado consiga ser reparado com sucesso, antes de um tempo $t$ @FaultInjectionTechniques, a modelagem precisa deste atributo necessita de conhecimento particular sobre a aplicação e sobre a disponibilidade de equipamentos (ou especialistas humanos) para a realização do reparo. Asssim como a confiabilidade, é descrita por uma distribuição de probabilidade particular da aplicação.
 
 #figure(caption: [Capacidade de manuntenção], kind: "equation", $
   M(t) = f(t, lambda, ...)
@@ -73,10 +55,7 @@ $)
 
 === Segurança
 
-Segurança é a probabilidade do sistema funcione ou não sem causar danos à
-integridade humana ou à outros patrimônios, por ser um fator muito particular
-da aplicação e seu contexto, uma estimativa analítica geral é extremamente
-difícil.
+Segurança é a probabilidade do sistema funcione ou não sem causar danos à integridade humana ou à outros patrimônios, por ser um fator muito particular da aplicação e seu contexto, uma estimativa analítica geral é extremamente difícil.
 
 === Dependabilidade
 
@@ -91,127 +70,57 @@ boa dependabilidade.
 
 == Tolerância à falhas
 
-Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de
-ocorrência @FaultTolerantSystems.
+Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de ocorrência @FaultTolerantSystems.
 
 - Falhas *Transientes*: Ocorrem aleatoriamente e possuem um impacto temporário.
 
-- Falhas *Intermitentes*: Assim como as transientes possuem impacto temporário,
-  porém re-ocorrem periodicamente.
+- Falhas *Intermitentes*: Assim como as transientes possuem impacto temporário, porém re-ocorrem periodicamente.
 
-- Falhas *Permanentes*: Causam uma degradação permanente no sistema da qual não
-  pode ser recuperada, potencialmente necessitando de intervenção externa.
+- Falhas *Permanentes*: Causam uma degradação permanente no sistema da qual não pode ser recuperada, potencialmente necessitando de intervenção externa.
 
-Existem diversas fontes de falhas que podem afetar um sistema, exemplos
-incluem: Radiação ionizante, Interferência Eletromagnética, Harmônicas, Impacto
-Físico, Oscilação elétrica (picos de tensão e/ou corrente).
+Existem diversas fontes de falhas que podem afetar um sistema, exemplos incluem: Radiação ionizante, Interferência Eletromagnética, Harmônicas, Impacto Físico, Oscilação elétrica (picos de tensão e/ou corrente).
 
-Para que o sistema possa ser _Tolerante à Falhas_, isto é, ser capaz de manter
-uma qualidade de serviço aceitável mesmo na presença de falhas são necessários
-2 principais mecanismos:
+Para que o sistema possa ser _Tolerante à Falhas_, isto é, ser capaz de manter uma qualidade de serviço aceitável mesmo na presença de falhas são necessários 2 principais mecanismos:
 
-1. *Detecção de Falhas*: Capacidade de perceber a ocorrência de uma falha e
-  executar a rotina de tratamento. Métodos comuns de detecção incluem: Bits de
-  paridade, Funções hash, Sinais heartbeat e Limites de tempo (timeouts ou
-  deadlines).
+1. *Detecção de Falhas*: Capacidade de perceber a ocorrência de uma falha e executar a rotina de tratamento. Métodos comuns de detecção incluem: Bits de paridade, Funções hash, Sinais heartbeat e Limites de tempo.
 
-2. *Tratamento de Falhas*: Capacidade de reagir as falhas, com uma correção,
-  re-execução ou rotina de mitigação. Falhas permanentes podem necessitar de um
-  desligamento gracioso do sistema ou reorganização para manter o máximo de
-  qualidade de serviço possível.
+2. *Tratamento de Falhas*: Capacidade de reagir as falhas, com uma correção, re-execução ou rotina de mitigação. Falhas permanentes podem necessitar de um desligamento gracioso do sistema ou reorganização para manter o máximo de qualidade de serviço possível.
 
-A detecção e o tratamento podem ser implementados em hardware ou em software,
-implementações em hardware conseguem fazer garantias físicas mais fortes com
-melhor revestimento e redundância implementada diretamente no circuito, e
-prover transparência de execução para o programador, a desvantagem é custo
-elevado de espaço no silício possível degradação de performance geral e menor
-flexibilidade. O processo de tornar o design e a implementação de um hardware
-com estas características é chamado de "hardening".
+A detecção e o tratamento podem ser implementados em hardware ou em software, implementações em hardware conseguem fazer garantias físicas mais fortes com melhor revestimento e redundância implementada diretamente no circuito, e prover transparência de execução para o programador, a desvantagem é custo elevado de espaço no silício possível degradação de performance geral e menor flexibilidade. O processo de tornar o design e a implementação de um hardware com estas características é chamado de "hardening".
 
-Implementações em software não são capazes de fornecer todas as garantias
-fortes do hardware, em contrapartida, não ocupam espaço extra no chip e são
-mais flexíveis, com software é possível implementar lógica de detecção
-recuperação e estruturas de dados mais complexas, e até mesmo realizar
-atualizações remotas com o sistema ativo (live patching).
+Implementações em software não são capazes de fornecer todas as garantias fortes do hardware, em contrapartida, não ocupam espaço extra no chip e são mais flexíveis, com software é possível implementar lógica de detecção recuperação e estruturas de dados mais complexas, e até mesmo realizar atualizações remotas com o sistema ativo (live patching).
 
-Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e
-software precisam ser consideradas, é possível utilizar hardware com
-hardening para um núcleo que realiza atividades críticas, e delegar núcleos
-menos protegidos para atividades em que o tratamento em software é suficiente.
-Balancear a troca de espaço em chip, uso de memória, flexibilidade de
-implementação, tempo de execução, vazão de dados e garantias de transparência é
-indispensável para a criação de um sistema que seja resiliente à falhas e que
-forneça uma boa qualidade de serviço pelo menor custo possível. @DependabilityInEmbeddedSystems
+Para que um sistema possa ser resiliente à falhas, ambas soluções de hardware e software precisam ser consideradas, é possível utilizar hardware com hardening para um núcleo que realiza atividades críticas, e delegar núcleos menos protegidos para atividades em que o tratamento em software é suficiente. Balancear a troca de espaço em chip, uso de memória, flexibilidade de implementação, tempo de execução, vazão de dados e garantias de transparência é indispensável para a criação de um sistema que seja resiliente à falhas e que forneça uma boa qualidade de serviço pelo menor custo possível. @DependabilityInEmbeddedSystems
 
 == Mecanismos de Detecção
 
-Os mecanismos de detecção, permitem que um sistema detecte uma inconsistência
-em seus dados, causada por falha externa ou por erro lógico de outra parte no
-caso de sistemas distribuídos. Os mecanismos de detecção são essenciais para a
-tolerância à falhas. Ao detectar uma falha o sistema deve tomar uma ação
-corretiva para o tratamento da falha, mecanismos de tratamento serão abordados
-posteriormente.
+Os mecanismos de detecção, permitem que um sistema detecte uma inconsistência em seus dados, causada por falha externa ou por erro lógico de outra parte no caso de sistemas distribuídos. Os mecanismos de detecção são essenciais para a tolerância à falhas. Ao detectar uma falha o sistema deve tomar uma ação corretiva para o tratamento da falha, mecanismos de tratamento serão abordados posteriormente.
 
 === CRC (Cyclic Redundancy Check)
 
-Os CRCs são códigos de detecção de erro comumente utilizados em redes de
-computador e armazenamento não volátil para detectar falhas. Para cada segmento
-de dado é concatenado um valor (denominado "check value" ou simplesmente o
-valor CRC) que é calculado com base no resto da divisão de um polinômio
-previamente acordado entre remetente e destinatário (chamado de "polinômio
-gerador") @FaultTolerantSystems.
+Os CRCs são códigos de detecção de erro comumente utilizados em redes de computador e armazenamento não volátil para detectar falhas. Para cada segmento de dado é concatenado um valor (denominado "check value" ou simplesmente o valor CRC) que é calculado com base no resto da divisão de um polinômio previamente acordado entre remetente e destinatário (chamado de "polinômio gerador") @FaultTolerantSystems.
 
-Ao receber o segmento, o receptor calcula seu próprio valor CRC com base nos
-dados do segmento (sem incluir o CRC do destinatário), caso ocorra diferença
-entre os CRCs isso indica a ocorrência de um erro. CRCs são comumente
-utilizados devido à serem simples de implementar, ocuparem pouco espaço
-adicional no segmento e serem resilientes à "burst errors", falhas
-transientes que alteram uma região de bits próximos.
+Ao receber o segmento, o receptor calcula seu próprio valor CRC com base nos dados do segmento (sem incluir o CRC do destinatário), caso ocorra diferença entre os CRCs isso indica a ocorrência de um erro. CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "burst errors", falhas transientes que alteram uma região de bits próximos.
 
 === Heartbeat signals
 
-É possível determinar se uma falha ocorreu com um nó de execução através de um
-critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais
-periódicos para garantir se um nó computacional está ativo @DependabilityInEmbeddedSystems.
+É possível determinar se uma falha ocorreu com um nó de execução através de um critério temporal, os sinais de heartbeat ("batimento cardíaco") são sinais periódicos para garantir se um nó computacional está ativo @DependabilityInEmbeddedSystems.
 
-Basta enviar um sinal simples e verificar se uma resposta correta chega em um
-tempo pré determinado. Sinais heartbeat são baratos porém não garantem uma
-detecção ou correção de erro mais granular, portanto são usados como um
-complemento para detectar falhas de forma concorrente a outros métodos mais
-robustos.
+Basta enviar um sinal simples e verificar se uma resposta correta chega em um tempo pré determinado. Sinais heartbeat são baratos porém não garantem uma detecção ou correção de erro mais granular, portanto são usados como um complemento para detectar falhas de forma concorrente a outros métodos mais robustos.
 
 #figure(caption: "Exemplo de um sinal heartbeat simples", image("assets/heartbeat_signal.png"))
 
-O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o
-custo temporal de tolerância limite no pior caso e o custo da viagem ida e
-volta no melhor caso. Este método é aplicado em datacenters, também chamado de
-"health signal" ou "health check", o sinal e sua resposta desejada podem conter
-outros metadados para análise de falhas, caso desejado. 
+O custo de memória de um sinal heartbeat tende a ser pequeno, porém possui o custo temporal de tolerância limite no pior caso e o custo da viagem ida e volta no melhor caso. Este método é aplicado em datacenters, também chamado de "health signal" ou "health check", o sinal e sua resposta desejada podem conter outros metadados para análise de falhas, caso desejado. 
 
-Também é possível usar os próprios prazos de execução como um mecanismo de
-detecção, um timer pode ser utilizado para alertar prematuramente a um erro que causou
-um aumento inesperado no tempo de uma tarefa. @FaultTolerantSystems
+Também é possível usar os próprios prazos de execução como um mecanismo de detecção, um timer pode ser utilizado para alertar prematuramente a um erro que causou um aumento inesperado no tempo de uma tarefa. @FaultTolerantSystems
 
 === Asserts
 
-A utilização de asserts é um mecanismo simples que é particularmente útil, um
-assert trata-se de checar se uma condição é verdadeira, caso não seja, o
-programa é interrompido e entra um estado de pânico. Utilizar asserts
-automáticos na entrada e saída de funções é denominado pré/pós-condições.
+A utilização de asserts é um mecanismo simples que é particularmente útil, um assert trata-se de checar se uma condição é verdadeira, caso não seja, o programa é interrompido e entra um estado de pânico. Utilizar asserts automáticos na entrada e saída de funções é denominado pré/pós-condições.
 
-Asserts não previnem erros do hardware ou tratam exceções por conta própria,
-mas tratam-se de um mecanismo de uso extremamente simples que pode ser inserido
-pelos desenvolvedores para detectar falhas cedo, especialmente erros lógicos e
-violação de contrato de um interface. Quando usados em conjunto com fuzzers ou
-simulações determinísticas podem alcançar um alto grau de confiabilidade e
-revelar erros de design durante a fase de desenvolvimento. @TigerBeetleSafety
-@PowerOf10Rules
+Asserts não previnem erros do hardware ou tratam exceções por conta própria, mas tratam-se de um mecanismo de uso extremamente simples que pode ser inserido pelos desenvolvedores para detectar falhas cedo, especialmente erros lógicos e violação de contrato de um interface. Quando usados em conjunto com fuzzers ou simulações determinísticas podem alcançar um alto grau de confiabilidade e revelar erros de design durante a fase de desenvolvimento. @TigerBeetleSafety @PowerOf10Rules
 
-Já na execução de um sistema tolerante, asserts servem como uma forma de
-rapidamente e imediatamente saber que algo errado aconteceu, dado que sua
-invariante não é mais mantida. Porém não são robustos o suficiente para
-detectar corrupção silenciosa de dados ou pulos inesperados de maneira
-consistente.
+Já na execução de um sistema tolerante, asserts servem como uma forma de rapidamente e imediatamente saber que algo errado aconteceu, dado que sua invariante não é mais mantida. Porém não são robustos o suficiente para detectar corrupção silenciosa de dados ou pulos inesperados de maneira consistente.
 
 #figure(caption: "Exemplo da implementação de um Assert", [
 ```cpp

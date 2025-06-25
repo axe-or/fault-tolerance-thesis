@@ -1,0 +1,70 @@
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	oneside,			% para impressão em um lado. Oposto a twoside, verso e anverso
+	a4paper,			% tamanho do papel. 
+	% -- opções da classe abntex2 --
+	chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	%french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	]{styles/abntex2}
+
+\usepackage[alf,abnt-etal-list=0,abnt-etal-cite=3,abnt-repeated-author-omit=no,abnt-doi=expand,abnt-emphasize=bf]{styles/abntex2cite}	% Citações padrão ABNT
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\makeatletter
+\usepackage[singlelinecheck=false,justification=raggedright]{caption}
+\usepackage{lastpage}
+\usepackage{tabularx}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{styles/ttc_univali}
+\usepackage{lipsum}
+\usepackage{url}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{float}
+\usepackage{accents}
+\usepackage{array}
+\usepackage{hyphenat}
+\usepackage{multirow}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+%\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}
+% \usepackage[
+%     % showframe=true
+%     ]
+% {geometry}
+
+\title{TTC Engenharia da Computação}
+\author{Modelo from Douglas Almeida dos Santos}
+\date{November 2018}
+
+\hyphenation{op-tical net-works customiza-cao implementa-cao quan-do microcon-troladores} 
+
+\begin{document}
+
+\renewcommand{\arraystretch}{1.10}
+\pretextual
+\input{chapters/0_info} \clearpage
+\input{chapters/0_pre_textual} \clearpage
+
+\textual % Indica inicio dos elementos textuais
+\pagestyle{simple} % remove o cabecalho
+
+\input{chapters/1_introducao} \clearpage
+\input{chapters/2_fundamentacao} \clearpage
+\input{chapters/3_projeto} \clearpage
+\input{chapters/4_consideracoes}
+
+\postextual
+
+\bibliography{refs}
+
+\end{document}
