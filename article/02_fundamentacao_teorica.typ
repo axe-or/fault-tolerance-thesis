@@ -390,10 +390,7 @@ Este exemplo é simples e tolera apenas uma falha transiente, porém processos c
 
 == Injeção de falhas
 
-Para adequadamente testar a dependabilidade do sistema, é possível
-deliberadamente causar falhas com o propósito de catalogar e validar se o
-sistema atinge as métricas necessárias. Dentre os tipos de teste que podem ser
-realizados, é possível categorizá-los em quatro grupos principais:
+Para adequadamente testar a dependabilidade do sistema, é possível deliberadamente causar falhas com o propósito de catalogar e validar se o sistema atinge as métricas necessárias. Dentre os tipos de teste que podem ser realizados, é possível categorizá-los em quatro grupos principais:
 
 Injeção *Física*: Involve utilizar um ambiente físico genuíno para causar as falhas, o principal benefício desta técnica é replicar eventos reais que possam causar falhas, assim como poder injetar falhas em superfícies reais do dispositivo @FaultInjectionTechniques. O principal problema é que esta técnica é particularmente cara e requer auxílio de equipamentos e profissionais especializados, também não é possível injetar um tipo específico de dado para testar um caso específico. Na seção de *trabalhos relacionados* é possível observar um exemplo testa técnica em uso na pesquisa de íons pesados.
 

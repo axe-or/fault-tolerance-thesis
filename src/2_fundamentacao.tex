@@ -164,7 +164,20 @@ Outra transformação comum é o inlining de funções, onde o corpo de uma fun�
 
 Importante ressaltar que realizar inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas otimizações saturam o cache de instruções, utilizam de mais registradores e ocupam espaço desnecessário no executável \cite{EngineeringACompiler}. Portanto, é importante que estas técnicas não sejam aplicadas de forma arbitrária e que seu uso seja acompanhado de medição para confirmar sua efetividade.
 
-\subsection{Sistemas embarcados}
+\subsection{Injeção de falhas}
+
+Para adequadamente testar a dependabilidade do sistema, é possível deliberadamente causar falhas com o propósito de catalogar e validar se o sistema atinge as métricas necessárias. Dentre os tipos de teste que podem ser realizados, é possível categorizá-los em quatro grupos principais:
+
+Injeção \textbf{Física}: Envolve utilizar um ambiente físico genuíno para causar as falhas, o principal benefício desta técnica é replicar eventos reais que possam causar falhas, assim como poder injetar falhas em superfícies reais do dispositivo \cite{FaultInjectionTechniques}. O principal problema é que esta técnica é particularmente cara e requer auxílio de equipamentos e profissionais especializados, também não é possível injetar um tipo específico de dado para testar um caso específico.
+
+Injeção \textbf{Lógica em Hardware}: Utiliza-se de um dispositivo adicional para injetar as falhas que controla o dispositivo alvo, possui como vantagem ser menos intrusivo e ainda permitir um algo grau de controle e simulação dos fenômenos físicos, desvantagens incluem uma área maior de circuito necessária, implementação de uma unidade extra e criação de canais de comunicação com o dispositivo alvo \cite{FaultInjectionTechniques}.
+
+Injeção \textbf{Lógica em Software}: Funções são executadas em software para injetar falhas em outras partes do programa, o método é pouco invasivo, de baixo custo, alta portabilidade e permite um controle muito elevado sobre os pontos de injeção e estilo de falha \cite{FaultInjectionTechniques}. Possui a desvantagem de aumentar o tempo médio de execução ao introduzir um custo extra de memória para armazenar o código de injeção, e nem sempre reproduz precisamente fenômenos físicos.
+
+Injeção \textbf{Simulada}: O dispositivo é executado em um ambiente totalmente simulado, tem como vantagem não ser invasivo, altamente flexível e nem sequer necessitar de uma versão física do dispositivo, porém tipicamente requer software de simulação potencialmente caro assim como uma descrição do chip na forma de alguma linguagem de descrição de hardware, que raramente é disponibilizada \cite{FaultInjectionTechniques}.
+
+
+\section{Sistemas embarcados}
 
 Sistemas embarcados são uma família vasta de sistemas computacionais, algumas das principais características de sistemas embarcados são:
 
@@ -176,7 +189,7 @@ Sistemas embarcados são uma família vasta de sistemas computacionais, algumas 
 
 \subsection{Sistemas Operacionais de Tempo-Real}
 
-Um sistema operacional é um conjunto de software que permite o gerenciamento e interação com os recursos do hardware através de uma camada de abstração. No contexto deste trabalho, o componente fundamental é o kernel, a componente sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação e os recursos do hardware \cite{OperatingSystemConcepts}.
+Um sistema operacional é um conjunto de software que permite o gerenciamento e interação com os recursos do hardware através de uma camada de abstração. O componente essencial de um sistema operacional é o kernel, que sempre está executando, A função primordial do kernel é viabilizar a coexistência de diversas tarefas no sistema, as quais demandam acesso às capacidades do hardware, notadamente o tempo de processamento da CPU e o espaço de memória. De forma simplificada, o kernel pode ser descrito como a "cola" entre as aplicações e os recursos de hardware \cite{OperatingSystemConcepts}.
 
 Um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional mais especializado, tipicamente pequeno, que possui como característica central cumprir um critério temporal Real-Time, que é dividido em 2 categorias:
 
@@ -247,11 +260,15 @@ Será introduzido transparência na tarefa $P_2$, isto é, será executada com r
     \label{fig:ftgTransparencia}
 \end{figure}
 
-Introduzindo apenas um ponto de transparência é possível reduzir significativamente as possibilidades de execução do sistema, isso é particularmente benéfico para escalonadores ou handlers de falhas baseados em tabelas ou máquinas de estado finito, assim como é positivo para a previsibilidade do sistema, estabelecendo uma relação forte de pré-conclusão com sucesso ao respeitar a deadline de da tarefa transparente.
+Introduzindo apenas um ponto de transparência é possível reduzir significativamente as possibilidades de execução do sistema, isso é particularmente benéfico para escalonadores ou algoritmos de tratamento de falhas baseados em máquinas de estado finito. Um grafo mais compacto é benéfico a previsibilidade do sistema, estabelecendo uma relação forte de pré-conclusão com sucesso ao respeitar o prazo da tarefa transparente \cite{SchedAndOptOfDistributedFT}.
 
 Este exemplo é simples e tolera apenas uma falha transiente, porém processos complexos com múltiplas mensagens entre si causam um aumento exponencial de complexidade, especialmente caso seja necessário tolerar até $k$ falhas transientes.
 
-É possível introduzir estes pontos de transparência com a técnica de reexecução ou com redundância modular (se a deadline conjunta das $N$ tarefas for determinística), com o objetivo de melhorar a confiabilidade do sistema e torná-lo mais previsível. A introdução de transparência naturalmente não é gratuita, é feito um tradeoff entre garantias mais fortes no escalonador e menos imprevisibilidade na execução com o custo de maior uso da CPU e memória, todos os pontos de transparência necessitam ser checados o que pode gerar um tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para garantir a possibilidade de reexecuções suficientes.
+Pode-se adicionar pontos de transparência através de reexecução ou redundância modular (se a deadline conjunta das $N$ tarefas for determinística) para aumentar a confiabilidade e previsibilidade do sistema. Essa transparência não é gratuita: há um troca entre maior confiabilidade no escalonador e menor imprevisibilidade na execução, com o custo de maior uso de CPU e memória. Todos os pontos precisam ser verificados, o que pode aumentar o tempo ocioso dos núcleos e exigir a extensão do prazo da tarefa para permitir reexecuções suficientes.
+
+\section{Trabalhos relacionados}
+
+% TODO(marcos): fazer tudo...
 
 
 % \renewcommand{\arraystretch}{1}
