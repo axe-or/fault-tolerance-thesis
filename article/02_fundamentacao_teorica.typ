@@ -143,54 +143,24 @@ detecção também fornecem a possibilidade de correção dos dados, como é o c
 dos códigos Reed-Solomon, nestes casos, fica à critério da aplicação se a
 correção deve ser tentada ou outro tratamento deve ser usado.
 
+///////////// CONTINUAR AQUI /////////////////////////////////
 === Redundância
 
-Adicionar redundância ao sistema é uma das formas mais intuitivas e mais
-antigas de aumentar a tolerância à falhas, a probabilidade de N falhas
-transientes ocorrendo simultaneamente em um sistema é mais baixa do que a
-probabilidade de apenas 1 falha.
+Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de N falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha.
 
-Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy)
-onde uma a tarefa é executada 3 vezes em paralelo, e uma porta de
-consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR
-é elegante em sua simplicidade e consegue atingir um bom grau de resiliência,
-porém com o custo adicional de triplicar o custo. @DependabilityInEmbeddedSystems
+Uma técnica de redundância comum é o uso de TMR (Triple Modular Redundancy) onde uma a tarefa é executada 3 vezes em paralelo, e uma porta de consenso utiliza a resposta gerada por pelo menos 2 das unidades. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar o custo. @DependabilityInEmbeddedSystems
 
 #figure(caption: "Exemplo de redundância modular na execução de tarefas", image("assets/redundancia_tmr.png", height: 180pt))
 
-Sistemas distribuídos também podem aproveitar de sua redundância natural por
-serem sistemas com múltiplos nós computacionais, falhas transientes em um nó
-podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem
-suplantar a execução de suas tarefas mantendo a qualidade média de serviço, o
-uso de sistemas capazes de auto reparo é vital para a existência de
-telecomunicação em larga escala e computação em nuvem.
+Sistemas distribuídos também podem aproveitar de sua redundância natural por serem sistemas com múltiplos nós computacionais, falhas transientes em um nó podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem suplantar a execução de suas tarefas mantendo a qualidade média de serviço, o uso de sistemas capazes de auto reparo é vital para a existência de telecomunicação em larga escala e computação em nuvem.
 
 === Loop Unrolling & Function Inlining
 
-Uma otimização comum que compiladores realizam é "desenrolar" laços de
-repetição (Loop Unrolling) com a finalidade de reduzir erros de cachê no
-preditor de desvios da CPU, no contexto de tolerância à falhas, é possível
-utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a
-possibilidade de pulos dependentes de um valor, torna-se menos provável um
-salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também
-ser feito caso exista um limite superior conhecido no loop, o que comum em
-aplicações em que utiliza-se se de um analisador estático para provar
-propriedades sobre a conclusão adequada do programa @LoopUnrollingARM.
+Uma otimização comum que compiladores realizam é "desenrolar" laços de repetição (Loop Unrolling) com a finalidade de reduzir erros de cachê no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no loop, o que comum em aplicações em que utiliza-se se de um analisador estático para provar propriedades sobre a conclusão adequada do programa @LoopUnrollingARM.
 
-Outra transformação comum é o inlining de funções, onde o corpo de uma função é
-copiado como se o código tivesse sido diretamente escrito em seu ponto de
-chamada, a razão pela qual é realizado é similar à de unrolling de loops, ao
-reduzir a quantidade de pulos (e neste caso, manipulação do stack) é possível
-melhorar a coerência do cachê de instruções, causando uma melhora na
-performance. Pela mesma razão, ao introduzir redundância o inlining de funções
-pode também reduzir a chance de um jump inadequado.
+Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada, a razão pela qual é realizado é similar à de unrolling de loops, ao reduzir a quantidade de pulos (e neste caso, manipulação do stack) é possível melhorar a coerência do cachê de instruções, causando uma melhora na performance. Pela mesma razão, ao introduzir redundância o inlining de funções pode também reduzir a chance de um jump inadequado.
 
-Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o
-efeito oposto do que se deseja no quesito de performance, quando aplicadas de
-forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço
-desnecessário no executável, o que requer que o frontend da CPU perca mais
-tempo aguardando IO e decodificando instruções. Portanto, é extremamente
-importante que estas técnicas não sejam aplicadas de forma arbitrária.
+Importante ressaltar que o inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas técnicas saturam o cachê de instruções e ocupam espaço desnecessário no executável, o que requer que o frontend da CPU perca mais tempo aguardando IO e decodificando instruções. Portanto, é extremamente importante que estas técnicas não sejam aplicadas de forma arbitrária.
 
 #figure(caption: "Exemplo de função sem unrolling ou inlining", [
 ```c
@@ -229,19 +199,9 @@ int sum_squares(int values[COUNT]){
 
 === Re-execução
 
-Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha,
-a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que
-a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao
-re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa.
-@DependabilityInEmbeddedSystems
+Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa. @DependabilityInEmbeddedSystems
 
-Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em
-troca de um tempo menor de execução médio sem necessitar de componentes extras.
-Em contraste com a técnica de redundância tripla, é possível entender que a
-redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É
-improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a
-re-execução depende de uma resiliência "temporal" (É improvável que múltiplas
-falhas ocorram repetidamente em $N$ execuções)
+Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência "espacial" (É improvável que uma falha ocorra em vários lugares ao mesmo tempo), enquanto a re-execução depende de uma resiliência "temporal" (É improvável que múltiplas falhas ocorram repetidamente em $N$ execuções) % TODO(marcos): citar aqui eh importante
 
 É também possível utilizar reexecuções sucessivas como um mecanismo de detecção
 e prevenção, a tarefa é reexecutada $N$ vezes, seus $N$ resultados são
@@ -250,6 +210,8 @@ redundância modular, mas sacrificando tempo ao invés de múltiplas instâncias
 concorrentes.
 
 #figure(caption: "Exemplo de reexecução com consenso", image("assets/redundancia_reexec.png", height: 140pt))
+
+
 
 === Correção de Erro
 
