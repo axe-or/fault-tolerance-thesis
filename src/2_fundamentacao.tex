@@ -105,7 +105,7 @@ Os heartbeat signals (sinais de batimento cardíaco) são sinais periódicos par
     \label{fig:heartbeatSignal}
 \end{figure}
 
-Na \autoref{fig:heartbeatSignal}, é utilizado a resposta tardia para deduzir a presença de uma falha na tarefa ou no canal de transmissão. Estes sinais também podem ser utilizados no contexto de tempo real para a validação de um prazo ou sub prazo da tarefa @FaultTolerantSystems. 
+Na \autoref{fig:heartbeatSignal}, é utilizado a resposta tardia para deduzir a presença de uma falha na tarefa ou no canal de transmissão. Estes sinais também podem ser utilizados no contexto de tempo real para a validação de um prazo ou sub prazo da tarefa \cite{FaultTolerantSystems}.
 
 \subsubsection{Asserts}
 
@@ -137,6 +137,122 @@ Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em tr
 \end{figure}
 
 Na \autoref{fig:redundanciaReexec} é possível observar a reexecução de uma tarefa em duas modalidades: Na primeira é realizado um consenso entre os resultados das execuções, e na segunda a tarefa é apenas reexecutada até $N$ vezes (podendo então tolerar até $N$ falhas transientes), encerrando sua execução caso nenhuma falha seja detectada. A segunda modalidade é particularmente útil para a implementação de condições de transparência \cite{SchedAndOptOfDistributedFT} que serão abordadas posteriormente.
+
+\subsubsection{Redundância}
+
+Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de $N$ falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha. % TODO(marcos): Citar aqui
+
+Uma técnica de redundância comum é o uso de redundância modular, tipicamente com 3 instâncias replicadas (neste caso chamada de TMR ou "Triple Modular Redundancy").
+
+O uso de TMR para uma tarefa pode consistir na reexecução concorrente das três instâncias, tendo seus resultados decidos por um votador. No contexto de tempo-real é importante que caso alguma das tasks no processo de execução concorrente viole sua deadline, que o votador ainda escolha um resultado para garantir o critério de tempo-real. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar o custo em termos de memória e execução \cite{DependabilityInEmbeddedSystems}, e potencialmente necessitar de hardware mais poderoso para manter a mesma performance esperada.
+
+\begin{figure}[H]
+    \centering
+    \caption{Exemplo de execução com redundância}
+    \includegraphics[width=1.0\textwidth]{assets/redundancia_tmr.png}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:redundanciaReexec}
+\end{figure}
+
+Sistemas distribuídos, sejam estes embarcados ou não, também podem aproveitar de sua redundância natural para ter maior dependabilidade \cite{MakingReliableDistSystems}. Falhas em um nó podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem suplantar a execução de suas tarefas mantendo a qualidade média de serviço \cite{MakingReliableDistSystems} \cite{SchedAndOptOfDistributedFT}, o uso de sistemas capazes de auto reparo é vital para a existência de telecomunicação em larga escala e computação em nuvem.
+
+\subsubsection{Loop Unrolling e Function Inlining}
+
+Uma otimização comum que compiladores realizam é desenrolar laços de repetição (Loop Unrolling) com a finalidade de reduzir erros no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no laço durante a compilação. \cite{LoopUnrollingARM}.
+
+Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada. Ao reduzir a quantidade de pulos é possível melhorar a coerência do cache de instruções além de permitir outras otimizações durante os passes otimizantes do compilador \cite{EngineeringACompiler}, causando uma melhora na performance. No caso de tolerância à falhas, ao reduzir a quantia de jumps e prover redundância de instruções, o inlining pode também reduzir a chance de um salto inadequado. %TODO(marcos): citar aqui tbm
+
+Importante ressaltar que realizar inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas otimizações saturam o cache de instruções, utilizam de mais registradores e ocupam espaço desnecessário no executável \cite{EngineeringACompiler}. Portanto, é importante que estas técnicas não sejam aplicadas de forma arbitrária e que seu uso seja acompanhado de medição para confirmar sua efetividade.
+
+\subsection{Sistemas embarcados}
+
+Sistemas embarcados são uma família vasta de sistemas computacionais, algumas das principais características de sistemas embarcados são:
+
+\textbf{Especificidade}: Diferente de um sistema de computação mais generalizado como um computador pessoal ou um servidor, sistemas embarcados são especializados para uma solução de escopo restrito. Exemplos de sistemas embarcados variam de microcontroladores encontrados em carros, televisões e dispositivos IoT até sistemas sofisticados de navegação de aeronaves e navios de grande porte \cite{ComputerOrganizationAndDesign}.
+
+\textbf{Limitação de recursos}: Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são definidos previamente. No caso de microcontroladores o poder de processamento e quantidade de memória podem ser restritos para satisfazer uma necessidade de baixo custo de fabricação e menor consumo energético \cite{ComputerOrganizationAndDesign}. Importante notar que existem sistemas embarcados com acesso maior à recursos, como certos equipamentos de rede e aceleradores, mas os recursos do sistema continuam estaticamente delimitados para cumprir sua função específica.
+
+\textbf{Critério Temporal}: Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de interrupção para a funcionalidade geral do contexto externo \cite{OperatingSystemConcepts}. A importância do tempo de execução de uma tarefa de um sistema pode ser classificada em duas principais categorias: soft Real-Time, e hard Real-Time, a distinção entre estas categorias é explicada na seção seguinte.
+
+\subsection{Sistemas Operacionais de Tempo-Real}
+
+Um sistema operacional é um conjunto de software que permite o gerenciamento e interação com os recursos do hardware através de uma camada de abstração. No contexto deste trabalho, o componente fundamental é o kernel, a componente sistema operacional que sempre está executando, o trabalho principal do kernel é permitir a coexistência de diferentes tarefas no sistema que precisam acessar as capacidades do hardware, especialmente tempo na CPU e memória, o kernel pode ser descrito de maneira simplificada como a "cola" entre a aplicação e os recursos do hardware \cite{OperatingSystemConcepts}.
+
+Um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional mais especializado, tipicamente pequeno, que possui como característica central cumprir um critério temporal Real-Time, que é dividido em 2 categorias:
+
+\begin{itemize}
+    \item \textbf{Soft Real Time}: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas soft Real-Time tipicamente operam na escala de milissegundos, isto é, percepção humana \cite{SchedAndOptOfDistributedFT}. O atraso de uma tarefa em um sistema soft Real-Time não é desejável, mas não constitui uma falha. Exemplos: Player de DVD, videogames, kiosks de atendimento automáticos.
+    
+    \item \textbf{Hard Real Time}: Precisam garantir as propriedades de soft real-time, além disso, o atraso de uma tarefa de seu prazo, é inaceitável, para um sistema hard real-time uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard Real-Time, pois muitas vezes aparacem em contextos críticos \cite{ModernOperatingSystems}. Exemplos: Software para sistema de frenagem, sistemas de navegação em aplicações aeroespaciais, software de negociação de alta frequência, fila de mensagens de alta performance
+\end{itemize}
+
+Como sistemas que cumprem o critério Hard Real-Time também cumprem os requisitos Soft Real-Time, os sistemas operacionais de tempo real tipicamente tem sua arquitetura orientada a serem capazes de cumprir o critério Hard Real-Time \cite{SchedAndOptOfDistributedFT}.
+
+Diferentemente de sistema operacionais focados em uso geral como Windows, Linux e OSX, os RTOSes não buscam priorizaram fornecer ao usuário uma sensação de fluidez com o mesmo grau de dinamicidade. Devido à seus requisitos temporais rígidos, um RTOS é feito com um enfoque significativo em determinismo, confiabilidade e simplicidade, para garantir que tarefas sejam executadas com um respeito estrito de seus prazos \cite{OperatingSystemConcepts}. Exemplos de RTOS disponíveis no mercado incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
+
+\subsection{Escalonador}
+
+% TODO: Termos em ingles
+O escalonador é o componente do sistema operacional responsável por gerenciar múltiplas tarefas que desejam executar \cite{OperatingSystemConcepts}, sendo um componente extramente crucial, a implementação do escalonador deve garantir que tarefas de alta prioridade executem antes e que a a troca de contexto seja o mais rápido possível, o algoritmo de escalonamento é o fator central para o comportamento do escalonador, sendo categorizados em 2 grandes grupos:
+
+\begin{itemize}
+    \item \textbf{Cooperativos}: Tarefas precisam voluntariamente devolver o controle da CPU (com exceção de certas interrupções de hardware) para que as outras tarefas possam executar, isso pode ser feito explicitamente por uma função de largar ("yield") ou implicitamente ao utilizar uma rotina assíncrona do sistema, como ler arquivos, receber pacotes de rede ou aguardar um evento \cite{OperatingSystemConcepts}.
+
+    \item \textbf{Preemptivos}: Além de poderem transferir a CPU manualmente, o escalonador forçará trocas de contexto caso uma condição para a troca seja satisfeita. O algoritmo mais comum que serve de base para diversos escalonadores preemptivos é o Round-Robin onde tarefas possuem uma quantia de tempo máximo alocada para sua execução contínua, nomeada "time slice" ou "quantum" \cite{ModernOperatingSystems}. Tarefas ainda podem possuir relações de prioridade, alterando a ordem que o escalonador realiza seu despache assim como o tamanho de sua fatia de tempo.
+\end{itemize}
+
+Sistemas operacionais de tempo real são tipicamente executados no modo totalmente preemptivo, mas o uso cooperativo também é viável e possui a vantagem de possuir o controle para o gerenciamento de tarefas, mas é importante que seja tomado o cuidado adequado para que nenhum prazo de execução hard Real-Time seja violado por uma tarefa inadvertidamente utilizando a CPU por uma quantidade longa de tempo.
+
+\subsection{Concorrência e Assincronia}
+
+Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência \cite{MakingReliableDistSystems}.
+
+Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressividade do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e caches da CPU. O processo de acessar um recurso é deve lidar com o fato de ser assíncrono. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocioso, esperar 20 milissegundos para um pacote de rede chegar é aceitável para um humano, mas é uma eternidade para um processador \cite{ComputerOrganizationAndDesign}. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+
+É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de relógio das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplas threads de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
+
+\subsection{Grafos de Processos tolerantes à falhas}
+
+Para uma representação mais clara e eficaz de um fluxo de execução sujeito a falhas, é possível utilizar de grafos resilientes a falhas como um mecanismo de diagramação. Nesta representação, os nós correspondem a tarefas, as quais podem ser executadas na mesma unidade de processamento ou não. As arestas do grafo representam o fluxo de execução, uma aresta não demarcada indica execução incondicional, enquanto arestas demarcadas com notação de mensagem designam uma execução condicional à transmissão de uma mensagem. Mensagens e tarefas representadas por símbolo circular indicam pontos ordinários no grafo, ao passo que símbolos quadrados denotam condições de transparência. \cite{SchedAndOptOfDistributedFT}.
+
+Um grafo de processos tolerantes é falhas é definido como um grafo não ponderado direcionado acíclico com seus nós representando tarefas/processos, arestas representam o fluxo de execução e arestas nomeadas representam fluxo dependente da entrega de mensagens. Será utilizado a notação $P_X (N)$, onde $X$ é o número identificador da tarefa, e $N$ corresponde à sua $N$-ésima re-execução, por exemplo: $P_2 (1)$ indica a primeira execução da tarefa $P_2$, enquanto $P_1 (3)$ indica a terceira reexecução da tarefa $P_1$. Uma notação similar será utilizada para mensagens entre tarefas, $m_X (N)$, mensagens, assim como tarefas, estão sujeitas à falhas e custos adicionais de detecção, mas ao invés de re-execução, mensagens são re-enviadas \cite{SchedFTWithSoftAndHardConstraints}.
+
+Para melhor exemplificar a importância da detecção das falhas, será tomado como exemplo um grafo simples, com apenas 3 tarefas e uma mensagem. O grafo precisará tolerar uma falha transiente. O fluxo "ideal" é demonstrado na \autoref{fig:ftgSimples}.
+
+\begin{figure}[H]
+    \centering
+    \caption{Grafo com 3 processos e uma mensagem}
+    \includegraphics[width=0.120\textwidth]{assets/ftg_simples.png}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:ftgSimples}
+\end{figure}
+
+Ao incluir os diferentes desvios possíveis na presença de apenas uma falha, o grafo de execução da \autoref{fig:ftgExpandido} é obtido. A incidência de falhas no processamento ou passagem de mensagens é indicada com um ícone de raio.
+
+\begin{figure}[H]
+    \centering
+    \caption{Mesmo grafo, mas tolerante à uma falha transiente}
+    \includegraphics[width=0.75\textwidth]{assets/ftg_expandido.png}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:ftgExpandido}
+\end{figure}
+
+Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após sua deadline ter sido completa, o grafo na \autoref{fig:ftgTransparencia} demonstra a condição de transparência com um ícone retangular.
+
+\begin{figure}[H]
+    \centering
+    \caption{Introdução de transparência em $P_2$}
+    \includegraphics[width=0.40\textwidth]{assets/ftg_transparencia.png}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:ftgTransparencia}
+\end{figure}
+
+Introduzindo apenas um ponto de transparência é possível reduzir significativamente as possibilidades de execução do sistema, isso é particularmente benéfico para escalonadores ou handlers de falhas baseados em tabelas ou máquinas de estado finito, assim como é positivo para a previsibilidade do sistema, estabelecendo uma relação forte de pré-conclusão com sucesso ao respeitar a deadline de da tarefa transparente.
+
+Este exemplo é simples e tolera apenas uma falha transiente, porém processos complexos com múltiplas mensagens entre si causam um aumento exponencial de complexidade, especialmente caso seja necessário tolerar até $k$ falhas transientes.
+
+É possível introduzir estes pontos de transparência com a técnica de reexecução ou com redundância modular (se a deadline conjunta das $N$ tarefas for determinística), com o objetivo de melhorar a confiabilidade do sistema e torná-lo mais previsível. A introdução de transparência naturalmente não é gratuita, é feito um tradeoff entre garantias mais fortes no escalonador e menos imprevisibilidade na execução com o custo de maior uso da CPU e memória, todos os pontos de transparência necessitam ser checados o que pode gerar um tempo ocioso maior dos núcleos e a necessidade de aumentar uma deadline para garantir a possibilidade de reexecuções suficientes.
+
 
 % \renewcommand{\arraystretch}{1}
 %  \begin{quadro}[H]
