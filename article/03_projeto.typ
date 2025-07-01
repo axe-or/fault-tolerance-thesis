@@ -3,21 +3,9 @@
 
 = PROJETO
 
-A etapa mais fundamental do projeto é a implementação dos algoritmos e da API
-de resiliência, dado o contexto de real time, cuidados devem ser tomados no
-quesito da performance e uso de memória (que pode indiretamente degradar a CPU
-na presença de erros de cachê).
+A etapa mais fundamental do projeto é a implementação dos algoritmos e da API de resiliência, dado o contexto de real time, cuidados devem ser tomados no quesito da performance e uso de memória (que pode indiretamente degradar a CPU na presença de erros de cache).
 
-A arquitetura será primariamente orientada à passagem de mensagens, pois
-permite uma generalização para mecanismos de I/O assíncrono e possível
-distribuição da arquitetura, permite também um desacoplamento  entre a lógica
-de detecção e transporte das mensagens, potencialmente permitindo otimizações
-futuras na diminuição da ociosidade dos núcleos. O estilo de implementação
-orientado à mensagens naturalmente oferece um custo adicional em termos de
-latência quando comparado à alternativas puramente baseadas em compartilhamento
-de memória, apesar deste custo poder ser amortizado com a utilização de filas
-concorrentes bem implementadas e com a criação de um perfil de uso para melhor
-ajuste do sistema.
+A arquitetura será primariamente orientada à passagem de mensagens, pois permite uma generalização para mecanismos de I/O assíncrono e possível distribuição da arquitetura, permite também um desacoplamento  entre a lógica de detecção e transporte das mensagens, potencialmente permitindo otimizações futuras na diminuição da ociosidade dos núcleos. O estilo de implementação orientado à mensagens naturalmente oferece um custo adicional em termos de latência quando comparado à alternativas puramente baseadas em compartilhamento de memória, apesar deste custo poder ser amortizado com a utilização de filas concorrentes bem implementadas e com a criação de um perfil de uso para melhor ajuste do sistema.
 
 == Visão Geral e Premissas
 
@@ -26,108 +14,39 @@ ajuste do sistema.
 // TODO: Mudar o diagrama de ordem, talvez deixar o paragrafo menos denso
 #figure(caption: "Visão Geral do projeto", image("assets/visao_geral.png"))
 
-A análise final será realizada com os mecanismos de tolerância já implementados
-no FreeRTOS, serão executados 2 programas de exemplo com diferentes combinações
-de técnicas, métricas do uso médio de CPU, memória e número de falhas
-detectadas e por quais técnicas serão todas armazenadas em um segmento de
-memória previamente definido, será tomado um cuidado adicional para não injetar
-falhas neste segmento, ou alterar endereços de memória para que apontem para
-este segmento, pois será utilizado um dump da imagem com as métricas para a
-análise e escrita do resto da monografia.
+A análise final será realizada com os mecanismos de tolerância já implementados no FreeRTOS, serão executados 2 programas de exemplo com diferentes combinações de técnicas, métricas do uso médio de CPU, memória e número de falhas detectadas e por quais técnicas serão todas armazenadas em um segmento de memória previamente definido, será tomado um cuidado adicional para não injetar falhas neste segmento, ou alterar endereços de memória para que apontem para este segmento, pois será utilizado um dump da imagem com as métricas para a análise e escrita do resto da monografia.
 
-O PC (host) será responsável por orquestrar o processo de injeção, será
-utilizado o ST-Link para manipular a memória e registradores do
-microcontrolador, a interface de uso será feita pela sessão de GDB exposta pelo
-driver do ST-Link e pela IDE STM32Cube. As técnicas representadas no diagrama
-são para propósito ilustrativo da arquitetura, e não necessariamente
-correspondem a segmentos de memória dedicados. O uso de Asserts é realizado no
-código das tasks ativas, mas não existe nenhum "módulo de asserts", dado que
-esta técnica é profundamente contextual.
+O PC (host) será responsável por orquestrar o processo de injeção, será utilizado o ST-Link para manipular a memória e registradores do microcontrolador, a interface de uso será feita pela sessão de GDB exposta pelo driver do ST-Link e pela IDE STM32Cube. As técnicas representadas no diagrama são para propósito ilustrativo da arquitetura, e não necessariamente correspondem a segmentos de memória dedicados. O uso de Asserts é realizado no código das tasks ativas, mas não existe nenhum "módulo de asserts", dado que esta técnica é profundamente contextual.
 
 === Premissas
 
 // TODO: Termos em ingles
-Será partido do ponto que ao menos o processador que executa o scheduler terá
-registradores de controle (Stack Pointer, Program Counter, Return Address) que
-sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos
-reforçados com análise de fluxo do programa e adicionar redundância aos
-registradores, isso adiciona um grau a mais de complexidade que foge do escopo
-do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória
-fora do banco de registradores pode ser 2 ordens de magnitude mais sensível
-à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons.
+Será partido do ponto que ao menos o processador que executa o scheduler terá registradores de controle (Stack Pointer, Program Counter, Return Address) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau a mais de complexidade que foge do escopo do trabalho, e, como mencionado na seção de *trabalhos relacionados*, a memória fora do banco de registradores pode ser 2 ordens de magnitude mais sensível à eventos disruptivos @ReliabilityArmCortexUnderHeavyIons.
 
-Portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de
-tolerância do núcleo monitor, tendo foco na detecção de falhas de memória,
-passagem de mensagens e resultados dos co-processadores.
+Portanto, todos os testes subsequentes assumirão ao menos uma quantia mínima de tolerância do núcleo monitor, tendo foco na detecção de falhas de memória, passagem de mensagens e resultados dos co-processadores.
 
-Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais
-previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI
-(Runtime Type Information), ao invés, erros de validação devem ser cuidados
-explicitamente com valores ou através de callbacks.
+Com o fim de reduzir o tamanho do executável e manter o fluxo de execução mais previsível não será utilizado mecanismo de exceção com stack unwinding ou RTTI (Runtime Type Information), ao invés, erros de validação devem ser cuidados explicitamente com valores ou através de callbacks.
 
-Necessariamente, é preciso também presumir que testes sintéticos possam ao
-menos aproximar a performance do mundo real, ou ao menos prever o pior caso
-possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser
-um substituto para a medição em uma aplicação real, porém, uma bateria de
-testes com injeção artificial de falhas pode ser utilizada para verificar as
-tendências e overheads relativos introduzidos, mesmo que não necessariamente
-reflitam as medidas absolutas do produto final.
+Necessariamente, é preciso também presumir que testes sintéticos possam ao menos aproximar a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de falhas pode ser utilizada para verificar as tendências e overheads relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
 
-Portanto, será assumido que os resultados extraídos de injeção de falhas
-artificiais, apesar de menos condizentes com os valores absolutos de uma
-aplicação e não sendo substitutos adequados na fase de aprovação de um produto
-real, são ao menos capazes para realizar uma análise quanto ao overhead
-proporcional introduzido, e devido à sua facilidade de realização e
-profundidade de inspeção possível, serão priorizados inicialmente neste
-projeto.
-
+Portanto, será assumido que os resultados extraídos de injeção de falhas artificiais, apesar de menos condizentes com os valores absolutos de uma aplicação e não sendo substitutos adequados na fase de aprovação de um produto real, são ao menos capazes para realizar uma análise quanto ao overhead proporcional introduzido, e devido à sua facilidade de realização e profundidade de inspeção possível, serão priorizados inicialmente neste projeto.
 == Metodologia
 
 === Métodos
 
 // TODO: Trocar a ordem, sumarizar, mais diagramas, melhorar coesao
-Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em
-software, duas das técnicas são diretamente associadas à interface de tarefa,
-uma serve como tarefa supervisora e as outras duas servem como suporte. Os
-detalhas específicos de cada técnica serão abordados na seção de *Algoritmos e
-Técnicas*.
 
-Para executar a injeção lógica em software será utilizado um ambiente virtual
-(QEMU) emulando a mesma arquitetura de processador juntamente com o debugger
-GDB e funções de injeção implementadas diretamente nos programas utilizando
-callbacks para disparar uma falha, a emissão de falhas ocorrerá periodicamente
-de forma parametrizada. A injeção lógica em software não é o objetivo final do
-trabalho mas serve como uma validação prévia durante o processo de
-desenvolvimento assim como uma possível contingência.
+Serão utilizadas técnicas de detecção e tolerância à falhas implementadas em software, duas das técnicas são diretamente associadas à interface de tarefa, uma serve como tarefa supervisora e as outras duas servem como suporte. Os detalhas específicos de cada técnica serão abordados na seção de *Algoritmos e Técnicas*.
 
-A injeção lógica em hardware é realizada com ferramentas do próprio fabricante
-do microcontrolador (detalhas na seção seguinte), o fluxo geral da injeção
-consiste em carregar o binário executável (no formato ELF) no micro controlador
-utilizando o ST-LINK, após isso, o programa será iniciado e será feita uma
-injeção de falhas via sessão do depurador GDB associado ao link.
+Para executar a injeção lógica em software será utilizado um ambiente virtual (QEMU) emulando a mesma arquitetura de processador juntamente com o debugger GDB e funções de injeção implementadas diretamente nos programas utilizando callbacks para disparar uma falha, a emissão de falhas ocorrerá periodicamente de forma parametrizada. A injeção lógica em software não é o objetivo final do trabalho mas serve como uma validação prévia durante o processo de desenvolvimento assim como uma possível contingência.
 
-A coleta de métricas é realizada com os mecanismos de profiling do sistema
-FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução
-das tasks, seu espaço de memória utilizado e o número de falhas detectadas (e
-causadas) será armazenado em uma estrutura singleton que residirá em um
-segmento de memória que é deliberadamente isento de falhas, servindo
-similarmente à uma "caixa preta" do sistema.
+A injeção lógica em hardware é realizada com ferramentas do próprio fabricante do microcontrolador (detalhas na seção seguinte), o fluxo geral da injeção consiste em carregar o binário executável (no formato ELF) no micro controlador utilizando o ST-LINK, após isso, o programa será iniciado e será feita uma injeção de falhas via sessão do depurador GDB associado ao link.
 
-Para simular uma carga de trabalho mais condizente com a aplicações reais,
-serão utilizados 2 programas de exemplo, um processador de sinal digital
-assíncrono e um programa que realiza uma convolução bidimensional, estes
-programas são executados e expostos à falhas que espera-se que os mecanismos de
-tolerância sejam capazes de detectar. Detalhamento destes programas pode ser
-encontrado no capítulo do *Plano de Verificação*.
+A coleta de métricas é realizada com os mecanismos de profiling do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tasks, seu espaço de memória utilizado e o número de falhas detectadas (e causadas) será armazenado em uma estrutura singleton que residirá em um segmento de memória que é deliberadamente isento de falhas, servindo similarmente à uma "caixa preta" do sistema.
 
-Visando a reutilização de código e abstração, será utilizada uma interface que
-generaliza um objeto de tarefa, como um objeto que realiza despache dinâmico
-necessita de uma tabela de despache virtual (V-Table), é necessário tomar
-cuidado adicional pois a própria tabela pode ser sujeita à falhas. Será
-aplicado uma replicação simples dos ponteiros de função da V-Table, com o custo
-de overhead de 2 comparações por chamada de método. Espera-se que este overhead
-não será significativo pois os métodos da interface não são chamados com uma
-frequência alta.
+Para simular uma carga de trabalho mais condizente com a aplicações reais, serão utilizados 2 programas de exemplo, um processador de sinal digital assíncrono e um programa que realiza uma convolução bidimensional, estes programas são executados e expostos à falhas que espera-se que os mecanismos de tolerância sejam capazes de detectar. Detalhamento destes programas pode ser encontrado no capítulo do *Plano de Verificação*.
+
+Visando a reutilização de código e abstração, será utilizada uma interface que generaliza um objeto de tarefa, como um objeto que realiza despache dinâmico necessita de uma tabela de despache virtual (V-Table), é necessário tomar cuidado adicional pois a própria tabela pode ser sujeita à falhas. Será aplicado uma replicação simples dos ponteiros de função da V-Table, com o custo de overhead de 2 comparações por chamada de método. Espera-se que este overhead não será significativo pois os métodos da interface não são chamados com uma frequência alta.
 
 === Materiais
 
