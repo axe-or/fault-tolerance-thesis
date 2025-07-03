@@ -228,10 +228,25 @@ Para a aplicação da redundância modular, neste caso a redundância modular tr
 \end{figure}
 
 \subsubsection{Reexecução}
-% TODO disagrama
+
+A implementação de tarefas com reexecução é baseada no uso de execuções consecutivas que reutilizam do mesmo espaço de pilha, uma tarefa pode ser sempre reexecutada $N$ vezes, servindo um propósito similar à técnica de redundância, ou executada \textit{até} $N$ vezes, encerrando a execução imediatamente após não encontrar nenhuma falha. Para os propósitos deste trabalho, será utilizada a segunda técnica, pois permite mais oportunidade para o escalonador encaixar trabalho no tempo ocioso, e também por ser um exemplo mais bem estudado na fundamentação teórica deste trabalho por Isosimov et. al.
+
+Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina de estado finito para a execução de uma tarefa com reexecução, espera-se que o caso médio seja a execução diretamente para um estado correto. Para a criação de uma condição de transparência, o prazo da tarefa deve ser o pior caso possível de $N$ execuções.
+
+% \begin{figure}[H]
+%     \centering
+%     \captionsetup{justification=centering}
+%     \caption{Estados de uma reexecução}
+%     \includegraphics[width=0.975\textwidth]{assets/state_reexec.png}
+%     \captionsetup{justification=raggedright}
+%     \caption*{Fonte: Elaborada pelo autor}
+%     \label{fig:stateReexec}
+% \end{figure}
 
 \subsubsection{Heartbeat Signal}
+
 \subsubsection{Asserts}
+
 
 \section{Plano de Verificação}
 
