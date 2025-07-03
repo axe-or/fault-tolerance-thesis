@@ -101,15 +101,16 @@ Serão utilizadas as seguintes técnicas de tolerância à falhas implementadas 
 
 Para a criação da análise, serão realizados testes com injeção lógica em hardware utilizando-se do ST-Link em combinação com um computador que emitirá os comandos para injeção via depurador, as falhas serão de natureza transiente e afetarão valores na memória (corrupção silenciosa) assim como nos registradores que não são de controle. A \autoref{fig:injecaoHardwareLogica} detalha de forma mais específica o fluxo de gerar uma falha. As combinações específicas de falhas e técnicas escolhidas são abordadas na \autoref{subsec:campanhaInjecao}.
 
-\begin{figure}[H]
-   \centering
-   \captionsetup{justification=centering}
-   \caption{Injeção lógica em hardware}
-   \includegraphics[width=0.90\textwidth]{assets/injecao_hardware.png}
-   \captionsetup{justification=raggedright}
-  \caption*{Fonte: Elaborada pelo autor}
-   \label{fig:injecaoHardwareLogica}
-\end{figure}
+% TODO: Diagrama
+%\begin{figure}[H]
+%    \centering
+%    \captionsetup{justification=centering}
+%    \caption{Injeção lógica em hardware}
+%    \includegraphics[width=0.90\textwidth]{assets/injecao_logica_hardware.png}
+%    \captionsetup{justification=raggedright}
+%   \caption*{Fonte: Elaborada pelo autor}
+%    \label{fig:injecaoHardwareLogica}
+%\end{figure}
 
 
 A coleta de métricas será realizada com os mecanismos de monitoramento do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de falhas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de falhas.
