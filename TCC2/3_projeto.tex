@@ -86,11 +86,6 @@ Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma f
     \label{fig:stmCubeIDE}
 \end{figure}
 
-% #sourced_image(
-%   caption: [STMCube IDE],
-%   source: "STMCubeProductPage",
-%   image("assets/stmcube_ide.png"))
-
 Durante a fase de desenvolvimento dos algoritmos será utilizado o QEMU juntamente com as ferramentas anteriormente citadas, assim como sanitizadores de memória e condições de corrida (ASan, TSan, UBSan) para auxiliar na detecção de erros mais cedo durante o desenvolvimento.
 
 O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser extensivamente testado e documentado e prover um escalonador totalmente preemptivo com um custo espacial relativamente pequeno, além disso, os contribuidores do FreeRTOS mantém uma lista grande de versões para diferentes arquiteturas e controladores, facilitando drasticamente o trabalho ao não ter que criar uma HAL do zero.
@@ -110,7 +105,6 @@ Para a criação da análise, serão realizados testes com injeção lógica em 
   \caption*{Fonte: Elaborada pelo autor}
    \label{fig:injecaoHardwareLogica}
 \end{figure}
-
 
 A coleta de métricas será realizada com os mecanismos de monitoramento do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de falhas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de falhas.
 
@@ -151,7 +145,6 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         
         \textbf{RF08} & Comunicação entre tarefas por uma fila com checagem dos pacotes \\
         \hline
-        
     \end{tabular}
     \label{tab:rf}
 \end{quadro}
@@ -165,31 +158,27 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         \textbf{Requisito} & \textbf{Descrição}  \\
         \hline
         
-        \textbf{RNF01} & Em caso de falha catastrófica (sem possibilidade de tolerância) o sistema deve ser capaz de reiniciar  \\ 
-        \hline
-
-        \textbf{RNF02} & O consumo de memória deve ser pré determinado em tempo de compilação ou na inicialização do sistema \\
+        \textbf{RNF01} & O consumo de memória deve ser pré determinado em tempo de compilação ou na inicialização do sistema \\
         \hline
         
-        \textbf{RNF03} & A interface deve estar acima do escalonador preemptivo do FreeRTOS \\
+        \textbf{RNF02} & A interface deve ser construida sobre o escalonador preemptivo do FreeRTOS \\
         \hline
 
-        \textbf{RNF04} & Deve ser compatível com arquitetura ARMv7M ou ARMv8M \\
+        \textbf{RNF03} & Deve ser compatível com arquitetura ARMv7M ou ARMv8M \\
         \hline
 
-        \textbf{RNF05} & Implementação realizada em C++ (versão 20 ou acima) \\
+        \textbf{RNF04} & Implementação realizada em C++ (versão 20 ou acima) \\
         \hline
         
-        \textbf{RNF06} & Código fonte da interface disponível sob licença permissiva (BSD3) \\
+        \textbf{RNF05} & Código fonte da interface disponível sob licença permissiva (BSD3) \\
         \hline
-
     \end{tabular}
     \label{tab:rnf}
 \end{quadro}
 
 \subsection{Interface} \label{subsec:interface}
 
-Para melhor generalizar o uso das técnicas, utiliza-se de uma abstração da estrutura de tarefa para facilitar a utilização de diferentes técnicas de execução sem necessitar de alterações significativas por parte do usuário da interface.
+Para melhor generalizar o uso das técnicas, utiliza-se de uma abstração da estrutura de tarefa juntamente com um mecanismo de passagem de mensagens com detecção de erros.
 
 Uma mensagem envelopa um pacote de dados qualquer para que possa ser enviado de forma assíncrona entre tarefas. Neste caso, o ordenamento dos campos é importante: o pacote precisa ser o último membro para serialização de estruturas de tamanho arbitrário, a distribuição dos campos na memória é demonstrada na \autoref{fig:messageStruct}. 
 
@@ -245,14 +234,25 @@ Para a aplicação da redundância modular, neste caso a redundância modular tr
 \subsubsection{Asserts}
 
 \section{Plano de Verificação}
+
+Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, \textbf{RF08}) será feito uma série de testes unitários e de integração, para garantir que as técnicas estejam ao menos corretamente implementadas antes de realizar qualquer tipo de medição.
+
+A validação da detecção de falhas e vencimento de prazos (\textbf{RC05}, \textbf{RF07}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software utilizando o emulador QEMU com a mesma arquitetura de processador executando o sistema FreeRTOS e será validado definitivamente durante o teste com injeção lógica em hardware. A capacidade de criar, destruir e cancelar tarefas (\textbf{RF02}) é um pré-requisito e será verificada com um simples teste ponta a ponta. Importante notar que a priorização de tarefas baseadas em seu número de prioridade já é implementada pelo próprio FreeRTOS.
+
+Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
+
 \subsection{Campanha de Injeção de Falhas} \label{subsec:campanhaInjecao}
 
-% 02/07
-% Associar coisas do plano de verificação aos requisitos
-% Falar de tempo real no visão geral
+
+\section{Análise de Riscos} \label{sec:analiseRiscos}
+
 % 03/07
+% Arrumar objetivo geral e específicos
 % Refazer consideracoes finais
+% Falar de tempo real no visão geral
 % 04/07
+% 
+% 05/07
 % Ler o trabalho da Nicole
 % COlocar como trabalho relacionado no lugar do de analise de fluxo la
 
