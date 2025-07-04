@@ -279,12 +279,21 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 \begin{quadro}[H]
     \centering
     \caption{Análise de riscos}
-    \begin{tabular}{|l|l|l|l|l|}
+    \begin{tabular}{|p{0.20\textwidth}|p{0.150\textwidth}|p{0.10\textwidth}|p{0.20\textwidth}|p{0.20\textwidth}|}
         \hline
         \rowcolor[HTML]{C0C0C0}
         \textbf{Risco} & \textbf{Probabilidade} & \textbf{Impacto} & \textbf{Gatilho} & \textbf{Mitigação} \\
         \hline
-        
+
+        Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho &  Baixo & Alto & Implementar interface no RTOS & Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface \\
+        \hline
+
+        Problemas para injetar falhas com depurador em hardware & Baixa & Alto & Realizar injeção no microcontrolador & Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa \\
+        \hline
+
+        Não conseguir coletar métricas de performance com profiler do FreeRTOS & Baixa & Médio & Teste em microcontrolador ou ambiente virtualizado & Inserir pontos de medição manualmente \\
+        \hline
+
     \end{tabular}
     \label{tab:rf}
 \end{quadro}
