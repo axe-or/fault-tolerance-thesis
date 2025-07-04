@@ -233,20 +233,22 @@ A implementação de tarefas com reexecução é baseada no uso de execuções c
 
 Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina de estado finito para a execução de uma tarefa com reexecução, espera-se que o caso médio seja a execução diretamente para um estado correto. Para a criação de uma condição de transparência, o prazo da tarefa deve ser o pior caso possível de $N$ execuções.
 
-% \begin{figure}[H]
-%     \centering
-%     \captionsetup{justification=centering}
-%     \caption{Estados de uma reexecução}
-%     \includegraphics[width=0.975\textwidth]{assets/state_reexec.png}
-%     \captionsetup{justification=raggedright}
-%     \caption*{Fonte: Elaborada pelo autor}
-%     \label{fig:stateReexec}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Estados de uma reexecução}
+    \includegraphics[width=0.975\textwidth]{assets/state_reexec.png}
+    \captionsetup{justification=raggedright}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:stateReexec}
+\end{figure}
 
 \subsubsection{Heartbeat Signal}
+% TODO
 
 \subsubsection{Asserts}
 
+Asserts serão utilizados para verificar invariantes, qualquer quebra de contrato de função ou invariante que é coberta com um assert deve resultar em uma falha.
 
 \section{Plano de Verificação}
 
@@ -261,8 +263,36 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
+O trabalho é de risco baixo, dado que constrói em cima de fundações técnicas previamente exploradas, porém dentro dos principais riscos que possam alterar ou causar problemas durante a realização encontram-se:
+
+% #figure(caption: [Análise de riscos], table(
+% 	columns: (auto,) * 5,
+% 	// column-gutter: (auto, 4pt, auto),
+% 	table.header([*Risco*], [*Probabilidade*], [*Impacto*], [*Gatilho*], [*Contingência*]),
+% 	[Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.], [Baixo], [Alto], [Implementar interface no RTOS], [Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface],
+
+% 	[Problemas para injetar falhas com depurador em hardware], [Baixa], [Alto], [Realizar injeção no microcontrolador], [Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa],
+
+% 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
+% ))
+
+\begin{quadro}[H]
+    \centering
+    \caption{Análise de riscos}
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \rowcolor[HTML]{C0C0C0}
+        \textbf{Risco} & \textbf{Probabilidade} & \textbf{Impacto} & \textbf{Gatilho} & \textbf{Mitigação} \\
+        \hline
+        
+    \end{tabular}
+    \label{tab:rf}
+\end{quadro}
+
+
+
 % 03/07
-% Arrumar objetivo geral e específicos
+% Arrumar objetivo específicos
 % Refazer consideracoes finais
 % Falar de tempo real no visão geral
 % 04/07
