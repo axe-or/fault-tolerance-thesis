@@ -74,11 +74,6 @@ A modelagem deste atributo necessita de conhecimento particular sobre a aplicaç
 
 Segurança (\textit{Safety}) é a probabilidade do sistema não causar danos à integridade humana ou à outros patrimônios, independentemente da presença falhas. Por ser um critério muito particular da natureza da aplicação e seu contexto de operação, uma estimativa analítica necessita de um modelo estatístico que não é facilmente sumarizado com apenas uma equação \cite{FaultInjectionTechniques}.
 
-
-
-
-
-
 \section{Tolerância à Falhas}
 
 \subsection{Mecanismos de Detecção}
@@ -90,12 +85,11 @@ Mecanismos de detecção são responsáveis por identificar a presença de uma f
 Os CRCs são códigos de detecção de erro comumente utilizados em redes de computador e armazenamento não volátil. Para cada segmento de dado é concatenado um valor de checagem que é calculado com base no resto da divisão com um polinômio gerador pré definido \cite{FaultTolerantSystems}.
 
 CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "burst errors", falhas transientes que alteram uma região de bits próximos.
-% TODO: Botar uma figura do payload com um crc
 
 \subsubsection{Heartbeat signals}
 % TODO Mencionar sobre como eles botem ser usados pra checar o critério real time
 
-Os heartbeat signals (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de "watchdog timers" \cite{DependabilityInEmbeddedSystems}. 
+Os heartbeat signals (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de "watchdog timers" \cite{DependabilityInEmbeddedSystems}. Uma das aplicações desta técnica em conjunto com reexecução ou replicação é a possibilidade de detectar uma demora excessiva e preeptivamente cancelar uma das unidades de execução.
 
 \begin{figure}[H]
     \centering
