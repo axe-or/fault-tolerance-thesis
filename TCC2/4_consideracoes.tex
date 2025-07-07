@@ -1,3 +1,14 @@
 \chapter{Considerações Finais}
 \label{cap:consid}
 
+Durante a pesquisa bibliográfica, foi possível observar uma variedade de técnicas de tolerância à falhas em software. Das técnicas escolhidas, optou-se por focar em técnicas mais simples para a detecção (CRC e asserts) e técnicas de execução que possibilitem a criação de condições de transparência.
+
+O projeto de pesquisa visa avaliar a aplicação destas técnicas em um contexto de um sistema operacional de tempo real, utilizando de injeção de falhas lógicas em hardware para a construção de uma análise do impacto de diferentes combinações de técnicas. Algumas das hipóteses levantadas foram:
+
+\begin{itemize}
+	\item[1] Asserts terão um impacto pequeno na performance.
+	\item[2] Replicação de tarefas introduzirá maior variância no tempo de execução.
+	\item[3] Reexecução terá uma variância menor do que a replicação, porém com maior custo de tempo.
+	\item[4] Sinais de heartbeat terão um impacto menor na detecção de erros em relação à outras técnicas.
+\end{itemize}
+
