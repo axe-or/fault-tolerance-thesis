@@ -293,8 +293,17 @@ Pode-se adicionar pontos de transparência através de reexecução ou redundân
 
 \section{Trabalhos relacionados} \label{sec:trabRel}
 
-% TODO(marcos): fazer tudo...
+\subsection{Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection}
 
+Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software no banco de registradores. \cite{ReliabilityArmCortexUnderHeavyIons}.
+
+% #sourced_image(
+% 	image("assets/related_works_heavy_ion_reliability.png"),
+% 	caption: [Análise de resiliência, dividida por categoria],
+% 	source: "ReliabilityArmCortexUnderHeavyIons",
+% )
+
+Uma outra observação foi que a quantia de falhas injetadas para ocasionar um erro de funcionalidade é 2 ordens de magnitude maior na memória em relação ao banco de registradores, indicando que existe uma necessidade real de poder detectar e mitigar erros de memória mais rapidamente \cite{ReliabilityArmCortexUnderHeavyIons}.
 
 % \renewcommand{\arraystretch}{1}
 %  \begin{quadro}[H]
