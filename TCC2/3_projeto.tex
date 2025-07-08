@@ -214,10 +214,10 @@ Para a implementação da funcionalidade de tolerância à falhas, algumas das t
 Será implementado o CRC-32C, que já é aplicado em sistemas de arquivos como o Btrfs e o ext4, assim como em protocolos de rede como iSCSI e SCTP. Seu Polinômio geradador $P$ é:
 
 \begin{equation}
-	\begin{split}
-		P = & x^{32} + x^{28} + x^{27} + x^{26} + x^{25} + x^{23} + x^{22} + x^{20} \\
-	        & + x^{19} + x^{18} + x^{14} + x^{13} + x^{11} + x^{10} + x^{9} + x^{8} + x^{6} + 1
-	\end{split}
+    \begin{split}
+        P = & x^{32} + x^{28} + x^{27} + x^{26} + x^{25} + x^{23} + x^{22} + x^{20} \\
+            & + x^{19} + x^{18} + x^{14} + x^{13} + x^{11} + x^{10} + x^{9} + x^{8} + x^{6} + 1
+    \end{split}
 \end{equation}
 \addEquacao{Polinômio CRC-32C}{5}
 
