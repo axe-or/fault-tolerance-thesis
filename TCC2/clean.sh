@@ -7,7 +7,7 @@ TrashFiles(){
 		-or -name '*.loq' \
 		-or -name '*.loe' \
 		-or -name '*.bbl' \
-		-or -name '*.bbl' \
+		-or -name '*.blg' \
 		-or -name '*.lof' \
 		-or -name '*.toc'
 }
