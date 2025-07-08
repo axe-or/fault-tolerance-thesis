@@ -294,10 +294,6 @@ Pode-se adicionar pontos de transparência através de reexecução ou redundân
 
 Durante a pesquisa bibliográfica para a fundamentação deste trabalho, foram selecionados três artigos que abordassem temas de tolerância à falhas em software.
 
-\subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
-
-O trabalho de \indirectcite{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
-
 \subsection{Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection}
 
 No trabalho de \indirectcite{ReliabilityArmCortexUnderHeavyIons} utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas em software para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software, como indicado na figura \autoref{fig:trabRelIonsPesados}.
@@ -314,22 +310,19 @@ No trabalho de \indirectcite{ReliabilityArmCortexUnderHeavyIons} utilizam de um 
 
 Uma outra observação foi que a memória foi duas ordens de magnitude maior em relação ao banco de registradores, indicando que é necessário um foco maior na detecção de falhas na memória \cite{ReliabilityArmCortexUnderHeavyIons}.
 
+\subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
+
+O trabalho de \indirectcite{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
+
 \subsection{Application-Level Fault Tolerance in Real-Time Embedded System}
 
-Neste trabalho são apresentadas técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface. O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando threads resilientes \cite{ApplicationLevelFT}. Um caso de estudo de um sistema de filtragem de radar é utilizado como projeto.
+No trabalho de \indirectcite{ApplicationLevelFT} são apresentada técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface. O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando threads resilientes \cite{ApplicationLevelFT}. Um caso de estudo de um sistema de filtragem de radar é utilizado como projeto.
 
-Os pesquisadores demonstraram resultados favoráveis para uma forma híbrida de tolerância com menor uso de CPU em relação à redundância tripla utilizando de técnicas em software combinado com um par de processadores com auto checagem (PSP).
-
-% TODO: referenciar a imagem
-% #sourced_image(
-% 	caption: [Utilização de CPU para diferentes implementações de tolerância],
-% 	source: "ApplicationLevelFT",
-% 	image("assets/related_works_psp_perf.png"),
-% )
-
-O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos.
+O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de executar em sistemas de recursos restritos. Demonstraram-se resultados favoráveis para uma forma híbrida de tolerância com menor uso de CPU em relação à redundância tripla utilizando de técnicas em software combinado com um par de processadores com auto checagem (PSP).
 
 \subsection{Análise Comparativa dos trabalhos relacionados}
+
+Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura é o de \indirectcite{ApplicationLevelFT} e o mais similar em termos de técnicas de injeção e materiais utilizados a técnica de confiabilidade apresentada em \indirectcite{TecnicaConfiabilidadeRISCV}. O \autoref{tab:trabRel} demonstra as principais diferenças entre os trabalhos.
 
 \begin{quadro}[H]
     \centering
@@ -340,17 +333,22 @@ O trabalho demonstra também a viabilidade de prover interfaces mais abstratas q
         \textbf{Trabalho} & \textbf{Sistema} & \textbf{Hardware} & \textbf{Injeção} & \textbf{Técnicas} \\
         \hline
 
-        Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection & Bare Metal, FreeRTOS & CY8CKIT-059 & Física e Lógica em Software & Redundância de Registradores, Deadlines, Redução de Registradores, Asserts \\
+        \figcite{ReliabilityArmCortexUnderHeavyIons} & Bare Metal, FreeRTOS & CY8CKIT-059 & Física e Lógica em Software & Redundância de Registradores, Deadlines, Redução de Registradores, Asserts \\
         \hline
 
-	% [2], [*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
-	%
-	% [3], [*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [MicroC/OS-ii], [MPC555 Evaluation Board], [Lógica em Hardware], [Análise de fluxo de controle e de dados com sensibilidade à deadlines],
-	%
-	% [-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
+        \figcite{TecnicaConfiabilidadeRISCV} & RISC-V Emulado no QEMU & Microkernel de \indirectcite{BasicMicrokernelForRISCV} & Emulada em Software & Redundância Modular, Segurança de memória extra (Borrow checker do Rust) \\
+        \hline
+
+        \figcite{ApplicationLevelFT} & BOSS & Máquinas PowerPC 823 e um PC x86\_64 não especificado & Simulada em Software & Redundância Modular, Deadlines, Rollback/Retry \\
+        \hline
+
+        Este Trabalho & FreeRTOS & STM32 Bluepill & Lógica em Software e Hardware & Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas \\
+        \hline
+
     \end{tabular}
     \label{tab:trabRel}
 \end{quadro}
+
 % \renewcommand{\arraystretch}{1}
 %  \begin{quadro}[H]
 %     \centering
