@@ -87,7 +87,6 @@ Os CRCs são códigos de detecção de erro comumente utilizados em redes de com
 CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "burst errors", falhas transientes que alteram uma região de bits próximos.
 
 \subsubsection{Heartbeat signals}
-% TODO Mencionar sobre como eles botem ser usados pra checar o critério real time
 
 Os heartbeat signals (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de "watchdog timers" \cite{DependabilityInEmbeddedSystems}. Uma das aplicações desta técnica em conjunto com reexecução ou replicação é a possibilidade de detectar uma demora excessiva e preeptivamente cancelar uma das unidades de execução.
 
@@ -138,7 +137,7 @@ Na \autoref{fig:redundanciaReexec} é possível observar a reexecução de uma t
 
 \subsubsection{Redundância}
 
-Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de $N$ falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha. % TODO(marcos): Citar aqui
+Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de $N$ falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha \cite{SchedAndOptOfDistributedFT}.
 
 Uma técnica de redundância comum é o uso de redundância modular, tipicamente com 3 instâncias replicadas (neste caso chamada de TMR ou "Triple Modular Redundancy"), a \autoref{fig:redundanciaTMR} ilustra a execução concorrente seguida de um votador.
 
