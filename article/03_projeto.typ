@@ -313,23 +313,11 @@ testes são artefatos que serão distribuídos juntamente com o trabalho.
 
 === Campanha de Injeção de Falhas
 
-Para testar a injeção de falhas serão utilizados mecanismos lógicos em software
-e em hardware com com o auxílio do depurador STLink. As falhas serão de
-natureza transiente e focarão no segmento de memória com leitura e escrita.
+Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a
-partir de um endereço base são escolhidos e escritos com dados pseudo
-aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático
-com escrita, o stack das tarefas e registradores de propósito geral. Os
-programas exemplo serão executados por um número fixo de rounds (e.x: 200) e
-terão suas métricas coletadas até o final dos rounds ou caso os erros
-cumulativos causem um reset total do sistema.
+As falhas injetadas serão principalmente upsets de memória onde $N$ bytes a partir de um endereço base são escolhidos e escritos com dados pseudo aleatórios ou zeros, as regiões de memória escolhidas serão o segmento estático com escrita, o stack das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rounds (e.x: 200) e terão suas métricas coletadas até o final dos rounds ou caso os erros cumulativos causem um reset total do sistema.
 
-Falhas detectadas serão armazenadas com contadores atômicos, com um contador
-dedicado para cada tipo de técnica. A região de coleta das métricas será
-reservada previamente na seção estática da imagem do executável e será isenta
-de falhas. Um dump da imagem será extraído e os contadores e métricas
-deserializados no host para análise.
+Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica. A região de coleta das métricas será reservada previamente na seção estática da imagem do executável e será isenta de falhas. Um dump da imagem será extraído e os contadores e métricas deserializados no host para análise.
 
 #figure(caption: [Combinações de técnicas utilizadas], table(
   columns: (auto, auto, auto, auto, auto, 1fr),
@@ -344,16 +332,7 @@ deserializados no host para análise.
   // "7", "✓","✓","✓","✓","✓",
 ))
 
-A combinação 1 é apenas um grupo controle, para checar a execução sem
-tolerância alguma, já a combinação 2 visa comparar com as técnicas de
-tolerância que não envolvem modificação do processo de execução da task. As
-combinações 3 à 6  visam comparar Reexecução e Redundância modular, com e sem
-Heartbeat Signals (que incorrem em uma task adicional). Asserts e CRCs serão
-mantidos ativos em todas as execuções por 2 razões principais: Asserts serão
-utilizados para validar as chamadas virtuais da interface, e CRCs tornam falhas
-na transmissão de mensagens detectáveis, não seria proveitoso realizar passagem
-de mensagens para os Heartbeat Signals se as mensagens por si só não são
-confiáveis.
+A combinação 1 é apenas um grupo controle, para checar a execução sem tolerância alguma, já a combinação 2 visa comparar com as técnicas de tolerância que não envolvem modificação do processo de execução da task. As combinações 3 à 6  visam comparar Reexecução e Redundância modular, com e sem Heartbeat Signals (que incorrem em uma task adicional). Asserts e CRCs serão mantidos ativos em todas as execuções por 2 razões principais: Asserts serão utilizados para validar as chamadas virtuais da interface, e CRCs tornam falhas na transmissão de mensagens detectáveis, não seria proveitoso realizar passagem de mensagens para os Heartbeat Signals se as mensagens por si só não são confiáveis.
 
 ==== Injeção Lógica com Software
 

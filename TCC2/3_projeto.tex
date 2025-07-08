@@ -280,6 +280,38 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 \subsection{Campanha de Injeção de Falhas} \label{subsec:campanhaInjecao}
 
+Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
+
+As falhas injetadas serão falhas transientes de memória onde $N$ bytes a partir de um endereço base são escolhidos e invertidos com um XOR de uma mascara aleatória, as regiões de memória escolhidas serão o segmento estático com escrita, a pilha das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rodadas (e.x: 200) e terão suas métricas coletadas e  catalogadas para análise posterior.
+
+Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica. A região de coleta das métricas será reservada previamente na seção estática da imagem do executável e será isenta de falhas.
+
+Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica como grupo de controle, técnicas simples (CRC e Asserts) que não interferem na execução e combinações de técnicas que alteram o fluxo do programa (Reexecução e Replicação) com e sem validação de prazo via sinal heartbeat.
+
+\begin{quadro}[H]
+    \centering
+    \caption{Combinações de técnicas utilizadas}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \rowcolor[HTML]{C0C0C0}
+        \textbf{Reexecução} & \textbf{Redundância modular} & \textbf{Heartbeat Signal} & \textbf{CRC} & \textbf{Asserts} \\
+        \hline
+        - & - & - & - & - \\
+        \hline
+        - & - & - & X & X \\
+        \hline
+        X & - & - & X & X \\
+        \hline
+        X & - & X & X & X \\
+        \hline
+        - & X & - & X & X \\
+        \hline
+        - & X & X & X & X \\
+        \hline
+    \end{tabular}
+    \label{tab:combinacoesTecnicas}
+\end{quadro}
+
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
