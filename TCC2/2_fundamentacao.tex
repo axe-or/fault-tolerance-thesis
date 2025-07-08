@@ -16,7 +16,6 @@ A qualidade de serviço $Q$ do sistema pode ser aproximada pela média ponderada
 \end{equation}
 \addEquacao{Qualidade de Serviço}{1}
 
-
 \subsection{Falhas}
 
 De acordo com a definição de anormalidades de software da IEEE: um erro (\textit{error}) é a diferença entre um valor esperado e o valor obtido. Um defeito (\textit{fault}) é um estado irregular do sistema que pode (ou não) provocar erros que resultem em falhas. Já uma falha (\textit{failure}) é uma incapacidade observável do sistema de cumprir sua função designada, constituindo uma degradação total ou parcial de sua qualidade de serviço \cite{IEEEAnormalities}.
@@ -292,18 +291,44 @@ Este exemplo é simples e tolera apenas uma falha transiente, porém processos c
 Pode-se adicionar pontos de transparência através de reexecução ou redundância modular (se a deadline conjunta das $N$ tarefas for determinística) para aumentar a confiabilidade e previsibilidade do sistema. Essa transparência não é gratuita: há um troca entre maior confiabilidade no escalonador e menor imprevisibilidade na execução, com o custo de maior uso de CPU e memória. Todos os pontos precisam ser verificados, o que pode aumentar o tempo ocioso dos núcleos e exigir a extensão do prazo da tarefa para permitir reexecuções suficientes.
 
 \section{Trabalhos relacionados} \label{sec:trabRel}
+\subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
+
+\cite{TecnicaConfiabilidadeRISCV}
 
 \subsection{Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection}
 
 Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software no banco de registradores. \cite{ReliabilityArmCortexUnderHeavyIons}.
 
-% #sourced_image(
-% 	image("assets/related_works_heavy_ion_reliability.png"),
-% 	caption: [Análise de resiliência, dividida por categoria],
-% 	source: "ReliabilityArmCortexUnderHeavyIons",
-% )
+% TODO: referenciar a imagem
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Análise de resiliência, dividida por categoria}
+    \includegraphics[width=0.75\textwidth]{assets/related_works_heavy_ion_reliability.png}
+    \captionsetup{justification=raggedright}
+    \caption*{Fonte: \figcite{ReliabilityArmCortexUnderHeavyIons}}
+    \label{fig:trabRelIonsPesados}
+\end{figure}
 
 Uma outra observação foi que a quantia de falhas injetadas para ocasionar um erro de funcionalidade é 2 ordens de magnitude maior na memória em relação ao banco de registradores, indicando que existe uma necessidade real de poder detectar e mitigar erros de memória mais rapidamente \cite{ReliabilityArmCortexUnderHeavyIons}.
+
+\subsection{Application-Level Fault Tolerance in Real-Time Embedded System}
+
+Neste trabalho são apresentadas técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface. O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando threads resilientes @ApplicationLevelFT. Um caso de estudo de um sistema de filtragem de radar é utilizado como projeto.
+
+Os pesquisadores demonstraram resultados favoráveis para uma forma híbrida de tolerância com menor uso de CPU em relação à redundância tripla utilizando de técnicas em software combinado com um par de processadores com auto checagem (PSP).
+
+% TODO: referenciar a imagem
+% #sourced_image(
+% 	caption: [Utilização de CPU para diferentes implementações de tolerância],
+% 	source: "ApplicationLevelFT",
+% 	image("assets/related_works_psp_perf.png"),
+% )
+
+O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de rodar em sistemas de recursos restritos.
+
+\subsection{Análise Comparativa dos trabalhos relacionados}
+
 
 % \renewcommand{\arraystretch}{1}
 %  \begin{quadro}[H]

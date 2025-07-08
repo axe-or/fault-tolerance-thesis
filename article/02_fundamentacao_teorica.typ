@@ -444,7 +444,7 @@ técnicas em software combinado com um par de processadores com auto checagem
 )
 
 O trabalho demonstra também a viabilidade de prover interfaces mais abstratas
-que ainda sejam capazes de rodar em sistemas de recursos restritos, os
+que ainda sejam capazes de rodar em sistemas de recursos restritos., os
 pesquisadores realizam uso amplo de herança e padrões orientados à objetos com
 chamadas virtuais. Uma possível otimização em termos de memória e coerência do
 cachê da CPU é reduzir o uso de despache dinâmico em favor de técnicas de
