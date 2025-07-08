@@ -242,7 +242,7 @@ Implementar os mecanismos de concorrência adequados também permite lidar com i
 
 É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de relógio das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
 
-\subsection{Grafos de Processos tolerantes à falhas}
+\subsection{Execução de Tarefas na Presença de Falhas}
 
 Para uma representação mais clara e eficaz de um fluxo de execução sujeito a falhas, é possível utilizar de grafos resilientes a falhas como um mecanismo de diagramação. Nesta representação, os nós correspondem a tarefas, as quais podem ser executadas na mesma unidade de processamento ou não. As arestas do grafo representam o fluxo de execução, uma aresta não demarcada indica execução incondicional, enquanto arestas demarcadas com notação de mensagem designam uma execução condicional à transmissão de uma mensagem. Mensagens e tarefas representadas por símbolo circular indicam pontos ordinários no grafo, ao passo que símbolos quadrados denotam condições de transparência. \cite{SchedAndOptOfDistributedFT}.
 
@@ -291,15 +291,17 @@ Este exemplo é simples e tolera apenas uma falha transiente, porém processos c
 Pode-se adicionar pontos de transparência através de reexecução ou redundância modular (se a deadline conjunta das $N$ tarefas for determinística) para aumentar a confiabilidade e previsibilidade do sistema. Essa transparência não é gratuita: há um troca entre maior confiabilidade no escalonador e menor imprevisibilidade na execução, com o custo de maior uso de CPU e memória. Todos os pontos precisam ser verificados, o que pode aumentar o tempo ocioso dos núcleos e exigir a extensão do prazo da tarefa para permitir reexecuções suficientes.
 
 \section{Trabalhos relacionados} \label{sec:trabRel}
+
+Durante a pesquisa bibliográfica para a fundamentação deste trabalho, foram selecionados três artigos que abordassem temas de tolerância à falhas em software.
+
 \subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
 
-\indirectcite{TecnicaConfiabilidadeRISCV}
+O trabalho de \indirectcite{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
 
 \subsection{Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection}
 
-Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software no banco de registradores. \cite{ReliabilityArmCortexUnderHeavyIons}.
+No trabalho de \indirectcite{ReliabilityArmCortexUnderHeavyIons} utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas em software para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software, como indicado na figura \autoref{fig:trabRelIonsPesados}.
 
-% TODO: referenciar a imagem
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
@@ -310,7 +312,7 @@ Neste trabalho conjunto de pesquisadores da USP e UFRGS utilizam de um sistema C
     \label{fig:trabRelIonsPesados}
 \end{figure}
 
-Uma outra observação foi que a quantia de falhas injetadas para ocasionar um erro de funcionalidade é 2 ordens de magnitude maior na memória em relação ao banco de registradores, indicando que existe uma necessidade real de poder detectar e mitigar erros de memória mais rapidamente \cite{ReliabilityArmCortexUnderHeavyIons}.
+Uma outra observação foi que a memória foi duas ordens de magnitude maior em relação ao banco de registradores, indicando que é necessário um foco maior na detecção de falhas na memória \cite{ReliabilityArmCortexUnderHeavyIons}.
 
 \subsection{Application-Level Fault Tolerance in Real-Time Embedded System}
 
@@ -329,8 +331,26 @@ O trabalho demonstra também a viabilidade de prover interfaces mais abstratas q
 
 \subsection{Análise Comparativa dos trabalhos relacionados}
 
+\begin{quadro}[H]
+    \centering
+    \caption{Comparação dos trabalhos relacionados}
+    \begin{tabular}{|p{0.20\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.20\textwidth}|}
+        \hline
+        \rowcolor[HTML]{C0C0C0}
+        \textbf{Trabalho} & \textbf{Sistema} & \textbf{Hardware} & \textbf{Injeção} & \textbf{Técnicas} \\
+        \hline
 
+        Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection & Bare Metal, FreeRTOS & CY8CKIT-059 & Física e Lógica em Software & Redundância de Registradores, Deadlines, Redução de Registradores, Asserts \\
+        \hline
 
+	% [2], [*Application-Level Fault Tolerance in Real-Time Embedded System*], [BOSS], [Máquinas PowerPC 823 e um PC x86_643 não especificado], [Simulada em Software], [Redundância Modular, Deadlines, Rollback/Retry],
+	%
+	% [3], [*A Software Implemented Comprehensive Soft Error Detection Method for Embedded Systems*], [MicroC/OS-ii], [MPC555 Evaluation Board], [Lógica em Hardware], [Análise de fluxo de controle e de dados com sensibilidade à deadlines],
+	%
+	% [-], [*Este Trabalho*], [FreeRTOS], [STM32 Bluepill], [Lógica em Software e Hardware], [Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas],
+    \end{tabular}
+    \label{tab:trabRel}
+\end{quadro}
 % \renewcommand{\arraystretch}{1}
 %  \begin{quadro}[H]
 %     \centering
