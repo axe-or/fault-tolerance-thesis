@@ -419,7 +419,7 @@
 % \AtEndDocument is the last chace for include bibliography style..
 \AtEndDocument{
   \ifthenelse{\not\boolean{ABCIbibtexstyleused}}
-    {\bibliographystyle{abntex2-\AbntCitetype}}
+    {\bibliographystyle{styles/abntex2-\AbntCitetype}}
     {}
 }
 
@@ -1343,10 +1343,15 @@
 \ifthenelse{\equal{\AbntCitetype}{num}}%
 {\renewcommand{\citeauthor}[1]{\citeauthoronline{#1}\cite{#1}}}{}
 
-
 % NOTE(marcos): Adicionado para ajudar em citar fonte de figuras
-\newcommand{\figcite}[2][]{\citeauthor{#2}, \citeyear{#2}%
+\newcommand{\figcite}[2][]{\citeauthor{#2}, \citeyear{#2}
 \ifthenelse{\equal{#1}{\empty}}{}{, #1}}
+
+% NOTE(marcos): Adicionado para ajudar em citar autores de forma indireta
+\newcommand{\indirectcite}[2][]{
+    \citeauthor{#2} (\citeyear{#2})
+    \ifthenelse{\equal{#1}{\empty}}{}{, #1}
+}
 
 \endinput
 

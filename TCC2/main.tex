@@ -16,17 +16,22 @@
     brazilian,            % o último idioma é o principal do documento
     ]{styles/abntex2}
 
+
 \usepackage[alf,
-%versalete,
-abnt-emphasize = bf, % destaca o titulo da revista ou livro em negrito;
-abnt-etal-list = 3, % trabalhos com mais de 3 autores recebem et al.,;
-%abnt-etal-text = it, % escreve o et al., em italico;
-%abnt-and-type = e, % usa o caracter '&' no lugar de 'e' para mais de um autor;
-abnt-last-names = abnt, % trata sobrenomes 'estritamente' conforme a ABNT;
-abnt-repeated-author-omit = no % autores com + de uma entrada recebem '____.'
+	%versalete,
+	abnt-emphasize = bf, % destaca o titulo da revista ou livro em negrito;
+	abnt-etal-list = 3, % trabalhos com mais de 3 autores recebem et al.,;
+	%abnt-etal-text = it, % escreve o et al., em italico;
+	bibliographystyle = styles/abntex2-alf.bst,
+	%abnt-and-type = e, % usa o caracter '&' no lugar de 'e' para mais de um autor;
+	%abnt-last-names = abnt, % trata sobrenomes 'estritamente' conforme a ABNT;
+	abnt-repeated-author-omit = no % autores com + de uma entrada recebem '____.'
 ]{styles/abntex2cite}
 
+% \bibliographystyle{styles/abntex2-alf.bst}
+
 \usepackage[utf8]{inputenc}
+
 
 %\usepackage[dvipsnames]{xcolor}
 \usepackage[table,xcdraw,dvipsnames]{xcolor}
@@ -112,7 +117,7 @@ abnt-repeated-author-omit = no % autores com + de uma entrada recebem '____.'
 \textual % Indica inicio dos elementos textuais
 \pagestyle{simple} % remove o cabecalho
 \input{1_introducao.tex} \clearpage
-\input{2_fundamentacao.tex} %\clearpage
+\input{2_fundamentacao.tex} \clearpage
 \input{3_projeto.tex} \clearpage
 \input{4_consideracoes} \clearpage
 % TCC 3

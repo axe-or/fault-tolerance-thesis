@@ -1,5 +1,5 @@
-%% abntex2-alf.bst, v-1.9.7 laurocesar
-%% Copyright 2012-2018 by abnTeX2 group at http://www.abntex.net.br/ 
+%% abntex2-alf.bst, v<VERSION> laurocesar
+%% Copyright 2012-<COPYRIGHT_YEAR> by abnTeX2 group at http://www.abntex.net.br/ 
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -2031,10 +2031,10 @@ FUNCTION {set.default.abnt.variables}
   "$RCSfile: abnt-alf.bst,v $ " extract.cvs.key
   %
   "abnt-alf.bst,v " = 'abnt.alf := % #1 para abnt-alf #0 para abnt-num
-  "$Revision: v-1.9.7 $" extract.cvs.key 'abnt.bst.revision :=
+  "$Revision: v<VERSION> $" extract.cvs.key 'abnt.bst.revision :=
   #0 'abnt.and.type     :=     % #0 "e"; #1 "&"
   "\emph" 'abnt.emphasize :=
-  #0 'abnt.cite.style :=       %default norm version for NBR10520
+  #1 'abnt.cite.style :=       %default norm version for NBR10520 % NOTE(marcos): Antes do valor padrão era 0, mas foi colocado 1 para ficar de acordo com a norma de 2023
                                %#0 \cite=(AUTHOR, YEAR)
 			       %#1 \cite=(Author, YEAR)
   #0 'abnt.experimental :=
