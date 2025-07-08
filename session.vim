@@ -7,3 +7,4 @@ set breakindent
 " Ensures word-wrap does not split words
 set formatoptions=l
 set linebreak
+set expandtab

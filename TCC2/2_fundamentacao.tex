@@ -37,9 +37,9 @@ Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de o
 
 \subsection{Dependabilidade}
 
-Será utilizado o termo dependabilidade como uma propriedade que sumariza os atributos:  confiabilidade, disponibilidade, capacidade de manutenção e segurança (conhecidos em inglês como critérios RAMS. Os critérios serão definidos na seção seguinte.
+Será utilizado o termo dependabilidade como uma propriedade que sumariza os atributos:  confiabilidade, disponibilidade, capacidade de manutenção e segurança (conhecidos em inglês como critérios RAMS). Os critérios serão definidos na seção seguinte.
 
-A tolerância à falhas impacta positivamente os critérios confiabilidade e disponibilidade, e pode em alguns casos melhorar a capacidade de manutenção, sendo assim, a tolerância à falhas é um aspecto importante para sistemas com boa dependabilidade.
+A tolerância à falhas impacta positivamente os critérios confiabilidade e disponibilidade, e pode em alguns casos melhorar a capacidade de manutenção, portanto a tolerância à falhas é um aspecto importante para sistemas com dependabilidade.
 
 \subsubsection{Confiabilidade}
 
@@ -55,7 +55,7 @@ Confiabilidade (\textit{Reliability}), é a probabilidade de um sistema executar
 Disponibilidade (\textit{Availability}) é a razão entre o tempo em que o sistema não consegue prover seu serviço (\textit{downtime}) e o e seu tempo total de operação \cite{FaultInjectionTechniques}. A disponibilidade $A$ pode ser modelada em termos do tempo disponível $t_{up}$ e do tempo indisponível $t_{down}$:
 
 \begin{equation}
-    A = t_u / (t_{up} + t_{down})
+    A = t_{up} / (t_{up} + t_{down})
 \end{equation}
 \addEquacao{Disponibilidade}{3}
 
@@ -66,7 +66,7 @@ Capacidade de manutenção (\textit{Maintainability}) é a probabilidade de um s
 A modelagem deste atributo necessita de conhecimento particular sobre a aplicação e sobre a disponibilidade de equipamentos ou especialistas humanos para a realização do reparo. Pode ser definida como uma função probabilidade do tempo $t$, taxa de falhas $\lambda$ e os outros parâmetros do modelo.
 
 \begin{equation}
-    M(t) = f(t, lambda, ...)
+    M(t) = f(t, \lambda, ...)
 \end{equation}
 \addEquacao{Capacidade de Manutenção}{4}
 
@@ -84,18 +84,18 @@ Mecanismos de detecção são responsáveis por identificar a presença de uma f
 
 Os CRCs são códigos de detecção de erro comumente utilizados em redes de computador e armazenamento não volátil. Para cada segmento de dado é concatenado um valor de checagem que é calculado com base no resto da divisão com um polinômio gerador pré definido \cite{FaultTolerantSystems}.
 
-CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento e serem resilientes à "burst errors", falhas transientes que alteram uma região de bits próximos.
+CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento de dados e serem resilientes à erros em rápida sucessão, falhas transientes que alteram uma região de bits próximos.
 
 \subsubsection{Heartbeat signals}
 
-Os heartbeat signals (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de "watchdog timers" \cite{DependabilityInEmbeddedSystems}. Uma das aplicações desta técnica em conjunto com reexecução ou replicação é a possibilidade de detectar uma demora excessiva e preeptivamente cancelar uma das unidades de execução.
+Os \textit{heartbeat signals} (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de \textit{watchdog timers} \cite{DependabilityInEmbeddedSystems}. Uma das aplicações desta técnica em conjunto com reexecução ou replicação é a possibilidade de detectar uma demora excessiva e preventivamente cancelar uma das unidades de execução.
 
 \begin{figure}[H]
     \centering
-	\captionsetup{justification=centering}
+    \captionsetup{justification=centering}
     \caption{Sequência de um Heartbeat Signal}
     \includegraphics[width=1.0\textwidth]{assets/heartbeat_signal.png}\\
-	\captionsetup{justification=raggedright}
+    \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:heartbeatSignal}
 \end{figure}
@@ -106,11 +106,18 @@ Na \autoref{fig:heartbeatSignal}, é utilizado a resposta tardia para deduzir a 
 
 Asserts são mecanismos simples e flexíveis para a detecção de falhas, consistindo na verificação de uma condição que, durante uma execução normal do programa, deve permanecer invariavelmente verdadeira (denominada "invariante"). Caso a invariante seja falsa, detecta-se a presença de uma falha. A \autoref{fig:assert} ilustra o fluxo de um assert.
 
-% TODO(marcos): Fluxograma de um assert
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Fluxograma de um Assert}
+    \includegraphics[width=0.5\textwidth]{assets/assert_diagram.png}\\
+    \captionsetup{justification=raggedright}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:assert}
+\end{figure}
 
-Apesar de sua simplicidade, quando usados em conjunto com simulações determinísticas e ferramentas de \textit{fuzzer} asserts podem tanto detectar erros durante a execução assim como revelar erros de design durante a fase de desenvolvimento \cite{TigerBeetleSafety} \cite{PowerOf10Rules}.
+Apesar de sua simplicidade, quando usados em conjunto com simulações determinísticas e ferramentas de \textit{fuzzying}, asserts podem detectar erros durante a execução assim como revelar erros de design durante a fase de desenvolvimento \cite{TigerBeetleSafety} \cite{PowerOf10Rules}.
 
-% TODO(marcos): citar Spark e ou C3 pre/post conditions
 Durante a execução de um sistema tolerante à falhas, asserts servem como uma forma de saber rapidamente que algo errado aconteceu. Porém não são robustos o suficiente para detectar corrupção silenciosa de dados ou pulos inesperados de maneira consistente. Quando asserts são inseridos na entrada ou saída de um procedimento são denominados como pré-condições e pós-condições respectivamente. Alguns compiladores são capazes de automaticamente inserir estas condições para assegurar contratos da interface de um programa. Algumas linguagens de programação, utilizam de uma forma automática de asserts chamados de "contratos", que podem ser usados para garantir certas pós e pré condições, certos compiladores como o da linguagem SPARK fazem uso destas capacidades para realizar verificação formal de um programa \cite{SPARKContracts}.
 
 \subsection{Mecanismos de Tratamento}
@@ -119,9 +126,9 @@ Uma vez que uma falha tenha sido detectada o sistema precisa tratar a falha o ma
 
 \subsubsection{Re-execução}
 
-Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa. \cite{DependabilityInEmbeddedSystems}
+Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa \cite{DependabilityInEmbeddedSystems} \cite{SchedAndOptOfDistributedFT}.
 
-Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência espacial "É improvável que uma falha ocorra em vários lugares ao mesmo tempo", enquanto a re-execução depende de uma resiliência temporal "É improvável que múltiplas falhas ocorram repetidamente em $N$ execuções" \cite{FaultTolerantSystems}.
+Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em troca de um tempo menor de execução médio sem necessitar de componentes extras. Em contraste com a técnica de redundância tripla, é possível entender que a redundância tripla ou "tradicional", depende de uma resiliência espacial "É improvável que uma falha ocorra em vários lugares ao mesmo tempo", enquanto a re-execução depende de uma resiliência temporal: É menos provável que múltiplas falhas ocorram repetidamente em $N$ execuções \cite{FaultTolerantSystems}.
 
 \begin{figure}[H]
     \centering
@@ -159,9 +166,9 @@ Sistemas distribuídos, sejam estes embarcados ou não, também podem aproveitar
 
 Uma otimização comum que compiladores realizam é desenrolar laços de repetição (Loop Unrolling) com a finalidade de reduzir erros no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no laço durante a compilação. \cite{LoopUnrollingARM}.
 
-Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada. Ao reduzir a quantidade de pulos é possível melhorar a coerência do cache de instruções além de permitir outras otimizações durante os passes otimizantes do compilador \cite{EngineeringACompiler}, causando uma melhora na performance. No caso de tolerância à falhas, ao reduzir a quantia de jumps e prover redundância de instruções, o inlining pode também reduzir a chance de um salto inadequado. %TODO(marcos): citar aqui tbm
+Outra transformação comum é o inlining de funções, onde o corpo de uma função é copiado como se o código tivesse sido diretamente escrito em seu ponto de chamada. Ao reduzir a quantidade de pulos é possível melhorar a coerência do cache de instruções além de permitir outras otimizações durante os passes otimizantes do compilador \cite{EngineeringACompiler}, causando uma melhora na performance. No caso de tolerância à falhas, ao reduzir a quantia de jumps e prover redundância de instruções, o inlining pode também reduzir a chance de um salto inadequado \cite{MakingReliableDistSystems}. %TODO(marcos): citar aqui tbm
 
-Importante ressaltar que realizar inlining e unrolling excessivamente agressivo tem o efeito oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas otimizações saturam o cache de instruções, utilizam de mais registradores e ocupam espaço desnecessário no executável \cite{EngineeringACompiler}. Portanto, é importante que estas técnicas não sejam aplicadas de forma arbitrária e que seu uso seja acompanhado de medição para confirmar sua efetividade.
+Importante ressaltar que aplicar \textit{function inlining} e \textit{loop unrolling} de forma excessiva pode resultar no oposto do que se deseja no quesito de performance, quando aplicadas de forma agressiva, essas otimizações saturam o cache de instruções, utilizam de mais registradores e ocupam espaço desnecessário no executável \cite{EngineeringACompiler}. Portanto, é importante que estas técnicas não sejam aplicadas de forma arbitrária e que seu uso seja acompanhado de medição para confirmar sua efetividade.
 
 \subsection{Injeção de falhas}
 
@@ -184,28 +191,27 @@ Sistemas embarcados são uma família vasta de sistemas computacionais, algumas 
 
 \textbf{Limitação de recursos}: Um corolário da natureza especialista destes sistemas, é que recursos alocados para o sistema são definidos previamente. No caso de microcontroladores o poder de processamento e quantidade de memória podem ser restritos para satisfazer uma necessidade de baixo custo de fabricação e menor consumo energético \cite{ComputerOrganizationAndDesign}. Importante notar que existem sistemas embarcados com acesso maior à recursos, como certos equipamentos de rede e aceleradores, mas os recursos do sistema continuam estaticamente delimitados para cumprir sua função específica.
 
-\textbf{Critério Temporal}: Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de interrupção para a funcionalidade geral do contexto externo \cite{OperatingSystemConcepts}. A importância do tempo de execução de uma tarefa de um sistema pode ser classificada em duas principais categorias: soft Real-Time, e hard Real-Time, a distinção entre estas categorias é explicada na seção seguinte.
+\textbf{Critério Temporal}: Sistemas embarcados, por serem parte de um todo maior, devem realizar sua função com o mínimo de interrupção para a funcionalidade geral do contexto externo \cite{OperatingSystemConcepts}. A importância do tempo de execução de uma tarefa de um sistema pode ser classificada em duas principais categorias: Soft Real-Time , e Hard Real-Time , a distinção entre estas categorias é explicada na seção seguinte.
 
 \subsection{Sistemas Operacionais de Tempo-Real}
 
 Um sistema operacional é um conjunto de software que permite o gerenciamento e interação com os recursos do hardware através de uma camada de abstração. O componente essencial de um sistema operacional é o kernel, que sempre está executando, A função primordial do kernel é viabilizar a coexistência de diversas tarefas no sistema, as quais demandam acesso às capacidades do hardware, notadamente o tempo de processamento da CPU e o espaço de memória. De forma simplificada, o kernel pode ser descrito como a "cola" entre as aplicações e os recursos de hardware \cite{OperatingSystemConcepts}.
 
-Um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional mais especializado, tipicamente pequeno, que possui como característica central cumprir um critério temporal Real-Time, que é dividido em 2 categorias:
+Um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional mais especializado, tipicamente pequeno, que possui como característica central cumprir um critério temporal Real-Time , que é dividido em 2 categorias:
 
 \begin{itemize}
-    \item \textbf{Soft Real Time}: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas soft Real-Time tipicamente operam na escala de milissegundos, isto é, percepção humana \cite{SchedAndOptOfDistributedFT}. O atraso de uma tarefa em um sistema soft Real-Time não é desejável, mas não constitui uma falha. Exemplos: Player de DVD, videogames, kiosks de atendimento automáticos.
+    \item \textbf{Soft Real-Time }: Um sistema que garante essa propriedade precisa sempre garantir que tarefas de  maior importância tenham prioridade sobre as de menor importância. Sistemas Soft Real-Time  tipicamente operam na escala de milissegundos, isto é, percepção humana \cite{SchedAndOptOfDistributedFT}. O atraso de uma tarefa em um sistema Soft Real-Time  não é desejável, mas não constitui uma falha. Exemplos: Player de DVD, videogames, kiosks de atendimento automáticos.
     
-    \item \textbf{Hard Real Time}: Precisam garantir as propriedades de soft real-time, além disso, o atraso de uma tarefa de seu prazo, é inaceitável, para um sistema hard real-time uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas hard Real-Time, pois muitas vezes aparacem em contextos críticos \cite{ModernOperatingSystems}. Exemplos: Software para sistema de frenagem, sistemas de navegação em aplicações aeroespaciais, software de negociação de alta frequência, fila de mensagens de alta performance
+    \item \textbf{Hard Real-Time }: Precisam garantir as propriedades de Soft Real-Time , além disso, o atraso de uma tarefa de seu prazo, é inaceitável, para um sistema Hard Real-Time  uma resposta com atraso é o mesmo que resposta nenhuma. Cuidado adicional deve ser utilizado ao projetar sistemas Hard Real-Time , pois muitas vezes aparacem em contextos críticos \cite{ModernOperatingSystems}. Exemplos: Software para sistema de frenagem, sistemas de navegação em aplicações aeroespaciais, software de negociação de alta frequência, fila de mensagens de alta performance
 \end{itemize}
 
-Como sistemas que cumprem o critério Hard Real-Time também cumprem os requisitos Soft Real-Time, os sistemas operacionais de tempo real tipicamente tem sua arquitetura orientada a serem capazes de cumprir o critério Hard Real-Time \cite{SchedAndOptOfDistributedFT}.
+Como sistemas que cumprem o critério Hard Real-Time também cumprem os requisitos Soft Real-Time, os sistemas operacionais de tempo real tipicamente tem sua arquitetura orientada a serem capazes de cumprir o critério Hard Real-Time  \cite{SchedAndOptOfDistributedFT}.
 
-Diferentemente de sistema operacionais focados em uso geral como Windows, Linux e OSX, os RTOSes não buscam priorizaram fornecer ao usuário uma sensação de fluidez com o mesmo grau de dinamicidade. Devido à seus requisitos temporais rígidos, um RTOS é feito com um enfoque significativo em determinismo, confiabilidade e simplicidade, para garantir que tarefas sejam executadas com um respeito estrito de seus prazos \cite{OperatingSystemConcepts}. Exemplos de RTOS disponíveis no mercado incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
+Diferentemente de sistema operacionais focados em uso geral como Windows, Linux e OSX, os RTOSes não priorizam fornecer ao usuário uma sensação de fluidez e adaptabilidade. Devido à seus requisitos temporais rígidos, um RTOS é feito com um foco significativo em determinismo, confiabilidade e simplicidade, para garantir que tarefas sejam executadas com um respeito estrito de seus prazos \cite{OperatingSystemConcepts}. Exemplos de RTOS disponíveis no mercado incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 \subsection{Escalonador}
 
-% TODO: Termos em ingles
-O escalonador é o componente do sistema operacional responsável por gerenciar múltiplas tarefas que desejam executar \cite{OperatingSystemConcepts}, sendo um componente extramente crucial, a implementação do escalonador deve garantir que tarefas de alta prioridade executem antes e que a a troca de contexto seja o mais rápido possível, o algoritmo de escalonamento é o fator central para o comportamento do escalonador, sendo categorizados em 2 grandes grupos:
+O escalonador é o componente do sistema operacional responsável por gerenciar múltiplas tarefas que desejam executar \cite{OperatingSystemConcepts}, sendo um componente extramente crucial, a implementação do escalonador deve garantir que tarefas de alta prioridade executem antes e que a a troca de contexto seja o mais rápido possível. O algoritmo de escalonamento é o fator central para o comportamento do escalonador, sendo categorizados em dois princpais grupos:
 
 \begin{itemize}
     \item \textbf{Cooperativos}: Tarefas precisam voluntariamente devolver o controle da CPU (com exceção de certas interrupções de hardware) para que as outras tarefas possam executar, isso pode ser feito explicitamente por uma função de largar ou implicitamente ao utilizar uma rotina assíncrona do sistema, como ler arquivos, receber pacotes de rede ou aguardar um evento \cite{OperatingSystemConcepts}.
@@ -213,13 +219,27 @@ O escalonador é o componente do sistema operacional responsável por gerenciar 
     \item \textbf{Preemptivos}: Além de poderem transferir a CPU manualmente, o escalonador forçará trocas de contexto caso uma condição para a troca seja satisfeita. O algoritmo mais comum que serve de base para diversos escalonadores preemptivos é o Round-Robin onde tarefas possuem uma quantia de tempo máximo alocada para sua execução contínua, nomeada "fatia de tempo" ou "quantum" \cite{ModernOperatingSystems}. Tarefas ainda podem possuir relações de prioridade, alterando a ordem que o escalonador realiza seu despache assim como o tamanho de sua fatia de tempo.
 \end{itemize}
 
-Sistemas operacionais de tempo real são tipicamente executados no modo totalmente preemptivo, mas o uso cooperativo também é viável e possui a vantagem de possuir o controle para o gerenciamento de tarefas, mas é importante que seja tomado o cuidado adequado para que nenhum prazo de execução hard Real-Time seja violado por uma tarefa inadvertidamente utilizando a CPU por uma quantidade longa de tempo.
+Sistemas operacionais de tempo real são tipicamente executados no modo totalmente preemptivo, mas o uso cooperativo também é viável e possui a vantagem de possuir um controle mais granular da execução das tarefas, mas é importante que seja tomado o cuidado adequado para que nenhum prazo de execução Hard Real-Time seja violado por uma tarefa inadvertidamente utilizando a CPU por uma quantidade longa de tempo.
 
 \subsection{Concorrência e Assincronia}
 
 Será utilizado a definição de concorrência como a habilidade de um sistema de lidar com múltiplas tarefas computacionais dividindo seus recursos (particularmente tempo de CPU e memória). Isto é, um sistema não necessariamente precisa ser paralelo (execuções múltiplas simultâneas) para possuir concorrência, mas para tornar paralelismo viável, o sistema necessita de mecanismos de concorrência \cite{MakingReliableDistSystems}.
 
-Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressividade do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e caches da CPU. O processo de acessar um recurso é deve lidar com o fato de ser assíncrono. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocioso \cite{OperatingSystemConcepts}. Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+Uma característica central para a utilidade de concorrência mesmo em situações em que paralelismo é limitado ou impossível vai além da pura expressividade do programador, existem assimetrias grandes na velocidade de acesso de disco, memória, rede, e caches da CPU como demonstrado na \autoref{fig:latencia}. Para acessar recursos de forma eficaz, é necessário lidar com suas características inerentemente assíncronas. O uso de concorrência permite que uma tarefa seja suspensa e resumida (voluntariamente ou não) o que permite que o sistema não fique excessivamente ocioso \cite{OperatingSystemConcepts}.
+
+\begin{figure}[H]
+    \centering
+	\captionsetup{justification=centering}
+    \caption{Hierarquia de latência de acessos}
+    \includegraphics[width=1.0\textwidth]{assets/latency_hierarchy.png}
+	\captionsetup{justification=raggedright}
+    \caption*{Fonte: \figcite{ModernOperatingSystems}}
+    \label{fig:latencia}
+\end{figure}
+
+Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local
+%TODO livro de iface e impl em c
+, violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
 
 É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de relógio das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
 
