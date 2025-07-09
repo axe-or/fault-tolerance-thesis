@@ -1,21 +1,3 @@
-% Comentários Douglas
-%  - Rever os objetivos específicos e geral para deixar mais explicativo e fechar melhor o escopo
-%  - Materiais antes de métodos
-%  - Trabalhos relacionados pode ser melhor explorados
-%  - Fraco refereciamento em vários itens do texto
-%  - Muitas palavras em inglês
-%  - Melhorar requisito funcionais
-%  - Falta um texto de suporte do visão geral
-%  - Faltam diagramas para suportar a implementação (e não dos testes) junto ou talvez substituir trechos de código
-
-% Comentários Tiago
-%  - Destacar melhor características de tempo real: se não injetar nenhuma falta o seu sistema pode falhar?
-%  - Destacar que o sistema é de tempo real e qual é o requisito de tempo real
-%  - heartbit talvez seja a técnica para atrelar em teste de atender o requisito de tempo real.
-%  - Plano de teste alinhados com os requisitos
-%  - Diagramas de sequência (ou fluxograma) entre outros para descrever os testes 
-%  - Analisar cronograma para realizar os testes
-
 \chapter{Projeto}
 \label{cap:proj}
 
@@ -133,16 +115,13 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         \textbf{RF04} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas \\
         \hline
 
-        \textbf{RF05} & Detecção e reação à falhas de corrupção de memória \\
-        \hline
-
-        \textbf{RF06} & Detecção e reação à falhas de vencimento de prazo de execução \\
+        \textbf{RF05} & Dependabilidade superior à versão do sistema sem técnicas \\
         \hline
         
-        \textbf{RF07} & Monitoramento do número de falhas detectadas e violações de prazos  \\
+        \textbf{RF06} & Monitoramento do número de falhas detectadas e violações de prazos  \\
         \hline
         
-        \textbf{RF08} & Comunicação entre tarefas por uma fila com checagem dos pacotes \\
+        \textbf{RF07} & Comunicação entre tarefas por uma fila com checagem dos pacotes \\
         \hline
     \end{tabular}
     \label{tab:rf}
@@ -272,21 +251,21 @@ Asserts serão utilizados para verificar invariantes, qualquer quebra de contrat
 
 \section{Plano de Verificação}
 
-Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, \textbf{RF08}) será feito uma série de testes unitários e de integração, para garantir que as técnicas estejam ao menos corretamente implementadas antes de realizar qualquer tipo de medição.
+Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, \textbf{RF07}) será feito uma série de testes unitários e de integração, para garantir que as técnicas estejam ao menos corretamente implementadas antes de realizar qualquer tipo de medição.
 
-A validação da detecção de falhas e vencimento de prazos (\textbf{RC05}, \textbf{RF07}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software utilizando o emulador QEMU com a mesma arquitetura de processador executando o sistema FreeRTOS e será validado definitivamente durante o teste com injeção lógica em hardware. A capacidade de criar, destruir e cancelar tarefas (\textbf{RF02}) é um pré-requisito e será verificada com um simples teste ponta a ponta. Importante notar que a priorização de tarefas baseadas em seu número de prioridade já é implementada pelo próprio FreeRTOS.
+A validação da detecção de falhas e vencimento de prazos (\textbf{RF05}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software utilizando o emulador QEMU com a mesma arquitetura de processador executando o sistema FreeRTOS e será validado definitivamente durante o teste com injeção lógica em hardware. A capacidade de criar, destruir e cancelar tarefas (\textbf{RF02}) é um pré-requisito e será verificada com um simples teste ponta a ponta. Importante notar que a priorização de tarefas baseadas em seu número de prioridade e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
 
 Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
 
 \subsection{Campanha de Injeção de Falhas} \label{subsec:campanhaInjecao}
 
-Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador STLink. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
+Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-As falhas injetadas serão falhas transientes de memória onde $N$ bytes a partir de um endereço base são escolhidos e invertidos com um XOR de uma mascara aleatória, as regiões de memória escolhidas serão o segmento estático com escrita, a pilha das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rodadas (e.x: 200) e terão suas métricas coletadas e  catalogadas para análise posterior.
+As falhas injetadas serão falhas transientes de memória onde $N$ bytes a partir de um endereço base são escolhidos e invertidos com um XOR de uma mascara aleatória, as regiões de memória escolhidas serão o segmento estático com escrita, a pilha das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rodadas (e.x: 200) e terão suas métricas coletadas e catalogadas para análise posterior.
 
 Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica. A região de coleta das métricas será reservada previamente na seção estática da imagem do executável e será isenta de falhas.
 
-Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica como grupo de controle, técnicas simples (CRC e Asserts) que não interferem na execução e combinações de técnicas que alteram o fluxo do programa (Reexecução e Replicação) com e sem validação de prazo via sinal heartbeat.
+Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica como grupo de controle, técnicas simples (CRC e Asserts) que não interferem na execução e combinações de técnicas que alteram o fluxo do programa (Reexecução e Replicação) com e sem validação de prazo via sinal heartbeat. As combinações estão listadas no \autoref{tab:combinacoesTecnicas}.
 
 \begin{quadro}[H]
     \centering
@@ -341,4 +320,22 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
 
 % -- TODO ---
 % Novo digrama pro heartbeat signal
+
+% Comentários Douglas
+%  - Rever os objetivos específicos e geral para deixar mais explicativo e fechar melhor o escopo
+%  - Materiais antes de métodos
+%  - Trabalhos relacionados pode ser melhor explorados
+%  - Fraco refereciamento em vários itens do texto
+%  - Muitas palavras em inglês
+%  - Melhorar requisito funcionais
+%  - Falta um texto de suporte do visão geral
+%  - Faltam diagramas para suportar a implementação (e não dos testes) junto ou talvez substituir trechos de código
+
+% Comentários Tiago
+%  - Destacar melhor características de tempo real: se não injetar nenhuma falta o seu sistema pode falhar?
+%  - Destacar que o sistema é de tempo real e qual é o requisito de tempo real
+%  - heartbit talvez seja a técnica para atrelar em teste de atender o requisito de tempo real.
+%  - Plano de teste alinhados com os requisitos
+%  - Diagramas de sequência (ou fluxograma) entre outros para descrever os testes 
+%  - Analisar cronograma para realizar os testes
 
