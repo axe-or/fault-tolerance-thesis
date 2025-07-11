@@ -41,7 +41,7 @@ Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principa
     \caption{Diagrama da STM32F103C8T6 ("Bluepill")}
     \includegraphics[width=0.80\textwidth]{assets/stm32_bluepill.png}
     \captionsetup{justification=raggedright}
-    \caption*{Fonte: \figcite{STMBoardProductPage}}
+    \caption*{Fonte: \citefigure{STMBoardProductPage}}
     \label{fig:stm32Bluepill}
 \end{figure}
 
@@ -51,19 +51,19 @@ Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma f
     \centering
     \captionsetup{justification=centering}
     \caption{ST-LINK/V2}
-    \includegraphics[width=0.50\textwidth]{assets/st_link.png}
+    \includegraphics[width=0.40\textwidth]{assets/st_link.png}
     \captionsetup{justification=raggedright}
-    \caption*{Fonte: \figcite{STLinkProductPage}}
+    \caption*{Fonte: \citefigure{STLinkProductPage}}
     \label{fig:stLink}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
-    \caption{ST-LINK/V2}
-    \includegraphics[width=0.80\textwidth]{assets/stmcube_ide.png}
+    \caption{STMCubeIDE}
+    \includegraphics[width=0.65\textwidth]{assets/stmcube_ide.png}
     \captionsetup{justification=raggedright}
-    \caption*{Fonte: \figcite{STMCubeProductPage}}
+    \caption*{Fonte: \citefigure{STMCubeProductPage}}
     \label{fig:stmCubeIDE}
 \end{figure}
 
@@ -81,7 +81,7 @@ Para a criação da análise, serão realizados testes com injeção lógica em 
    \centering
    \captionsetup{justification=centering}
    \caption{Injeção lógica em hardware}
-   \includegraphics[width=0.90\textwidth]{assets/injecao_hardware.png}
+   \includegraphics[width=0.85\textwidth]{assets/injecao_hardware.png}
    \captionsetup{justification=raggedright}
   \caption*{Fonte: Elaborada pelo autor}
    \label{fig:injecaoHardwareLogica}
@@ -164,7 +164,7 @@ Uma mensagem envelopa um pacote de dados qualquer para que possa ser enviado de 
     \centering
     \captionsetup{justification=centering}
     \caption{Layout de uma mensagem}
-    \includegraphics[width=0.60\textwidth]{assets/payload_layout.png}
+    \includegraphics[width=0.50\textwidth]{assets/payload_layout.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:messageStruct}
@@ -209,7 +209,7 @@ Para a aplicação da redundância modular, neste caso a redundância modular tr
     \centering
     \captionsetup{justification=centering}
     \caption{Diagrama de bloco de Redundância modular}
-    \includegraphics[width=0.975\textwidth]{assets/tmr_bdd.png}
+    \includegraphics[width=0.950\textwidth]{assets/tmr_bdd.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:bddTMR}
@@ -225,7 +225,7 @@ Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina
     \centering
     \captionsetup{justification=centering}
     \caption{Estados de uma reexecução}
-    \includegraphics[width=0.950\textwidth]{assets/state_reexec.png}
+    \includegraphics[width=0.925\textwidth]{assets/state_reexec.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:stateReexec}
@@ -239,7 +239,7 @@ Para a implementação dos sinais de heartbeat será utilizado uma tarefa que se
     \centering
     \captionsetup{justification=centering}
     \caption{Estados de uma reexecução}
-    \includegraphics[width=0.975\textwidth]{assets/heartbeat_signal.png} %TODO: Imagem melhor
+    \includegraphics[width=0.95\textwidth]{assets/heartbeat_signal.png} %TODO: Imagem melhor
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:heartbeatAdv}
@@ -291,6 +291,15 @@ Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica
     \label{tab:combinacoesTecnicas}
 \end{quadro}
 
+\subsection{Programas de Teste}
+
+Para testar a viabilidade e o impacto das técnicas implementadas, serão desenvolvidas duas aplicações pequenas para testes. A primeira realizará um filtro passa-banda com no domínio da frequência (necessitando de uma transformada de Fourier) de uma onda fornecida como entrada, o processamento será feito em lotes. Já o segundo programa realizará uma convolução bidimensional para aplicar um filtro Laplaciano.
+
+A escolha da primeira aplicação serve primariamente testar uma operação que dependa de múltiplos acessos e modificações à memória e que possa demonstrar capacidades de processamento assíncronas (padrão produtor/consumidor), que são particularmente importantes ao se lidar com múltiplas interrupções causadas por temporizadores ou IO.
+
+Já o segundo programa, de natureza mais simples, visa causar alto estresse em termos de leituras, juntamente com muitas operações aritméticas, mas com menos ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas em um caso mais extremo que requer muito processamento.
+
+Ambos os programas são problemas que requerem um uso de CPU relativamente alto, o que pode auxiliar a notar violações do critério de tempo real ou uma variação muito grande no tempo de execução, que não é muito desejada mesmo que cumpra o prazo. As implementações dos algoritmos para estes programas são primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
@@ -316,6 +325,49 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
     \end{tabular}
     \label{tab:riscos}
 \end{quadro}
+
+\section{Cronograma do TCC3}
+
+\begin{quadro}[H]
+    \centering
+    \caption{Combinações de técnicas utilizadas}
+    \begin{tabular}{|p{0.25\textwidth}|c|c|c|c|c|c|c|}
+    \hline
+    \rowcolor[HTML]{C0C0C0}
+    \hline
+    \textbf{Atividade} & \textbf{07/2025} & \textbf{08/2025} & \textbf{09/2025} & \textbf{10/2025} & \textbf{11/2025} & \textbf{12/2025} \\
+    \hline
+    Escrita da Monografia                           & XXXX & XXXX & XXXX & XXXX  & XX-- & ---- \\
+    \hline
+    Implementação dos Algoritmos                    & XXXX & XX-- & ---- & ----  & ---- & ---- \\
+    \hline
+    Testes dos Algoritmos                           & XXXX & XX-- & ---- & ----  & ---- & ---- \\
+    \hline
+    Implementação dos Programas Exemplo             & ---- & --XX & XXX- & ----  & ---- & ---- \\
+    \hline
+    Teste dos Programas Exemplo                     & ---- & --XX & XXX- & ----  & ---- & ---- \\
+    \hline
+    Implementação da Injeção com Hardware           & ---- & ---- & -XXX & XX--  & ---- & ---- \\
+    \hline
+    Execução microcontrolador e coleta das métricas & ---- & ---- & ---- & XXXX  & X--- & ---- \\
+    \hline
+    Revisão Textual                                 & ---- & ---- & ---- & --XX  & XXXX & XX-- \\
+    \hline
+    \end{tabular}
+    \label{tab:riscos}
+\end{quadro}
+
+
+  % table.header([*Atividade*], [*07/2025*], [*08/2025*], [*09/2025*], [*10/2025*], [*11/2025*], [*12/2025*]),
+  % [Escrita da Monografia],                           [`XXXX`], [`XXXX`], [`XXXX`], [`XXXX`],  [`XXXX`], [`X___`],
+  % [Implementação dos Algoritmos],                    [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  % [Testes dos Algoritmos],                           [`XXXX`], [`XX__`], [`____`], [`____`],  [`____`], [`____`],
+  % [Implementação dos Programas Exemplo],             [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  % [Teste dos Programas Exemplo],                     [`____`], [`__XX`], [`XXX_`], [`____`],  [`____`], [`____`],
+  % [Implementação da Injeção com Software],           [`____`], [`____`], [`XXXX`], [`____`],  [`____`], [`____`],
+  % [Implementação da Injeção com Hardware],           [`____`], [`____`], [`__XX`], [`XXX_`],  [`____`], [`____`],
+  % [Execução microcontrolador e coleta das métricas], [`____`], [`____`], [`____`], [`__XX`],  [`XXXX`], [`____`],
+  % [Revisão Textual],                                 [`____`], [`____`], [`____`], [`____`],  [`__XX`], [`XXXX`],
 
 
 % -- TODO ---

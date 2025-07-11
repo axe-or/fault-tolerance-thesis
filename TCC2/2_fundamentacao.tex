@@ -230,9 +230,9 @@ Uma característica central para a utilidade de concorrência mesmo em situaçõ
     \centering
     \captionsetup{justification=centering}
     \caption{Hierarquia de latência de acessos}
-    \includegraphics[width=1.0\textwidth]{assets/latency_hierarchy.png}
+    \includegraphics[width=0.8\textwidth]{assets/latency_pyramid.png}
     \captionsetup{justification=raggedright}
-    \caption*{Fonte: \figcite{ModernOperatingSystems}}
+    \caption*{Fonte: Adaptado de \citefigure{ModernOperatingSystems}}
     \label{fig:latencia}
 \end{figure}
 
@@ -296,7 +296,7 @@ Durante a pesquisa bibliográfica para a fundamentação deste trabalho, foram s
 
 \subsection{Reliability Assessment of Arm Cortex-M Processors under Heavy Ions and Emulated Fault Injection}
 
-No trabalho de \indirectcite{ReliabilityArmCortexUnderHeavyIons} utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas em software para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software, como indicado na figura \autoref{fig:trabRelIonsPesados}.
+No trabalho de \citeindirect{ReliabilityArmCortexUnderHeavyIons} utilizam de um sistema COTS e criam um perfil de falhas com exposição a íons pesados assim como injeção artificial de falhas em software para posteriormente realizar uma adição de formas de detecção de falhas para melhorar a confiabilidade do sistema. Foi possível detectar mais da metade das falhas funcionais apenas com técnicas de software, como indicado na figura \autoref{fig:trabRelIonsPesados}.
 
 \begin{figure}[H]
     \centering
@@ -304,7 +304,7 @@ No trabalho de \indirectcite{ReliabilityArmCortexUnderHeavyIons} utilizam de um 
     \caption{Análise de resiliência, dividida por categoria}
     \includegraphics[width=0.75\textwidth]{assets/related_works_heavy_ion_reliability.png}
     \captionsetup{justification=raggedright}
-    \caption*{Fonte: \figcite{ReliabilityArmCortexUnderHeavyIons}}
+    \caption*{Fonte: \citefigure{ReliabilityArmCortexUnderHeavyIons}}
     \label{fig:trabRelIonsPesados}
 \end{figure}
 
@@ -312,17 +312,17 @@ Uma outra observação foi que a memória foi duas ordens de magnitude maior em 
 
 \subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
 
-O trabalho de \indirectcite{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
+O trabalho de \citeindirect{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
 
 \subsection{Application-Level Fault Tolerance in Real-Time Embedded System}
 
-No trabalho de \indirectcite{ApplicationLevelFT} são apresentada técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface. O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando tarefas resilientes \cite{ApplicationLevelFT}. Um caso de estudo de um sistema de filtragem de radar é utilizado como projeto.
+No trabalho de \citeindirect{ApplicationLevelFT} são apresentada técnicas de tolerância à falhas em um sistema operacional chamado BOSS, é utilizado uma interface de thread com a implementação de tolerância conformando à interface. O trabalho naturalmente explora o escalonador mas não entra em detalhamento profundo na parte de detecção, mas sim de prover uma biblioteca na forma de classes representando tarefas resilientes \cite{ApplicationLevelFT}. Um caso de estudo de um sistema de filtragem de radar é utilizado como projeto.
 
 O trabalho demonstra também a viabilidade de prover interfaces mais abstratas que ainda sejam capazes de executar em sistemas de recursos restritos. Demonstraram-se resultados favoráveis para uma forma híbrida de tolerância com menor uso de CPU em relação à redundância tripla utilizando de técnicas em software combinado com um par de processadores com auto checagem (PSP).
 
 \subsection{Análise Comparativa dos trabalhos relacionados}
 
-Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura é o de \indirectcite{ApplicationLevelFT} e o mais similar em termos de técnicas de injeção e materiais utilizados a técnica de confiabilidade apresentada em \indirectcite{TecnicaConfiabilidadeRISCV}. O \autoref{tab:trabRel} demonstra as principais diferenças entre os trabalhos.
+Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura é o de \citeindirect{ApplicationLevelFT} e o mais similar em termos de técnicas de injeção e materiais utilizados a técnica de confiabilidade apresentada em \citeindirect{TecnicaConfiabilidadeRISCV}. O \autoref{tab:trabRel} demonstra as principais diferenças entre os trabalhos.
 
 \begin{quadro}[H]
     \centering
@@ -333,13 +333,13 @@ Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura
         \textbf{Trabalho} & \textbf{Sistema} & \textbf{Hardware} & \textbf{Injeção} & \textbf{Técnicas} \\
         \hline
 
-        \figcite{ReliabilityArmCortexUnderHeavyIons} & Bare Metal, FreeRTOS & CY8CKIT-059 & Física e Lógica em Software & Redundância de Registradores, Deadlines, Redução de Registradores, Asserts \\
+        \citefigure{ReliabilityArmCortexUnderHeavyIons} & Bare Metal, FreeRTOS & CY8CKIT-059 & Física e Lógica em Software & Redundância de Registradores, Deadlines, Redução de Registradores, Asserts \\
         \hline
 
-        \figcite{TecnicaConfiabilidadeRISCV} & RISC-V Emulado no QEMU & Microkernel de \indirectcite{BasicMicrokernelForRISCV} & Emulada em Software & Redundância Modular, Segurança de memória extra (Borrow checker do Rust) \\
+        \citefigure{TecnicaConfiabilidadeRISCV} & RISC-V Emulado no QEMU & Microkernel de \citeindirect{BasicMicrokernelForRISCV} & Emulada em Software & Redundância Modular, Segurança de memória extra (Borrow checker do Rust) \\
         \hline
 
-        \figcite{ApplicationLevelFT} & BOSS & Máquinas PowerPC 823 e um PC x86\_64 não especificado & Simulada em Software & Redundância Modular, Deadlines, Rollback/Retry \\
+        \citefigure{ApplicationLevelFT} & BOSS & Máquinas PowerPC 823 e um PC x86\_64 não especificado & Simulada em Software & Redundância Modular, Deadlines, Rollback/Retry \\
         \hline
 
         Este Trabalho & FreeRTOS & STM32 Bluepill & Lógica em Software e Hardware & Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas \\
@@ -349,24 +349,3 @@ Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura
     \label{tab:trabRel}
 \end{quadro}
 
-% \renewcommand{\arraystretch}{1}
-%  \begin{quadro}[H]
-%     \centering
-%     \caption{Comparação de trabalhos relacionados}
-%     \label{tab:trabrel}
-%     \begin{tabular}{|m{0.126\textwidth}|m{0.135\textwidth}|m{0.10\textwidth}|m{0.115\textwidth}|m{0.11\textwidth}|m{0.18\textwidth}|}
-%         \hline
-%         \rowcolor[HTML]{C0C0C0}
-%         \textbf{Trabalho}  & \textbf{CNN base} & \textbf{Imagem} & \textbf{Tipo de Resolução} & \textbf{$\mu$C} & \textbf{Métricas} \\ \hline
-        
-%         \Centering\textbf{\citeDir{azami2022earth}}  & ShallowNet, LeNet e MiniVGGNet & RGB & Espacial e Espectral & Raspberry Pi 3+ & Acurácia \\ \hline
-        
-%         \Centering\textbf{\citeDir{maskey2020cubesatnet}}  & CubeSatNet & RGB & Espacial e Espectral & STM32H & Acurácia Global, \textit{F1-score} e Memória \\ \hline 
-        
-%         \Centering\textbf{\citeDir{leong2021unet}}  & U-net & RGB & Espacial e Espectral & STM32F7 & Precisão, Sensibilidade, Falso Negativo, Falso Positivo, Acurácia Global, \textit{F1-score} e Memória \\ \hline
-        
-%         \Centering\textbf{Este trabalho}  & LeNet-5 e HybridSN & HSI & Espectral & ESP32 e/ou Raspberry Pi Pico & Acurácia, F1-Score, Sensibilidade, Tempo de Processamento, Memória Utilizada, Potência Dissipada e Energia Consumida\\ \hline
-%     \end{tabular}
-%  \end{quadro}
-%  \renewcommand{\arraystretch}{1}
- 
