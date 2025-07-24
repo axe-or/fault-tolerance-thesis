@@ -1,4 +1,5 @@
-#include "base.hpp"
+#include "base/base.hpp"
+#include "base/strings.hpp"
 
 constexpr u32 crc32_poly = 0xedb88320;
 
@@ -20,6 +21,6 @@ u32 crc32(Slice<u8> bytes){
 
 int main(){
 	String msg = "123456789";
-	printf("%08x\n", crc32(raw_data(msg)));
+	printf("%08x\n", crc32(raw_bytes(msg)));
 }
 

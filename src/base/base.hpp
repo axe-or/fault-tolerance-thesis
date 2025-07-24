@@ -24,6 +24,10 @@ T clamp(T lo, T x, T hi){
 	return min(max(lo, x), hi);
 }
 
+#ifndef static_assert
+	#define static_assert(Pred, Msg) _Static_assert((Pred), "" Msg "")
+#endif
+
 #if defined(compiler_vendor_clang) || defined(compiler_vendor_gcc)
 	#define attribute_force_inline __attribute__((always_inline))
 #elif defined(compiler_vendor_msvc)
@@ -73,10 +77,9 @@ static_assert(
 	#define debug_ensure(Pred, Msg) ensure_ex((Pred), (Msg), __FILE__, __LINE__)
 #endif
 
-// TODO: remove hosted impl
 extern "C" {
-	int printf(char const*, ...) noexcept;
-	[[noreturn]] void abort() noexcept;
+	int printf(char const*, ...);
+	[[noreturn]] void abort();
 }
 
 static inline
@@ -146,17 +149,12 @@ struct String {
 		return data[idx];
 	}
 
-	String() : data{nullptr}, len{0} {}
+	String(){}
 	String(char const* b, usize n) : data{b}, len{n} {}
 	String(char const* cs) : data{cs}, len{cstring_len(cs)} {}
 };
 
 #define str_fmt(S) ((int)((S).len)), ((char const*)((S).data))
-
-static inline
-Slice<u8> raw_data(String s){
-	return Slice<u8>{.data = (u8*)s.data, .len = s.len};
-}
 
 static inline
 String slice(String s, usize begin, usize end){
@@ -176,16 +174,6 @@ String take(String s, usize n){
 	return String(s.data, n);
 }
 
-
-template<typename T>
-Slice<T> make_slice(usize n){
-	T* p = new T[n];
-	if(!p){
-		return Slice<T>{nullptr, 0};
-	}
-	return Slice<T>{p, n};
-}
-
 template<typename T>
 using Atomic = std::atomic<T>;
 
@@ -193,4 +181,24 @@ using std::atomic_load;
 using std::atomic_store;
 using std::atomic_load_explicit;
 using std::atomic_store_explicit;
+
+namespace defer_detail {
+template<typename F>
+struct DeferredCall {
+	F f;
+	DeferredCall(F&& f) : f(static_cast<F&&>(f)) {}
+	~DeferredCall(){ f(); }
+};
+
+template<typename F>
+DeferredCall<F> make_deferred(F&& f){
+	return DeferredCall<F>(static_cast<F&&>(f));
+}
+
+#define defer_detail_glue_0(X, Y) X##Y
+#define defer_detail_glue_1(X, Y) defer_detail_glue_0(X, Y)
+#define defer_detail_name(X) defer_detail_glue_1(X, __COUNTER__)
+#define defer(Stmt) auto defer_detail_name(_deferred_) = ::defer_detail::make_deferred([&](){ Stmt ; })
+
+}
 

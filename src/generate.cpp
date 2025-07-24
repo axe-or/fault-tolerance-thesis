@@ -1,8 +1,8 @@
-#include "base.hpp"
+#include "base/base.hpp"
 #include <cstdio>
 
 String crc32_build_lut(u32 poly){
-	auto buf = make_slice<char>(256 * 16);
+	auto buf = make<char>(256 * 16);
 
 	usize cur = 0;
 	for(u32 i = 0; i < 256; i++) {
