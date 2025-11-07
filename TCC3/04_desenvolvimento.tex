@@ -1,3 +1,23 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
+\section{Tarefas}
+
+A classe \texttt{RawTask} é uma abstração fina que encapsula a que interage com o escalonador e fornece mecanismos unificados para gerenciamento do ciclo de vida das tarefas. Esta estrutura foi projetada para oferecer uma interface consistente que abstrai as especificidades da plataforma subjacente.
+
+O alvo principal é a , porém também pode ser compilado para Linux ou Windows 10/11.
+ 
+ % TODO: Declaração da classe aqui
+ 
+Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\textbf{id}).
+ 
+O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente.
+ 
+O estado da tarefa é mantido através do atributo atômico \texttt{\_status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro).
+ 
+A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes.
+ 
+ 
+\section{Compilação do Projeto}
+
+Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS+CMSISv2 o design desacoplado permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
