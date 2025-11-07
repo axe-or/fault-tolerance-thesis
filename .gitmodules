@@ -1,0 +1,3 @@
+[submodule "ft_sched"]
+	path = ft_sched
+	url = git@github.com:marcs-feh/ft_sched.git
