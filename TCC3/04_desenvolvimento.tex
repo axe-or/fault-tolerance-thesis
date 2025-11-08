@@ -2,7 +2,6 @@
 \label{cap:desenvolvimento}
 
 % TODO: Referenciar o quadro de RawTask
-% TODO: Referenciar o quadro de BasicTask
 % TODO: Referenciar o quadro de exemplo de basictask
 % TODO: Referenciar o quadro de DeadlineWatcher
 \section{Estrutura da Implementação}
@@ -34,7 +33,6 @@ struct RawTask {
     u32 args_size = 0;
     u32 id{};
     Atomic<TaskStatus> _status = TaskStatus_Initialized;
-    // Optional callback to unlock mutexes or release any additional resource after killing the thread
     TaskCancelCallback on_cancel = nullptr;
     RawTaskPlatformSpecificData _specific{};
 
@@ -56,11 +54,11 @@ struct RawTask {
 
 Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
 
-O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback `on_cancel` é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
+O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback \texttt{on\_cancel} é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
 
 O estado da tarefa é mantido através do atributo atômico \texttt{status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro). A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes e cuidado extra foi tomado na escolha do ordenamento de memória correto para evitar dupla desalocação de recursos, em última instância, o próprio mecanismo de aloção em arenas auxilia, por a liberação de memória é idempotente neste caso.
 
-A classe genérica \texttt{BasicTask} incrementa a classe \texttt{RawTask} com conveniência adicional do uso de funções anônimas com grupos de captura e garantia de tipagem de seu retorno.
+A classe genérica \texttt{BasicTask} demonstrada no Quadro \autoref{cod:basicTask} incrementa a classe \texttt{RawTask} com conveniência adicional do uso de funções anônimas com grupos de captura e garantia de tipagem de seu retorno. O tipo \texttt{TaskContext} é passado como argumento obrigatório pois permite que a tarefa sendo executada sinalize cancelamento ou conclusão prematura, permitindo um controle superior no caso de tarefas redundantes.
 
 \begin{quadro}[H]
     \centering
@@ -100,21 +98,29 @@ struct BasicTask {
 \label{cod:basicTask}
 \end{quadro}
 
-Apesar da implementação mais complexa que necessita lidar com restrições de tipos em funções anônimas, construção in-place e uso adequado do alinhamento de estruturas para o layout dos grupos de captura, o uso desta classe é relativamente ergonômico sendo similar a classe \texttt{std::thread} da biblioteca padrão introduzida no C++11.
+Apesar da implementação mais complexa que necessita lidar com restrições de tipos em funções anônimas, construção in-place e uso adequado do alinhamento de estruturas para o layout dos grupos de captura, o uso desta classe é relativamente ergonômico sendo similar a classe \texttt{std::thread} da biblioteca padrão introduzida no C++11. Um exemplo é demonstrado no Quadro \autoref{cod:basicTaskExample}.
 
 \begin{quadro}[H]
-    \centering
-    \caption{Utilizando uma Basic Task para calcular uma soma}
+\centering
+\caption{Utilizando uma Basic Task para calcular uma soma}
+\begin{lstlisting}[language=C++]
+auto numbers = Array<i32, 7>{-4, -2, 0, 6, 9, 2, 1};
+auto task = make_basic_task(&arena, [numbers](TaskContext* ctx) -> i32 {
+    i32 acc = 0;
+    for(i32 x : numbers){
+        acc += x;
+    }
+    return x;
+});
 
-% TODO: Exemplo aqui
-    \begin{lstlisting}[language=C++]
-
+task.join();
+auto sum = task.result().unwrap();
+printf("Sum = %d\n", sum);
 \end{lstlisting}
-\label{cod:basicTask}
+\label{cod:basicTaskExample}
 \end{quadro}
 
-
-\subsection{Deadlines}
+\subsection{Deadlines & Heartbeat}
 
 A classe \texttt{DeadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
 
@@ -122,7 +128,7 @@ A classe \texttt{DeadlineWatcher} implementa um vigilante responsável pelo gere
 
 \begin{quadro}[H]
     \centering
-    \caption{Declaração da estrutura \texttt{DeadlinewWatcher}}
+    \caption{Declaração da estrutura \texttt{DeadlineWatcher}}
 
     \begin{lstlisting}[language=C++]
 struct DeadlineWatcher {
@@ -138,7 +144,6 @@ struct DeadlineWatcher {
 
     void clear();
 
-    // Scan for deadline violations and remove Done tasks
     bool scan();
 
     auto lock_guard(){
@@ -157,14 +162,21 @@ A funcionalidade de \texttt{scan} é responsável por validar as deadlines e lim
 
 A verificação de integridade via CRC32 utiliza a técnica de LUT (Look-up table) para todos os possíveis bytes de entrada considerando o polinômio gerador escolhido, armazenando-os em uma tabela estática. Durante o cálculo do CRC cada byte dos dados é processado através de uma operação de indexação na tabela seguida de uma operação XOR com o estado acumulado, eliminando a necessidade de cálculos bit a bit. O valor final também pode ser incrementalmente computado, que é essencial para estruturas que possuem descontinuidades em memória ou que sejam de tamanho muito grande.
 
-Cuidado adicional deve ser tomado ao calcular o CRC de uma estrutura arbitrária, pois compiladores frequentemente adicionam bytes de enchimento (padding) para garatir alinhamento adequado dos dados na memória. O conteúdo destes bytes é indefinido, portanto calcular o CRC de duas estruturas idênticas pode resultar em números diferentes devido à inclusão de bytes de enchimento com valores distintos. Para remediar isso, uma restrição de tipo \texttt{CRC_Checkable} deve ser implementada por todas as estruturas que desejam fornecer essa funcionalidade, é parte do contrato do conceito que o implementador adequadamente lide com bytes de enchimento.
+Cuidado adicional deve ser tomado ao calcular o CRC de uma estrutura arbitrária, pois compiladores frequentemente adicionam bytes de enchimento (padding) para garatir alinhamento adequado dos dados na memória. O conteúdo destes bytes é indefinido, portanto calcular o CRC de duas estruturas idênticas pode resultar em números diferentes devido à inclusão de bytes de enchimento com valores distintos. Para remediar isso, uma restrição de tipo \texttt{CRC\_Checkable} deve ser implementada por todas as estruturas que desejam fornecer essa funcionalidade, é parte do contrato do conceito que o implementador adequadamente lide com bytes de enchimento.
 
 \subsection{Asserts}
 
+Foram utilizados 2 níveis de assert, globais (críticos) e locais (contextuais). Para evitar conflito com o macro da biblioteca padrão, a função de assert é nomeada com o sinônimo \texttt{ensure}. A função \texttt{ensure} global verifica um predicado, caso seja falso, dispara uma exceção do processador para causar uma reinicialização forçada, indicando uma falha catastrófica no sistema. A função membro \texttt{TaskContext::ensure} não causa uma falha catastrófica, mas apenas cancela a tarefa.
+
+Asserções locais são utilizadas para detectar a violação de invariantes dentro de um contexto recuperável, já asserções globais são reservadas para propriedades fundamentais que não podem ser violadas.
 
 \subsection{Dependências Adicionais}
 
 A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (\texttt{base}) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
 \subsection{Compilação do Projeto}
 
-Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS+CMSISv2 o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
+Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS com CMSISv2, o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
+
+\section{Verificação}
+
+
