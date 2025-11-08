@@ -1,23 +1,42 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
-\section{Tarefas}
+\section{Estrutura da Implementação}
+Esta seção aborda os detalhes técnicos mais importantes para a implementação das técnicas de tolerância à falhas
+
+\subsection{Estratégia de Alocação}
+
+Com exceção de algumas alocações internas do FreeRTOS e da biblioteca do sistema, a maioria das alocações dinâmicas realizadas é feita com o uso de alocadores do tipo \textit{arena de memória}. Este padrão de alocador comporta-se similarmente à uma pilha, o incremento e decremento de um ponteiro determina a barreira entre memória disponível e alocada. Portanto alocações são rápidas e simples, assim como liberação total ou reset para um estado anterior, a principal desvantagem destes alocadores é não serem capazes de expressar ordems de alocação e liberação granulares muito distintas (Exemplo: filas de conclusão assíncrona para saídas de rede).
+
+Pela estrutura do alocador ser simples, a coleta de métricas e injeção de falhas foi simplificada dado que é possível acessar a maioria dos componentes do sistema apenas em termos de seu deslocamenteo em relação à sua arena que é facilmente identificável no depurador ao pesquisar por seu símbolo.
+
+Cada arena serve para encapsular um lifetime conjunto de $N$ alocações, todas as alocações estão vivas, ou todas estão mortas. Para o gerenciamento de tarefas essa técnica mostrou-se satisfatória e fácil de utilizar, pois tarefas e seu estado local são inseparáveis no comportamento normal do sistema, também é possível facilmente recolher memória de tarefas replicadas canceladas durante a aplicação de técnicas de TMR e Reexecução. A estrutura de arena falha em ser adequada no geranciamento de múltiplos objetos com lifetimes distintos, o único caso que isso ocorre na aplicação é na alocação de observadores de deadline, onde o problema é mitigado com o uso de uma lista intrusiva.
+
+\subsection{Tarefas}
 
 A classe \texttt{RawTask} é uma abstração fina que encapsula a que interage com o escalonador e fornece mecanismos unificados para gerenciamento do ciclo de vida das tarefas. Esta estrutura foi projetada para oferecer uma interface consistente que abstrai as especificidades da plataforma subjacente.
-
-O alvo principal é a , porém também pode ser compilado para Linux ou Windows 10/11.
  
  % TODO: Declaração da classe aqui
  
-Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\textbf{id}).
+Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}).
  
 O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente.
  
-O estado da tarefa é mantido através do atributo atômico \texttt{\_status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro).
+O estado da tarefa é mantido através do atributo atômico \texttt{status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro). A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes e cuidado extra foi tomado na escolha do ordenamento de memória correto para evitar dupla desalocação de recursos, em última instância, o próprio mecanismo de aloção em arenas auxilia, por a liberação de memória é idempotente neste caso.
  
-A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes.
- 
- 
-\section{Compilação do Projeto}
+\subsection{Deadlines}
 
-Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS+CMSISv2 o design desacoplado permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
+A classe \texttt{DeadlineWatcher} implementa um de vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um array de slots que mantém as informações temporais de todas as tarefas sob monitoramento.
+
+
+\subsection{CRC32}
+
+\subsection{Asserts}
+
+\subsection{Dependências Adicionais}
+
+A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (`base`) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
+
+\subsection{Compilação do Projeto}
+
+Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS+CMSISv2 o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
