@@ -1,6 +1,10 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
+% TODO: Referenciar o quadro de RawTask
+% TODO: Referenciar o quadro de BasicTask
+% TODO: Referenciar o quadro de exemplo de basictask
+% TODO: Referenciar o quadro de DeadlineWatcher
 \section{Estrutura da Implementação}
 Esta seção aborda os detalhes técnicos mais importantes para a implementação das técnicas de tolerância à falhas
 
@@ -50,13 +54,65 @@ struct RawTask {
 \label{cod:rawTask}
 \end{quadro}
 
-% TODO: Declaração da classe aqui
-
 Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
 
 O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback `on_cancel` é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
 
 O estado da tarefa é mantido através do atributo atômico \texttt{status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro). A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes e cuidado extra foi tomado na escolha do ordenamento de memória correto para evitar dupla desalocação de recursos, em última instância, o próprio mecanismo de aloção em arenas auxilia, por a liberação de memória é idempotente neste caso.
+
+A classe genérica \texttt{BasicTask} incrementa a classe \texttt{RawTask} com conveniência adicional do uso de funções anônimas com grupos de captura e garantia de tipagem de seu retorno.
+
+\begin{quadro}[H]
+    \centering
+    \caption{Declaração da estrutura \texttt{BasicTask} (Implementação omitida)}
+
+    \begin{lstlisting}[language=C++]
+template<
+    typename Output,
+    Callable<Output, TaskContext> TaskFunc,
+    Callable<void, TaskContext> OnCancel
+>
+struct BasicTask {
+    RawTask _task;
+    TaskFunc _func;
+    OnCancel _on_cancel;
+    Option<Output> _result;
+
+    static void _basic_task_wrapper(RawTask* t);
+
+    static void _basic_task_cancel_wrapper(RawTask* t);
+
+    Option<Output> result();
+
+    bool has_result() const;
+
+    TaskStatus status() const;
+
+    RawTask* raw_task();
+
+    u32 id();
+
+    void join();
+
+    void cancel();
+};
+\end{lstlisting}
+\label{cod:basicTask}
+\end{quadro}
+
+Apesar da implementação mais complexa que necessita lidar com restrições de tipos em funções anônimas, construção in-place e uso adequado do alinhamento de estruturas para o layout dos grupos de captura, o uso desta classe é relativamente ergonômico sendo similar a classe \texttt{std::thread} da biblioteca padrão introduzida no C++11.
+
+\begin{quadro}[H]
+    \centering
+    \caption{Utilizando uma Basic Task para calcular uma soma}
+
+% TODO: Exemplo aqui
+    \begin{lstlisting}[language=C++]
+
+\end{lstlisting}
+\label{cod:basicTask}
+\end{quadro}
+
 
 \subsection{Deadlines}
 
@@ -99,12 +155,12 @@ A funcionalidade de \texttt{scan} é responsável por validar as deadlines e lim
 
 \subsection{CRC32}
 
-A verificação de integridade de via CRC32 utiliza a técnica de LUT (Look-up table) para todos os possíveis bytes de entrada considerando o polinômio gerador escolhido, armazenando-os em uma tabela estática. Durante o cálculo do CRC, cada byte dos dados é processado através de uma operação de indexação na tabela seguida de uma operação XOR com o estado acumulado, eliminando a necessidade de cálculos bit a bit e permitindo que seja incrementalmente computado, que é essencial para estruturas que possuem descontinuidades em memória ou que sejam de tamanho muito grande.
+A verificação de integridade via CRC32 utiliza a técnica de LUT (Look-up table) para todos os possíveis bytes de entrada considerando o polinômio gerador escolhido, armazenando-os em uma tabela estática. Durante o cálculo do CRC cada byte dos dados é processado através de uma operação de indexação na tabela seguida de uma operação XOR com o estado acumulado, eliminando a necessidade de cálculos bit a bit. O valor final também pode ser incrementalmente computado, que é essencial para estruturas que possuem descontinuidades em memória ou que sejam de tamanho muito grande.
 
 Cuidado adicional deve ser tomado ao calcular o CRC de uma estrutura arbitrária, pois compiladores frequentemente adicionam bytes de enchimento (padding) para garatir alinhamento adequado dos dados na memória. O conteúdo destes bytes é indefinido, portanto calcular o CRC de duas estruturas idênticas pode resultar em números diferentes devido à inclusão de bytes de enchimento com valores distintos. Para remediar isso, uma restrição de tipo \texttt{CRC_Checkable} deve ser implementada por todas as estruturas que desejam fornecer essa funcionalidade, é parte do contrato do conceito que o implementador adequadamente lide com bytes de enchimento.
 
-
 \subsection{Asserts}
+
 
 \subsection{Dependências Adicionais}
 
