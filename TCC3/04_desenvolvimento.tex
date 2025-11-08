@@ -15,19 +15,87 @@ Cada arena serve para encapsular um lifetime conjunto de $N$ alocações, todas 
 \subsection{Tarefas}
 
 A classe \texttt{RawTask} é uma abstração fina que encapsula a que interage com o escalonador e fornece mecanismos unificados para gerenciamento do ciclo de vida das tarefas. Esta estrutura foi projetada para oferecer uma interface consistente que abstrai as especificidades da plataforma subjacente.
- 
- % TODO: Declaração da classe aqui
- 
-Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}).
- 
-O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente.
- 
+
+\begin{quadro}[H]
+    \centering
+    \caption{Declaração da estrutura \texttt{RawTask}}
+
+    \begin{lstlisting}[language=C++]
+struct RawTask {
+    RawTaskFunc func = nullptr;
+    Arena* arena = nullptr;
+    void* args = nullptr;
+    DeadlineSlot* deadline = nullptr;
+    u32 stack_size = 0;
+    u32 args_size = 0;
+    u32 id{};
+    Atomic<TaskStatus> _status = TaskStatus_Initialized;
+    // Optional callback to unlock mutexes or release any additional resource after killing the thread
+    TaskCancelCallback on_cancel = nullptr;
+    RawTaskPlatformSpecificData _specific{};
+
+    TaskStatus status();
+
+    void join(CALLER_LOCATION);
+
+    void cancel(CALLER_LOCATION);
+
+    ~RawTask(){}
+
+    bool _platform_init(Arena* a, usize stack_size, RawTaskFunc func, void* args);
+    bool _platform_join();
+    bool _platform_cancel();
+};
+\end{lstlisting}
+\label{cod:rawTask}
+\end{quadro}
+
+% TODO: Declaração da classe aqui
+
+Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
+
+O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback `on_cancel` é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
+
 O estado da tarefa é mantido através do atributo atômico \texttt{status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro). A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes e cuidado extra foi tomado na escolha do ordenamento de memória correto para evitar dupla desalocação de recursos, em última instância, o próprio mecanismo de aloção em arenas auxilia, por a liberação de memória é idempotente neste caso.
- 
+
 \subsection{Deadlines}
 
-A classe \texttt{DeadlineWatcher} implementa um de vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um array de slots que mantém as informações temporais de todas as tarefas sob monitoramento.
+A classe \texttt{DeadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
 
+É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-deadlines arbitrariamente aninhadas, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas\cite{MakingReliableDistSystems}.
+
+\begin{quadro}[H]
+    \centering
+    \caption{Declaração da estrutura \texttt{DeadlinewWatcher}}
+
+    \begin{lstlisting}[language=C++]
+struct DeadlineWatcher {
+    Slice<DeadlineSlot> slots;
+    Spinlock _lock{};
+    Atomic<u32> _count;
+
+    usize count() const;
+
+    bool watch(RawTask* task, Duration limit);
+
+    void remove(DeadlineSlot* node);
+
+    void clear();
+
+    // Scan for deadline violations and remove Done tasks
+    bool scan();
+
+    auto lock_guard(){
+        return _lock.guard();
+    }
+};
+\end{lstlisting}
+\label{cod:deadline}
+\end{quadro}
+
+Para a leitura e comparação de temporizadores, são utilizadas 2 funções específicas para cada plataforma: \texttt{tick\_now} para observar o estado temporal atual e \texttt{tick\_frequency} para ler a frequência do temporizador.
+
+A funcionalidade de \texttt{scan} é responsável por validar as deadlines e limpar descritores que foram encerrados, o seu retorno indica um estado de sucesso. No caso do uso do temporizador embutido da blackpill para watchdog independente (IWDG), é possível utilizar o output do monitor principal para decidir se o watchdog deve ser reiniciado ou não.
 
 \subsection{CRC32}
 
@@ -35,8 +103,7 @@ A classe \texttt{DeadlineWatcher} implementa um de vigilante responsável pelo g
 
 \subsection{Dependências Adicionais}
 
-A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (`base`) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
-
+A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (\texttt{base}) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
 \subsection{Compilação do Projeto}
 
 Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS+CMSISv2 o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
