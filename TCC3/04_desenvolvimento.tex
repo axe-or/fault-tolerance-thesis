@@ -1,8 +1,6 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
-% TODO: Referenciar o quadro de RawTask
-% TODO: Referenciar o quadro de exemplo de basictask
 % TODO: Referenciar o quadro de DeadlineWatcher
 \section{Estrutura da Implementação}
 Esta seção aborda os detalhes técnicos mais importantes para a implementação das técnicas de tolerância à falhas
@@ -52,7 +50,7 @@ struct RawTask {
 \label{cod:rawTask}
 \end{quadro}
 
-Os atributos centrais da classe incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
+Os atributos centrais da classe demonstrados no Quadro \autoref{cod:rawTask} incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
 
 O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback \texttt{on\_cancel} é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
 
@@ -98,11 +96,11 @@ struct BasicTask {
 \label{cod:basicTask}
 \end{quadro}
 
-Apesar da implementação mais complexa que necessita lidar com restrições de tipos em funções anônimas, construção in-place e uso adequado do alinhamento de estruturas para o layout dos grupos de captura, o uso desta classe é relativamente ergonômico sendo similar a classe \texttt{std::thread} da biblioteca padrão introduzida no C++11. Um exemplo é demonstrado no Quadro \autoref{cod:basicTaskExample}.
+Apesar da implementação mais complexa o uso desta classe é relativamente ergonômico, sendo similar em seu uso à classe \texttt{std::thread} da introduzida no C++11 como demonstrado no Quadro \autoref{cod:basicTaskExample}.
 
 \begin{quadro}[H]
 \centering
-\caption{Utilizando uma Basic Task para calcular uma soma}
+\caption{Utilizando uma \texttt{BasicTask} para calcular uma soma}
 \begin{lstlisting}[language=C++]
 auto numbers = Array<i32, 7>{-4, -2, 0, 6, 9, 2, 1};
 auto task = make_basic_task(&arena, [numbers](TaskContext* ctx) -> i32 {
@@ -120,11 +118,11 @@ printf("Sum = %d\n", sum);
 \label{cod:basicTaskExample}
 \end{quadro}
 
-\subsection{Deadlines & Heartbeat}
+\subsection{Deadlines e Heartbeat}
 
-A classe \texttt{DeadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
+A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{code:deadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
 
-É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-deadlines arbitrariamente aninhadas, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas\cite{MakingReliableDistSystems}.
+É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-deadlines arbitrariamente aninhadas, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas \cite{MakingReliableDistSystems}.
 
 \begin{quadro}[H]
     \centering
@@ -149,6 +147,14 @@ struct DeadlineWatcher {
     auto lock_guard(){
         return _lock.guard();
     }
+};
+
+struct DeadlineSlot {
+    TimeTick last_tick;
+    Duration limit;
+    RawTask* task;
+
+    void reset(){ last_tick = tick_now(); }
 };
 \end{lstlisting}
 \label{cod:deadline}
