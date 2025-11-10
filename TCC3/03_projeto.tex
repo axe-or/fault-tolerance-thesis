@@ -7,6 +7,8 @@ Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base,
 
 A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância são implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falha.
 
+% TODO: Trocar bluepill por blackpill
+% TODO: Incluir o virtual com
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
@@ -21,7 +23,7 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
 
 Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau a mais de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}.
 
-O sistema tentará atingir um critério de Hard Real-Time, isto é, o descumprimento de um prazo de execução será considerado uma falha completa. Prazos de execução podem ser locais à um segmento particular do programa ou globais que correspondem ao programa como um todo ou à um macro processo. A escolha do critério Hard Real-Time também é útil de um ponto de vista da análise pois será possível comparar o custo temporal da aplicação de técnicas em relação ao limite de execução.
+Durante os testes, será assumido um critério Hard Real-Time sem presença de falhas, isto é, não é aceitável o descumprimento do prazo de execução quando não houver falhas. Na presença de falhas, o prazo também deve ser mantido porém será considerado preferível que falhas sejam detectadas e causem um atraso ao invés de causar uma corrupção silenciosa.
 
 Com o fim de reduzir o tamanho do executável e manter o fluxo de mais previsível não serão utilizados mecanismos de exceção com desenrolamento (\textit{unwinding}) da pilha. Também não será utilizado de RTTI (Runtime Type Information). Todos os erros devem portanto ser tratados como valores ou como falhas lógicas.
 
@@ -33,19 +35,19 @@ Portanto, será assumido que os resultados extraídos de injeção de falhas art
 
 \subsection{Materiais}
 
-Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principal do trabalho será um microcontrolador STM32F103C8T6 "Bluepill" 32-bits da arquitetura ARMv7-M, como visto na \autoref{fig:stm32Bluepill}.
+Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principal do trabalho será um microcontrolador STM32F411CEU6 "BlackPill" 32-bits da arquitetura ARM, como visto na \autoref{fig:stm32Blackpill}.
 
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
-    \caption{Diagrama da STM32F103C8T6 ("Bluepill")}
+    \caption{Diagrama da STM32F411CEU6 ("Bluepill")}
     \includegraphics[width=0.80\textwidth]{assets/stm32_bluepill.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: \citefigure{STMBoardProductPage}}
     \label{fig:stm32Bluepill}
 \end{figure}
 
-Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma ferramenta de depuração de hardware ST-LINK (\autoref{fig:stLink}), a comunicação do ST-LINK é feita via USB com o computador e via JTAG com o microcontrolador alvo, também será usado em conjunto uma IDE fornecida pelo mesmo fabricante, a STM32Cube IDE.
+Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma ferramenta de depuração de hardware ST-LINK (\autoref{fig:stLink}), a comunicação do ST-LINK é feita via USB com o computador e via JTAG com o microcontrolador alvo, também será usado em conjunto ferramentas do fabricante como o CubeIDE, CubeMX e CubeCLT.
 
 \begin{figure}[H]
     \centering
@@ -73,9 +75,9 @@ O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser extensivam
 
 \subsection{Métodos}
 
-Serão utilizadas as seguintes técnicas de tolerância à falhas implementadas em software: CRCs para mensagens, redundância modular, reexecução, sinal heartbeat e asserts. O detalhamento específico de cada técnica é abordado em maior detalhe na \autoref{subsec:algoritmos}.
+Serão utilizadas as seguintes técnicas de tolerância à falhas implementadas em software: CRCs para dados, redundância modular, reexecução, sinal heartbeat e asserts. O detalhamento específico de cada técnica é abordado em maior detalhe na \autoref{subsec:algoritmos}.
 
-Para a criação da análise, serão realizados testes com injeção lógica em hardware utilizando-se do ST-Link em combinação com um computador que emitirá os comandos para injeção via depurador, as falhas serão de natureza transiente e afetarão valores na memória (corrupção silenciosa) assim como nos registradores que não são de controle. A \autoref{fig:injecaoHardwareLogica} detalha de forma mais específica o fluxo de gerar uma falha. As combinações específicas de falhas e técnicas escolhidas são abordadas na \autoref{subsec:campanhaInjecao}.
+Para a criação da análise, serão realizados testes com injeção lógica em hardware utilizando-se do ST-Link em combinação com um computador que emitirá os comandos para injeção via depurador, as falhas serão de natureza transiente e afetarão valores na memória (corrupção silenciosa). A \autoref{fig:injecaoHardwareLogica} detalha de forma mais específica o fluxo de gerar uma falha. As combinações específicas de falhas e técnicas escolhidas são abordadas na \autoref{subsec:campanhaInjecao}.
 
 \begin{figure}[H]
    \centering
@@ -87,9 +89,9 @@ Para a criação da análise, serão realizados testes com injeção lógica em 
    \label{fig:injecaoHardwareLogica}
 \end{figure}
 
-A coleta de métricas será realizada com os mecanismos de monitoramento do sistema FreeRTOS juntamente com contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de falhas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de falhas.
+A coleta de métricas será realizada com os contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de falhas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de falhas. Ao fim da execução, será utilizado o depurador para ler estes valores.
 
-Com o objetivo de promover a reutilização de código e a abstração, será implementada uma interface que generaliza um objeto de tarefa. Considerando que um objeto que realiza despache dinâmico requer uma tabela de despacho virtual (V-Table), faz-se necessário adotar precauções adicionais, dado que a própria tabela pode estar sujeita a falhas. Para mitigar esse risco, será aplicada uma replicação simples dos ponteiros de função da V-Table, resultando em um custo adicional de duas comparações por chamada de método. A interação da interface com o resto do sistema é abordada em maior detalhe na \autoref{subsec:interface}.
+Com o objetivo de promover a reutilização de código, será criada uma interface que abstrai noções comuns de tarefa. A interação da interface com o resto do sistema é abordada em maior detalhe na \autoref{subsec:interface}.
 
 \section{Análise de requisitos}
 \label{sec:req}
@@ -106,9 +108,6 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         \textbf{RF01} & Implementação de todos os algoritmos descritos na \autoref{subsec:algoritmos} \\ 
         \hline
 
-        \textbf{RF02} & Criação, finalização e cancelamento de tarefas e recuperação de sua memória alocada \\
-        \hline
-        
         \textbf{RF03} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa \\
         \hline
 
@@ -119,9 +118,6 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         \hline
         
         \textbf{RF06} & Monitoramento do número de falhas detectadas e violações de prazos  \\
-        \hline
-        
-        \textbf{RF07} & Comunicação entre tarefas por uma fila com checagem dos pacotes \\
         \hline
     \end{tabular}
     \label{tab:rf}
@@ -148,8 +144,6 @@ Com o objetivo de promover a reutilização de código e a abstração, será im
         \textbf{RNF04} & Implementação realizada em C++ (versão 20 ou acima) \\
         \hline
         
-        \textbf{RNF05} & Código fonte da interface disponível sob licença permissiva (BSD3) \\
-        \hline
     \end{tabular}
     \label{tab:rnf}
 \end{quadro}
@@ -251,9 +245,9 @@ Asserts serão utilizados para verificar invariantes, qualquer quebra de contrat
 
 \section{Plano de Verificação}
 
-Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, \textbf{RF07}) será feito uma série de testes unitários e de integração, para garantir que as técnicas estejam ao menos corretamente implementadas antes de realizar qualquer tipo de medição.
+Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}) serão feitos testes unitários das técnicas isoladas.
 
-A validação da detecção de falhas e vencimento de prazos (\textbf{RF05}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software utilizando o emulador QEMU com a mesma arquitetura de processador executando o sistema FreeRTOS e será validado definitivamente durante o teste com injeção lógica em hardware. A capacidade de criar, destruir e cancelar tarefas (\textbf{RF02}) é um pré-requisito e será verificada com um simples teste ponta a ponta. Importante notar que a priorização de tarefas baseadas em seu número de prioridade e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
+A validação da detecção de falhas e vencimento de prazos (\textbf{RF05}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
 
 Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
 
@@ -261,9 +255,9 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-As falhas injetadas serão falhas transientes de memória onde $N$ bytes a partir de um endereço base são escolhidos e invertidos com um XOR de uma mascara aleatória, as regiões de memória escolhidas serão o segmento estático com escrita, a pilha das tarefas e registradores de propósito geral. Os programas exemplo serão executados por um número fixo de rodadas (e.x: 200) e terão suas métricas coletadas e catalogadas para análise posterior.
+Serão injetadas por caso até 6 falhas transientes. Os tipos de falha serão: 4 falhas com endereços fixos, com o objetivo de corromper variáveis locais ou globais já conhecidas com o fim de causar falhas em pontos do programa que produzam resultados diretos, e 2 falhas que utilizarão de um endereço base e causarão uma corrupção aleatória a partir do endereço base.
 
-Falhas detectadas serão armazenadas com contadores atômicos, com um contador dedicado para cada tipo de técnica. A região de coleta das métricas será reservada previamente na seção estática da imagem do executável e será isenta de falhas.
+As regiões de memória escolhidas estarão no segmento estático com escrita e nos stack frames das tarefas. O programa de teste serão executados por um número fixo de rodadas com as falhas se suas métricas serão coletadas.
 
 Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica como grupo de controle, técnicas simples (CRC e Asserts) que não interferem na execução e combinações de técnicas que alteram o fluxo do programa (Reexecução e Replicação) com e sem validação de prazo via sinal heartbeat. As combinações estão listadas no \autoref{tab:combinacoesTecnicas}.
 
@@ -273,9 +267,9 @@ Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         \rowcolor[HTML]{C0C0C0}
-        \textbf{Reexecução} & \textbf{Redundância modular} & \textbf{Heartbeat Signal} & \textbf{CRC} & \textbf{Asserts} \\
+        \textbf{Reexecução} & \textbf{Redundância modular} & \textbf{Heartbeat} & \textbf{CRC} & \textbf{Asserts} \\
         \hline
-        - & - & - & - & - \\
+        - & - & - & - & X \\
         \hline
         - & - & - & X & X \\
         \hline
@@ -293,13 +287,10 @@ Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica
 
 \subsection{Programas de Teste}
 
-Para testar a viabilidade e o impacto das técnicas implementadas, serão desenvolvidas duas aplicações pequenas para testes. A primeira realizará um filtro passa-banda com no domínio da frequência (necessitando de uma transformada de Fourier) de uma onda fornecida como entrada, o processamento será feito em lotes. Já o segundo programa realizará uma convolução bidimensional para aplicar um filtro Laplaciano.
 
-A escolha da primeira aplicação serve primariamente testar uma operação que dependa de múltiplos acessos e modificações à memória e que possa demonstrar capacidades de processamento assíncronas (padrão produtor/consumidor), que são particularmente importantes ao se lidar com múltiplas interrupções causadas por temporizadores ou IO.
+Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo 
 
-Já o segundo programa, de natureza mais simples, visa causar alto estresse em termos de leituras, juntamente com muitas operações aritméticas, mas com menos ênfase em comunicação entre tarefas. O objetivo é testar o impacto das técnicas em um caso mais extremo que requer muito processamento.
-
-Ambos os programas são problemas que requerem um uso de CPU relativamente alto, o que pode auxiliar a notar violações do critério de tempo real ou uma variação muito grande no tempo de execução, que não é muito desejada mesmo que cumpra o prazo. As implementações dos algoritmos para estes programas são primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
+O programa requer um uso de CPU alto e realiza uma grande quantidade . As implementações dos algoritmos para estes programas são primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
@@ -320,7 +311,7 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
         Problemas para injetar falhas com depurador em hardware & Baixa & Alto & Realizar injeção no microcontrolador & Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa \\
         \hline
 
-        Não conseguir coletar métricas de performance com profiler do FreeRTOS & Baixa & Médio & Teste em microcontrolador ou ambiente virtualizado & Inserir pontos de medição manualmente \\
+        Não conseguir coletar métricas de performance & Baixa & Médio & Teste em microcontrolador ou ambiente virtualizado & Inserir pontos de medição manualmente \\
         \hline
     \end{tabular}
     \label{tab:riscos}
