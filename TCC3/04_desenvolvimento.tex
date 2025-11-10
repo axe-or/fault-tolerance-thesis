@@ -197,11 +197,26 @@ Foram selecionados os símbolos globais:
 
 Para os símbolos locais, é necessário identificar seu offset de pilha no momento da execução, para isso será feita inspeção ad-hoc no depurador. Os alvos escolhidos foram os filtros da imagem, pois possuem uma área maior e resultam em impacto significativo no output quando modificados.
 
+São sorteados 2 deslocamentos para as corrupções na pilha. É feito o flash do programa de teste na placa e inicia-se uma sessão de debugging no ST-Link. 
+
 \subsection{Demonstração do processo de Injeção}
 
-Primeiramente são sorteados 4 falhas fixas dos símbolos, 2 globais e 2 locais da lista acima. Também é sorteado 2 deslocamentos para as corrupções na pilha. É feito o flash do programa de teste na placa e inicia-se uma sessão de debugging no ST-Link. 
+O programa sempre será pausado logo após o setup inicial das arenas e tasks e antes da saída, são realizados 2 rodadas de injeção, uma com a injeção em pontos conhecidos e outra para os offsets aleatórios.
 
-% TODO: Imagem no VScode
+As falhas fixas (input, output e filtro) são injetadas durante 3 iterações da convolução, na linha 30 e na linha 60 e 90 da imagem, que correspondem à aproximadamente um terço do processo.
 
-O programa sempre será pausado logo após o setup inicial das arenas, o teste será re-executado para cada uma das 
+As falhas aleatórias são injetadas nos mesmos pontos da convolução, mas afetam um pedaço arbitrário de pilha
+
+% TODO: Imagem no VScode(debugging)
+
+A injeção é aplicada através da janela de símbolos:
+
+% TODO: Imagem no VScode(simb)
+
+O programa é resumido e seu comportamento monitorado, antes de sair as métricas coletadas são lidas e armazenadas. 
+Caso ocorra uma violação de deadline, será possível notar um salto para o \texttt{HardFault\_Handler} assim como uma mensagem no console indicando qual tarefa violou caso seja possível identificá-la.
+
+O output do programa é emitido pela conexão VirtualCOM e é colocado num arquivo \texttt{out.pgm} redirecionando o resultado da conexão serial com um programa de linha de comando da seguinte forma: \texttt{microcom -p /dev/ttyACM0 > out.pgm}.
+
+% TODO: Imagem do VSCode e o arquivo resultado do lado
 

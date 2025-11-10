@@ -1,3 +1,46 @@
 \chapter{Resultados}
 \label{cap:resultados}
 
+\section{Dependabilidade e Performance}
+Após repetir o processo de injeção do capítulo anterior para as combinações de técnicas, foi possível coletar os seguntes dados
+
+\subsection{Impacto na Detecção}
+
+% TODO Falaar aq
+
+| Injeção | Técnicas | Detectado? | Resultado |
+% TODO dados
+
+\subsection{Impacto no Tempo de execução}
+
+É possível observar que não houve uma mudança significativa no tempo de execução entre TMR e reexecução, isso é esperado pois não foi utilizado multi processamento simétrico na placa. Indicando que as diferenças possam ser variações parcialmente causadas pelas trocas de contexto e passagem nas filas.
+
+| Injeção | Técnicas | Tempo de execução (total) | Tempo de execução por pixel |
+% TODO dados
+
+\subsection{Impacto no Uso de Memória RAM}
+
+O maior impacto na memória naturalmente será a presença de novas tasks, portanto a execução TMR gera o maior impacto. O impacto na memória das variáveis globais não possuiu muita variação
+
+| Injeção | Técnicas | Memória de Tarefa (pico) | Memória Compartilhada (pico) |
+% TODO dados
+
+
+% TODO botar isso num apendice?
+\subsection{Impacto no Output}
+
+Nem todas as execuções geram o output válido, e algumas geraram o output correto, esta seção serve para cunho de exemplo, demonstrando alguns dos efeitos observados de corrupções silenciosas na imagem resultado.
+
+% TODO: Lena OG e Lena Filtrada (baseline)
+% TODO: Lena com kernel corrompido
+% TODO: Lena com tamanho corrompido (pular pedaço da imagem)
+% TODO: Lena interrompida, filtro parcial
+
+\section{Verificação}
+
+Após a análise das técnicas, é possível verificar os requisitos funcionais na tabela %TODO TAB
+e não-funcionais na tabela %TODO TAB 
+do projeto da sequinte forma:
+
+% RF
+% RnF

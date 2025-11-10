@@ -259,7 +259,7 @@ Serão injetadas por caso até 6 falhas transientes. Os tipos de falha serão: 4
 
 As regiões de memória escolhidas estarão no segmento estático com escrita e nos stack frames das tarefas. O programa de teste serão executados por um número fixo de rodadas com as falhas se suas métricas serão coletadas.
 
-Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica como grupo de controle, técnicas simples (CRC e Asserts) que não interferem na execução e combinações de técnicas que alteram o fluxo do programa (Reexecução e Replicação) com e sem validação de prazo via sinal heartbeat. As combinações estão listadas no \autoref{tab:combinacoesTecnicas}.
+As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat pelo menos no início e no final para monitorar cumprimento do prazo de execução.
 
 \begin{quadro}[H]
     \centering
@@ -267,15 +267,17 @@ Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica
     \begin{tabular}{|c|c|c|c|c|}
         \hline
         \rowcolor[HTML]{C0C0C0}
-        \textbf{Reexecução} & \textbf{Redundância modular} & \textbf{Heartbeat} & \textbf{CRC} & \textbf{Asserts} \\
-        \hline
-        - & - & - & - & X \\
+        \textbf{Reexecução} & \textbf{Redundância modular} & \textbf{CRC} & \textbf{Heartbeat} & \textbf{Asserts} \\
         \hline
         - & - & - & X & X \\
+        \hline
+        - & - & X & X & X \\
+
         \hline
         X & - & - & X & X \\
         \hline
         X & - & X & X & X \\
+
         \hline
         - & X & - & X & X \\
         \hline
@@ -286,7 +288,6 @@ Para os testes, as combinações de técnicas escolhidas foram: nenhuma técnica
 \end{quadro}
 
 \subsection{Programas de Teste}
-
 
 Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo 
 
