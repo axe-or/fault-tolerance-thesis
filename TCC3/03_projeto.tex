@@ -7,8 +7,8 @@ Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base,
 
 A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância são implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falha.
 
-% TODO: Trocar bluepill por blackpill
-% TODO: Incluir o virtual com
+% TODO: Incluir o virtual COM no diagrama
+% TODO: Trocar bluepill por redpill no diagrama
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
@@ -40,11 +40,11 @@ Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principa
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
-    \caption{Diagrama da STM32F411CEU6 ("Bluepill")}
-    \includegraphics[width=0.80\textwidth]{assets/stm32_bluepill.png}
+    \caption{Diagrama da STM32F411CEU6 ("BlackPill")}
+    \includegraphics[width=0.80\textwidth]{assets/stm32_blackpill.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: \citefigure{STMBoardProductPage}}
-    \label{fig:stm32Bluepill}
+    \label{fig:stm32Blackpill}
 \end{figure}
 
 Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma ferramenta de depuração de hardware ST-LINK (\autoref{fig:stLink}), a comunicação do ST-LINK é feita via USB com o computador e via JTAG com o microcontrolador alvo, também será usado em conjunto ferramentas do fabricante como o CubeIDE, CubeMX e CubeCLT.
@@ -108,7 +108,7 @@ Com o objetivo de promover a reutilização de código, será criada uma interfa
         \textbf{RF01} & Implementação de todos os algoritmos descritos na \autoref{subsec:algoritmos} \\ 
         \hline
 
-        \textbf{RF03} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa \\
+        \textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa \\
         \hline
 
         \textbf{RF04} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas \\
@@ -245,7 +245,7 @@ Asserts serão utilizados para verificar invariantes, qualquer quebra de contrat
 
 \section{Plano de Verificação}
 
-Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}) serão feitos testes unitários das técnicas isoladas.
+Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, textbf\{RF02}) serão feitos testes unitários das técnicas isoladas.
 
 A validação da detecção de falhas e vencimento de prazos (\textbf{RF05}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
 
@@ -255,9 +255,9 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-Serão injetadas por caso até 6 falhas transientes. Os tipos de falha serão: 4 falhas com endereços fixos, com o objetivo de corromper variáveis locais ou globais já conhecidas com o fim de causar falhas em pontos do programa que produzam resultados diretos, e 2 falhas que utilizarão de um endereço base e causarão uma corrupção aleatória a partir do endereço base.
+Serão injetadas por caso até 5 falhas transientes. Os tipos de falha serão: 3 falhas com endereços fixos, com o objetivo de corromper variáveis locais ou globais já conhecidas com o fim de causar falhas em pontos do programa que produzam resultados diretos, e 2 falhas que utilizarão de um endereço base e causarão uma corrupção aleatória a partir do endereço base.
 
-As regiões de memória escolhidas estarão no segmento estático com escrita e nos stack frames das tarefas. O programa de teste serão executados por um número fixo de rodadas com as falhas se suas métricas serão coletadas.
+As regiões de memória escolhidas estarão no segmento estático com escrita e nos stack frames das tarefas. O programa de teste será executado com as mesmas falhas porém com diferentes combinações de técnicas.
 
 As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat pelo menos no início e no final para monitorar cumprimento do prazo de execução.
 
@@ -287,11 +287,11 @@ As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o 
     \label{tab:combinacoesTecnicas}
 \end{quadro}
 
-\subsection{Programas de Teste}
+\subsection{Programa de Teste}
 
-Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo 
+Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM.
 
-O programa requer um uso de CPU alto e realiza uma grande quantidade . As implementações dos algoritmos para estes programas são primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
+O programa requer um uso de CPU alto e realiza uma grande quantidade de acessos à memória, o processo de convolução também necessita de valores estáveis de kernel e offsets para calcular o valor de cada pixel. A fundamentação teórica da aplicação destes algoritmos é primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
