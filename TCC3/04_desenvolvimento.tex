@@ -192,7 +192,7 @@ O primeiro passo após compilar o projeto em um arquivo ELF com informação de 
 
 Foram selecionados os símbolos globais:
 - task\_arena: Ponteiro base das alocações do stack das tarefas, será utilizada para corrupção de stack aleatória
-- image: Imagem de input decodificada
+- input: Pedaço da imagem de input decodificada
 - output: Espaço para a imagem de output
 
 Para os símbolos locais, é necessário identificar seu offset de pilha no momento da execução, para isso será feita inspeção ad-hoc no depurador. Os alvos escolhidos foram os filtros da imagem, pois possuem uma área maior e resultam em impacto significativo no output quando modificados.
@@ -203,9 +203,7 @@ São sorteados 2 deslocamentos para as corrupções na pilha. É feito o flash d
 
 O programa sempre será pausado logo após o setup inicial das arenas e tasks e antes da saída, são realizados 2 rodadas de injeção, uma com a injeção em pontos conhecidos e outra para os offsets aleatórios.
 
-As falhas fixas (input, output e filtro) são injetadas durante 3 iterações da convolução, na linha 30 e na linha 60 e 90 da imagem, que correspondem à aproximadamente um terço do processo.
-
-As falhas aleatórias são injetadas nos mesmos pontos da convolução, mas afetam um pedaço arbitrário de pilha
+As falhas fixas (input, output e filtro) são injetadas durante 3 iterações da convolução, na linha 30 e na linha 60 e 90 da imagem, que correspondem à aproximadamente um terço do processo. As falhas aleatórias são injetadas nas iterações 40 e 80 da convolução, mas afetam um pedaço arbitrário de pilha.
 
 % TODO: Imagem no VScode(debugging)
 
