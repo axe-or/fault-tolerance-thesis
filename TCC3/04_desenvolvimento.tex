@@ -184,9 +184,19 @@ A camada de abstração de hardware é fornecida pela STMicroelectronics atravé
 
 Apesar do alvo de compilação do projeto ser um microcontrolador com o FreeRTOS com CMSISv2, o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}. A versão de teste utiliza de alguns primitivos de semáforo do FreeRTOS, porém esses podem ser generalizados para multi-plataforma.
 
+\subsection{Programa de Teste}
+
+O programa de teste escolhido foi desenvolvido em 3 versões, o algoritmo de convolução é idêntico, tendo como alteração apenas o setup das tarefas adicionais (no caso de TMR) e a alocação inicial de memória.
+
+% TODO: Mostrar image da lena e da lena preta
+
+O fluxo do programa de teste pode ser generalizado da seguinte forma:
+
+% TODO: Fluxo grama linha linha
+
 \section{Verificação}
 
-O primeiro passo após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para relizar a injeção. Utilizando um script Python com a biblioteca \texttt{elftools} para analisar a tabela de símbolos do arquivo.
+O primeiro passo após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para relizar a injeção. Utilizando um script Python com a biblioteca \texttt{elftools} para analisar a tabela de símbolos do arquivo. É também possível 
 
 % TODO: Imagem dos simbolos
 
