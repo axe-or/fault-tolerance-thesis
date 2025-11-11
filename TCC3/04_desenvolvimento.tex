@@ -180,9 +180,9 @@ Asserções locais são utilizadas para detectar a violação de invariantes den
 
 A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (\texttt{base}) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
 
-% \subsection{Compilação do Projeto}
+\subsection{Compilação do Projeto}
 
-% Apesar do alvo de compilação do projeto ser a STM32F411CEU6 com o FreeRTOS com CMSISv2, o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}.
+Apesar do alvo de compilação do projeto ser um microcontrolador com o FreeRTOS com CMSISv2, o design transparente permitiu também a implementação para testes e um ciclo de debug mais rápido em sistemas operacionais completos (Linux e Windows 10/11) sem necessitar de um simulador. Os detalhes de plataforma são consolidados em uma única unidade de tradução e condicionalmente compilados dependendo do sistema alvo. Todo código específico de plataforma pode ser encontrado em suas respectivas unidades \texttt{platform\_PLATAFORMA.cpp}. A versão de teste utiliza de alguns primitivos de semáforo do FreeRTOS, porém esses podem ser generalizados para multi-plataforma.
 
 \section{Verificação}
 
