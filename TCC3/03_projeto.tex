@@ -21,11 +21,11 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
 
 \section{Premissas}
 
-Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau a mais de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}.
+Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau grande de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}.
 
 Durante os testes, será assumido um critério Hard Real-Time sem presença de falhas, isto é, não é aceitável o descumprimento do prazo de execução quando não houver falhas. Na presença de falhas, o prazo também deve ser mantido porém será considerado preferível que falhas sejam detectadas e causem um atraso ao invés de causar uma corrupção silenciosa.
 
-Com o fim de reduzir o tamanho do executável e manter o fluxo de mais previsível não serão utilizados mecanismos de exceção com desenrolamento (\textit{unwinding}) da pilha. Também não será utilizado de RTTI (Runtime Type Information). Todos os erros devem portanto ser tratados como valores ou como falhas lógicas.
+Com o fim de reduzir o tamanho do executável e manter o fluxo de mais previsível não serão utilizados mecanismos de exceção com desenrolamento (unwinding) da pilha. Também não será utilizado de RTTI (Runtime Type Information). Todos os erros devem portanto ser tratados como valores ou como falhas lógicas.
 
 Necessariamente, é preciso também presumir que testes sintéticos possam ao menos aproximar a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de falhas pode ser utilizada para verificar as tendências e custos relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
 
@@ -111,13 +111,13 @@ Com o objetivo de promover a reutilização de código, será criada uma interfa
         \textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa \\
         \hline
 
-        \textbf{RF04} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas \\
+        \textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas \\
         \hline
 
-        \textbf{RF05} & Dependabilidade superior à versão do sistema sem técnicas \\
+        \textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas \\
         \hline
         
-        \textbf{RF06} & Monitoramento do número de falhas detectadas e violações de prazos  \\
+        \textbf{RF05} & Monitoramento do número de falhas detectadas e violações de prazos  \\
         \hline
     \end{tabular}
     \label{tab:rf}
@@ -144,6 +144,7 @@ Com o objetivo de promover a reutilização de código, será criada uma interfa
         \textbf{RNF04} & Implementação realizada em C++ (versão 20 ou acima) \\
         \hline
         
+        \textbf{RNF05} & Código Fonte disponível sob licença permissíva \\
     \end{tabular}
     \label{tab:rnf}
 \end{quadro}
@@ -247,7 +248,7 @@ Asserts serão utilizados para verificar invariantes, qualquer quebra de contrat
 
 Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, textbf\{RF02}) serão feitos testes unitários das técnicas isoladas.
 
-A validação da detecção de falhas e vencimento de prazos (\textbf{RF05}, \textbf{RF06}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
+A validação da detecção de falhas e vencimento de prazos (\textbf{RF04}, \textbf{RF05}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
 
 Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
 
@@ -255,11 +256,9 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-Serão injetadas por caso até 5 falhas transientes. Os tipos de falha serão: 3 falhas com endereços fixos, com o objetivo de corromper variáveis locais ou globais já conhecidas com o fim de causar falhas em pontos do programa que produzam resultados diretos, e 2 falhas que utilizarão de um endereço base e causarão uma corrupção aleatória a partir do endereço base.
+A injeção será feita em 2 rodadas. A primeira rodada consiste em em símbolos conhecidos do programa de exemplo (filtro da imagem, linha do output e tamanho da imagem) com o objetivo de demonstrar as técnicas em uma situação de falha previsível, onde o valor e posição exata do upset não são conhecidos, mas não ocorre corrupção direta do estado do stack frame. A segunda rodada consistirá em escolher um de aleatório da região de memória das tarefas e da região de memória usada para alocações temporárias, será sorteado um deslocamento aleatório para cada uma das regiões e será aplicado um upset na palavra do endereço, o objetivo aqui é melhor demonstrar o efeito de corrupções aleatórias no stack das tarefas assim como na fronteira entre o armazenamento entre variáveis, que podem deixar o sistema em um estado irrecuperável.
 
-As regiões de memória escolhidas estarão no segmento estático com escrita e nos stack frames das tarefas. O programa de teste será executado com as mesmas falhas porém com diferentes combinações de técnicas.
-
-As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat pelo menos no início e no final para monitorar cumprimento do prazo de execução.
+As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat no início e no final para monitorar cumprimento do prazo de execução global assim como uma instância local.
 
 \begin{quadro}[H]
     \centering
@@ -289,9 +288,10 @@ As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o 
 
 \subsection{Programa de Teste}
 
-Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM.
+Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM. O output é construído linha por linha. Cada linha possui um prazo hard real-time de 125ms para ser computada.
 
 O programa requer um uso de CPU alto e realiza uma grande quantidade de acessos à memória, o processo de convolução também necessita de valores estáveis de kernel e offsets para calcular o valor de cada pixel. A fundamentação teórica da aplicação destes algoritmos é primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
+
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
 
