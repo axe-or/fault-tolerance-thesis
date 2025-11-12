@@ -81,6 +81,13 @@ Após feitas as injeções desejadas, o programa é resumido e seu resultado ins
     \label{fig:injResultadoVirtualcom}
 \end{figure}
 
+Para observar o resultado, basta definir a macro \texttt{DUMP_BITMAP} e redirecionar a saída do microCOM para um arquivo PGM. Em um sistema POSIX seria algo como \texttt{microcom -f -p /dev/ttyACM0 > out.pgm}
+
+Refazendo o processo acima com a saída redirecionada é possível observar o output da imagem com o filtro Sobel aplicado como desmonstrado nas figuras ?? e ??.
+
+\textbf{[FOTO DO GATO NORMAL E GATO SOBEL]}
+
+
 \section{Dependabilidade e Performance}
 
 Após repetir o processo de injeção da \autoref{sec:execucao} para as combinações de técnicas, foi possível coletar os dados representados na \autoref{tab:resSemInj}. O pico de memória da arena para o armazenamento das tarefas é denominado $M_{task}$, o pico da arena de memória adicional é denominado $M_{extra}$. As variáveis $T_{total}$ e $T_{linha}$ representam o tempo total de execução e o tempo médio por linha, respectivamente. A variável $D$ indica o número de detecções de erros bem-sucedidas.

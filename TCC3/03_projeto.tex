@@ -250,6 +250,24 @@ A validação da detecção de falhas e vencimento de prazos (\textbf{RF04}, \te
 
 Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
 
+\subsection{Programa de Teste}
+
+Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM. O output é construído linha por linha. Cada linha possui um prazo hard real-time de 125ms para ser computada.
+
+O programa requer um uso de CPU alto e realiza uma grande quantidade de acessos à memória, o processo de convolução também necessita de valores estáveis de kernel e offsets para calcular o valor de cada pixel. A fundamentação teórica da aplicação destes algoritmos é primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
+
+A estrutura do programa com CRC é demonstrada na figura \autoref{fig:programaTeste}, caso o check de CRC não seja bem sucedido, a linha é recomputada com a mesma técnica de tolerância mais uma vez. Caso CRC esteja desabilitado, este passo é ignorado.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Fluxo do programa de exemplo}
+    \includegraphics[width=0.90\textwidth]{assets/programa_teste.png} \\
+    \captionsetup{justification=raggedright}
+    \caption*{Fonte: Elaborada pelo autor}
+    \label{fig:programaTeste}
+\end{figure}
+
 \subsection{Campanha de Injeção de Falhas} \label{subsec:campanhaInjecao}
 
 Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
@@ -286,25 +304,6 @@ As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o 
     \label{tab:combinacoesTecnicas}
 \end{quadro}
 
-\subsection{Programa de Teste}
-
-Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM. O output é construído linha por linha. Cada linha possui um prazo hard real-time de 125ms para ser computada.
-
-O programa requer um uso de CPU alto e realiza uma grande quantidade de acessos à memória, o processo de convolução também necessita de valores estáveis de kernel e offsets para calcular o valor de cada pixel. A fundamentação teórica da aplicação destes algoritmos é primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
-
-A estrutura do programa com CRC é demonstrada na figura \autoref{fig:programaTeste}, caso o check de CRC não seja bem sucedido, a linha é recomputada com a mesma técnica de tolerância mais uma vez. Caso CRC esteja desabilitado, este passo é ignorado.
-
-\begin{figure}[H]
-    \centering
-    \captionsetup{justification=centering}
-    \caption{Fluxo do programa de exemplo}
-    \includegraphics[width=0.90\textwidth]{assets/programa_teste.png} \\
-    \captionsetup{justification=raggedright}
-    \caption*{Fonte: Elaborada pelo autor}
-    \label{fig:programaTeste}
-\end{figure}
-
-
 
 
 \section{Análise de Riscos} \label{sec:analiseRiscos}
@@ -332,41 +331,7 @@ O trabalho é de risco baixo, dado que constrói em cima de fundações técnica
     \label{tab:riscos}
 \end{quadro}
 
-% TODO: é pra deixar isso aqui?
-\section{Cronograma do TCC3}
-
-\begin{quadro}[H]
-    \centering
-    \caption{Combinações de técnicas utilizadas}
-    \begin{tabular}{|p{0.25\textwidth}|c|c|c|c|c|c|c|}
-    \hline
-    \rowcolor[HTML]{C0C0C0}
-    \hline
-    \textbf{Atividade} & \textbf{07/2025} & \textbf{08/2025} & \textbf{09/2025} & \textbf{10/2025} & \textbf{11/2025} & \textbf{12/2025} \\
-    \hline
-    Escrita da Monografia                           & XXXX & XXXX & XXXX & XXXX  & XX-- & ---- \\
-    \hline
-    Implementação dos Algoritmos                    & XXXX & XX-- & ---- & ----  & ---- & ---- \\
-    \hline
-    Testes dos Algoritmos                           & XXXX & XX-- & ---- & ----  & ---- & ---- \\
-    \hline
-    Implementação dos Programas Exemplo             & ---- & --XX & XXX- & ----  & ---- & ---- \\
-    \hline
-    Teste dos Programas Exemplo                     & ---- & --XX & XXX- & ----  & ---- & ---- \\
-    \hline
-    Implementação da Injeção com Hardware           & ---- & ---- & -XXX & XX--  & ---- & ---- \\
-    \hline
-    Execução microcontrolador e coleta das métricas & ---- & ---- & ---- & XXXX  & X--- & ---- \\
-    \hline
-    Revisão Textual                                 & ---- & ---- & ---- & --XX  & XXXX & XX-- \\
-    \hline
-    \end{tabular}
-    \label{tab:cronograma3}
-\end{quadro}
-
-
 % -- TODO ---
-% Novo digrama pro heartbeat signal
 
 % ---- TCC2 ----
 % Comentários Douglas

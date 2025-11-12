@@ -120,7 +120,7 @@ printf("Sum = %d\n", sum);
 
 \subsection{Deadlines e Heartbeat}
 
-A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{code:deadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
+A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{cod:deadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
 
 É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-deadlines arbitrariamente aninhadas, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas \cite{MakingReliableDistSystems}.
 
@@ -157,7 +157,7 @@ struct DeadlineSlot {
     void reset(){ last_tick = tick_now(); }
 };
 \end{lstlisting}
-\label{cod:deadline}
+\label{cod:deadlineWatcher}
 \end{quadro}
 
 Para a leitura e comparação de temporizadores, são utilizadas 2 funções específicas para cada plataforma: \texttt{tick\_now} para observar o estado temporal atual e \texttt{tick\_frequency} para ler a frequência do temporizador.
@@ -187,11 +187,3 @@ Apesar do alvo de compilação do projeto ser um microcontrolador com o FreeRTOS
 \subsection{Programa de Teste}
 
 O programa de teste escolhido foi desenvolvido em 3 versões (Controle, TMR, Reexecução), o algoritmo de convolução é o mesmo como demonstrado no \autoref{cap:proj}, tendo como alteração apenas o setup das tarefas adicionais (no caso de TMR) e a alocação inicial de memória. Para carregar a armazenar a imagem embutida, foi escrito um pequeno carregador de imagem PGM do tipo binário (P5).
-
-O Resultado esperado do programa é a aplicação do filtro sobel, como desmonstrado nas figuras ?? e ??
-
-\textbf{[FOTO DO GATO E GATO SOBEL]}
-
-
-
-
