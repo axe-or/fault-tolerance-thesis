@@ -131,7 +131,7 @@ Injetando falhas nos filtros e no output como descrito no \autoref{cap:proj}, fo
 	\label{tab:resInjecaoFixa}
 \end{quadro}
 
-No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falha local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. 
+No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falha local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. Para cada técnica foi escolhida uma variável do stack frame e aplicado um upset a partir de um offset e um tamanho. A notação $V+O:N$ indica que foi aplicado uma corrupção de tamanho $N$ a partir do endereço da variável $V$ deslocado por $O$ bytes.
 
 \begin{quadro}[H]
 	\centering
@@ -142,10 +142,10 @@ No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção d
 		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{$D$} & \textbf{Resultado} & \textbf{Observação} & \textbf{Var} \\
 		\hline
 
-		N/A	& ~1100ms & 60ms & 2768B & 374B & 1 & Deadline & Deadline de linha expirada & row 0:8 \\ \hline
-		CRC32 & ~1100ms & 60ms & 2768B & 856B & 1 & Deadline & Deadline de linha expirada & row 0:8 \\ \hline
-		Reexec & <100ms & 0ms & 2768B & 1074B & 1 & Assert & Assert: row.width != output.width & output\_rows 4:12 \\ \hline
-		Reexec + CRC32 & 2265ms & 38ms & 2768B & 1556B & 1 & Hard Fault & Hard Fault do FreeRTOS & output\_rows 4:12 \\ \hline
+		N/A	& ~1100ms & 60ms & 2768B & 374B & 1 & Erro & Deadline de linha expirada & row 0:8 \\ \hline
+		CRC32 & ~1100ms & 60ms & 2768B & 856B & 1 & Erro & Deadline de linha expirada & row 0:8 \\ \hline
+		Reexec & <100ms & 0ms & 2768B & 1074B & 1 & Erro & Assert: row.width != output.width & output\_rows 4:12 \\ \hline
+		Reexec + CRC32 & 2265ms & 38ms & 2768B & 1556B & 1 & Erro & Hard Fault do FreeRTOS & output\_rows 4:12 \\ \hline
 		TMR & 4625ms & 38ms & 8336B & 1126B & 0 & OK & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
 		TMR + CRC32 & 4628ms & 38ms & 8336B & 1608B & 0 & OK & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
 
