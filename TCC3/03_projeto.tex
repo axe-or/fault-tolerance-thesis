@@ -256,9 +256,9 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-A primeira rodada de injeção consiste em em símbolos conhecidos do programa de exemplo (filtro da imagem, linha do output e tamanho da imagem) com o objetivo de demonstrar as técnicas em uma situação de falha previsível, onde o valor e posição exata do upset não são conhecidos, mas não ocorre corrupção direta do estado do stack frame.
+A primeira rodada de injeção consiste em em símbolos conhecidos do programa de exemplo (linha do output e imagem resultado) com o objetivo de demonstrar as técnicas em uma situação de falha previsível, onde o valor e posição exata do upset não são conhecidos, mas não ocorre corrupção direta do estado do stack frame.
 
-A segunda rodada consiste em escolher um deslocamento aleatório da base do stack de uma tarefa em execução e causar um upset em 16 bytes subsequentes. O objetivo deste teste é avaliar como as tarefas irão se comportar na presença de uma falha que diretamente corrompe seu estado interno.
+A segunda rodada consiste em  em execução e causar um upset de $N$ bytes a partir do endereço de uma variável local. O objetivo deste teste é avaliar como as tarefas irão se comportar na presença de uma falha que diretamente corrompe seu stack frame.
 
 As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat no início e no final para monitorar cumprimento do prazo de execução global assim como uma instância local.
 
