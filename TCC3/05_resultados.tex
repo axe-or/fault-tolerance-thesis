@@ -95,9 +95,54 @@ Refazendo o processo acima com a saída redirecionada é possível observar o ou
 	\label{fig:gatoNormalESobel}
 \end{figure}
 
-\section{Mecanismos de Tolerância}
+\section{CRC em Detalhes}
 
-Esta seção aborda de uma forma mais direta como a detecção afeta de erros ocorrem em detalhes. Primeiramente, sem utilizar Reexecução ou TMR, é possível observar o comportamento do CRC nas linhas. Após a iteração da imagem, cada linha possui um CRC32 associado, 
+Esta seção foca especificamente na aplicação do CRC. Para essa demonstração em particular não será utilizado Reexecução ou TMR.
+
+A \autoref{fig:crcDemo1} demonstra estado inicial do cálculo do CRC de cada linha. Na janela superior direita estão os conteúdos da memória do vetor de CRCs e na parte inferior os dados de pixel da imagem output.
+
+Na \autoref{fig:crcDemo2} é demonstrado a imagem após ter as linhas filtradas e seus valores de checagem calculados. É introduzido uma corrupção na primeira linha do output (para facilitar visualização) na \autoref{fig:crcDemo3}.
+
+Após a inserção, é realizado a checagem dos valores CRC com suas linhas correspondentes, os valores são modificados e viram um vetor que serve como uma máscara booleana para decidir quais linhas necessitam ser recomputadas, linhas marcadas com 0 indicam necessidade de recomputação pois a checagem falhou. A \autoref{fig:crcDemo4} demonstra que a linha que sofreu um upset é corretamente identificada. Cores indicam a relação do valor e sua região de memória.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Estado Inicial}
+	\includegraphics[width=1.0\textwidth]{assets/crc_demo_1.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:crcDemo1}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Convolução aplicada e CRCs de cada linha calculados}
+	\includegraphics[width=1.0\textwidth]{assets/crc_demo_2.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:crcDemo2}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Inserção de um valor upset}
+	\includegraphics[width=1.0\textwidth]{assets/crc_demo_3.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:crcDemo3}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Comparação dos CRCs resulta em máscara de execução}
+	\includegraphics[width=0.95\textwidth]{assets/crc_demo_4.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:crcDemo4}
+\end{figure}
+
+
 
 
 \section{Dependabilidade e Performance}
