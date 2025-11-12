@@ -81,11 +81,23 @@ Após feitas as injeções desejadas, o programa é resumido e seu resultado ins
     \label{fig:injResultadoVirtualcom}
 \end{figure}
 
-Para observar o resultado, basta definir a macro \texttt{DUMP_BITMAP} e redirecionar a saída do microCOM para um arquivo PGM. Em um sistema POSIX seria algo como \texttt{microcom -f -p /dev/ttyACM0 > out.pgm}
+Para observar o resultado, basta definir a macro \texttt{DUMP\_BITMAP} e redirecionar a saída do microCOM para um arquivo PGM. Em um sistema POSIX seria algo como \texttt{microcom -f -p /dev/ttyACM0 > out.pgm}
 
-Refazendo o processo acima com a saída redirecionada é possível observar o output da imagem com o filtro Sobel aplicado como desmonstrado nas figuras ?? e ??.
+Refazendo o processo acima com a saída redirecionada é possível observar o output da imagem com o filtro Sobel aplicado à direita, como desmonstrado na figura \autoref{fig:gatoNormalESobel}.
 
-\textbf{[FOTO DO GATO NORMAL E GATO SOBEL]}
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Resultado do Filtro Sobel}
+	\includegraphics[width=0.95\textwidth]{assets/cat_regular_to_sobel.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: (Original) https://www.flickr.com/photos/evapro/539719106}
+	\label{fig:gatoNormalESobel}
+\end{figure}
+
+\section{Mecanismos de Tolerância}
+
+Esta seção aborda de uma forma mais direta como a detecção afeta de erros ocorrem em detalhes. Primeiramente, sem utilizar Reexecução ou TMR, é possível observar o comportamento do CRC nas linhas. Após a iteração da imagem, cada linha possui um CRC32 associado, 
 
 
 \section{Dependabilidade e Performance}
