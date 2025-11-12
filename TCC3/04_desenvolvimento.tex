@@ -1,13 +1,13 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
-% TODO: Referenciar o quadro de DeadlineWatcher
 \section{Estrutura da Implementação}
 Esta seção aborda os detalhes técnicos mais importantes para a implementação das técnicas de tolerância à falhas
 
 \subsection{Estratégia de Alocação}
 
-Com exceção de algumas alocações internas do FreeRTOS e da biblioteca do sistema, a maioria das alocações dinâmicas realizadas é feita com o uso de alocadores do tipo arena de memória. Este padrão de alocador comporta-se similarmente à uma pilha, o incremento e decremento de um ponteiro determina a barreira entre memória disponível e alocada. Portanto alocações são rápidas e simples, assim como liberação total ou reset para um estado anterior, a principal desvantagem destes alocadores é não serem capazes de expressar ordems de alocação e liberação granulares muito distintas .
+
+Com exceção de algumas alocações internas do FreeRTOS e da biblioteca do sistema, a maioria das alocações dinâmicas realizadas é feita com o uso de alocadores do tipo arena de memória. Este padrão de alocador comporta-se similarmente à uma pilha, o incremento e decremento de um ponteiro determina a barreira entre memória disponível e alocada. Portanto alocações são rápidas e simples, assim como liberação total ou reset para um estado anterior, a principal desvantagem destes alocadores é não serem capazes de expressar ordems de alocação e liberação granulares muito distintas \cite{ArenaAllocation}.
 
 Pela estrutura do alocador ser simples, a coleta de métricas e injeção de falhas foi simplificada dado que é possível acessar a maioria dos componentes do sistema apenas em termos de seu deslocamenteo em relação à sua arena que é facilmente identificável no depurador ao pesquisar por seu símbolo.
 
@@ -194,98 +194,4 @@ O fluxo do programa de teste pode ser generalizado da seguinte forma:
 
 % TODO: Fluxo grama linha linha
 
-\section{Verificação}
-
-O primeiro passo após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para relizar a injeção. Utilizando um script Python com a biblioteca \texttt{elftools} para analisar a tabela de símbolos do arquivo. É também possível 
-
-% TODO: Imagem dos simbolos
-
-Foram selecionados os símbolos globais:
-- task\_arena: Ponteiro base das alocações do stack das tarefas, será utilizada para corrupção de stack aleatória
-- input: Pedaço da imagem de input decodificada
-- output: Espaço para a imagem de output
-
-Para os símbolos locais, é necessário identificar seu offset de pilha no momento da execução, para isso será feita inspeção ad-hoc no depurador. Os alvos escolhidos foram os filtros da imagem, pois possuem uma área maior e resultam em impacto significativo no output quando modificados.
-
-São sorteados 2 deslocamentos para as corrupções na pilha. É feito o flash do programa de teste na placa e inicia-se uma sessão de debugging no ST-Link.
-
-\section{Verificação}
-
-Após a análise das técnicas, é possível verificar os requisitos funcionais na \autoref{tab:verirf} e não-funcionais no \autoref{tab:verirnf}.
-
-\begin{quadro}[H]
-	\centering
-	\caption{Requisitos funcionais}
-	\begin{tabular}{|p{0.125\textwidth}|p{0.4\textwidth}|p{0.4\textwidth}|}
-		\hline
-		\rowcolor[HTML]{C0C0C0}
-		\textbf{Requisito} & \textbf{Descrição} & \textbf{Validação} \\
-		\hline
-		
-		\textbf{RF01} & Implementação de todos os algoritmos descritos na \autoref{subsec:algoritmos} & TODO \\
-		\hline
-		
-		\textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa & TODO\\
-		\hline
-		
-		\textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas & Validado com os testes sem injeção de falha \\
-		\hline
-		
-		\textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas & O sistema foi capaz de mascarar algumas falhas e detectar outras. Portanto possui uma dependabilidade superior \\
-		\hline
-		
-		\textbf{RF05} & Monitoramento do número de falhas detectadas e violações de prazos & Implementado em \texttt{DeadlineWatcher} em conjunto com o IWDG. Foi capaz de detectar violações \\
-		\hline
-	\end{tabular}
-	\label{tab:verirf}
-\end{quadro}
-
-Os requisitos não funcionais também foram analisados conforme o \autoref{tab:verirnf}.
-
-\begin{quadro}[H]
-	\centering
-	\caption{Validação dos Requisitos não funcionais}
-	\begin{tabular}{|p{0.125\textwidth}|p{0.4\textwidth}|p{0.4\textwidth}|}
-		\hline
-		\rowcolor[HTML]{C0C0C0}
-		\textbf{Requisito} & \textbf{Descrição} & \textbf{Validação} \\
-		\hline
-		
-		\textbf{RNF01} & O consumo de memória deve ser pré determinado em tempo de compilação ou na inicialização do sistema & O pico de memória é estável e determinado no startup da aplicação \\
-		\hline
-		
-		\textbf{RNF02} & A interface deve ser construida sobre o escalonador preemptivo do FreeRTOS & Os mecanismos de tarefa são implementados sobre o escalonador \\
-		\hline
-		
-		\textbf{RNF03} & Deve ser compatível com arquitetura ARMv7M ou ARMv8M & O projeto compila e executa na arquitetura \\
-		\hline
-		
-		\textbf{RNF04} & Implementação realizada em C++ (versão 20 ou acima) & O projeto compila na versão C++20 com GCC e Clang\\
-		\hline
-		
-		\textbf{RNF05} & Código Fonte disponível sob licença permissíva & Validado parcialmente. O módulo de USB\_DEVICE não é compatível com uma licença BSD2 porém não é essencial apra a demonstração das técnicas. O resto do código cumpre este requisito. \\
-		\hline
-	\end{tabular}
-	\label{tab:verirnf}
-\end{quadro}
-
-
-\subsection{Demonstração do processo de Injeção}
-
-% O programa sempre será pausado logo após o setup inicial das arenas e tasks e antes da saída, são realizados 2 rodadas de injeção, uma com a injeção em pontos conhecidos e outra para os offsets aleatórios.
-
-% As falhas fixas (input, output e filtro) são injetadas durante 3 iterações da convolução, na linha 30 e na linha 60 e 90 da imagem, que correspondem à aproximadamente um terço do processo. As falhas aleatórias são injetadas nas iterações 40 e 80 da convolução, mas afetam um pedaço arbitrário de pilha.
-
-% % TODO: Imagem no VScode(debugging)
-
-% A injeção é aplicada através da janela de símbolos:
-
-% % TODO: Imagem no VScode(simb)
-
-% O programa é resumido e seu comportamento monitorado, antes de sair as métricas coletadas são lidas e armazenadas. 
-% Caso ocorra uma violação de deadline, será possível notar um salto para o \texttt{HardFault\_Handler} assim como uma mensagem no console indicando qual tarefa violou caso seja possível identificá-la.
-
-% O output do programa é emitido pela conexão VirtualCOM e é colocado num arquivo \texttt{out.pgm} redirecionando o resultado da conexão serial com um programa de linha de comando da seguinte forma: \texttt{microcom -p /dev/ttyACM0 > out.pgm}.
-
-% % TODO: Imagem do VSCode e o arquivo resultado do lado
-
+\
