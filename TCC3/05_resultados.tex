@@ -2,29 +2,53 @@
 \label{cap:resultados}
 
 \section{Dependabilidade e Performance}
-Após repetir o processo de injeção do capítulo anterior para as combinações de técnicas, foi possível coletar os seguntes dados
+Após repetir o processo de injeção do capítulo anterior para as combinações de técnicas, foi possível coletar os dados representados na \autoref{tab:resSemInj}. O pico de memória da arena para o armazenamento das tarefas é denominado $M_{task}$, o pico da arena de memória adicional é denominado $M_{extra}$. As variáveis $T_{total}$ e $T_{linha}$ representam o tempo total de execução e o tempo médio por linha, respectivamente.
 
-\subsection{Impacto na Detecção}
+\begin{quadro}[H]
+	\centering
+	\caption{Resultados sem injeção}
+	\begin{tabular}{|l|c|c|c|c|c|c|}
+		\hline
+		\rowcolor[HTML]{C0C0C0}
+		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{Detecção} & \textbf{Resultado} \\
+		\hline
+		N/A & \textsc{1542}ms & 12ms & 2768B & 374B & 0 & OK \\
+		CRC32 & 1549ms & 12ms & 2768B & 856B & 0 & OK \\ \hline
+		Reexec & 4631ms & 38ms & 2768B & 1074B & 0 & OK \\ \hline
+		Reexec + CRC32 & 4635ms & 38ms & 2768B & 1556B & 0 & OK \\ \hline
+		TMR & 4644ms & 38ms & 8336B & 1126B & 0 & OK \\ \hline
+		TMR + CRC32 & 4651ms & 38ms & 8336B & 1608B & 0 & OK \\ \hline
+\end{tabular}
+\label{tab:resSemInj}
+\end{quadro}
 
-% TODO Falaar aq
+Os resultados neste caso servem para estabelcer uma linha base das latências envolvidas. O método de CRC32 é relativamente rápido, adicionando apenas alguns milisegundos e um pouco menos de 500 bytes para manter o CRC de cada linha da imagem juntamente com buffers temporários para processamento.
 
-| Injeção | Técnicas | Detectado? | Resultado |
-% TODO dados
+As técnicas de reexecução e TMR possuem um grande impacto no tempo de execução de aproxiamente 3.02x, já a técnica de TMR em particular necessita do triplo de memória de tarefas para manter o stack de todas suas sub-tarefas assim como triplo de memória de trabalho para garantir o isolamento entre as sub-tarefas. O tempo de execução entre a Reexecução e TMR não é muito grande, o sistema foi executado sem multiprocessamento simétrico, portanto não foi possível observar as vantagems potenciais causadas pelo uso de paralelismo. O custo das trocas de contexto do kernel e das sincronizações pode ser observado no valor das tarefas TMR serem tipicamente apenas alguns millisegundos mais lentas que as versões de reexecução.
 
-\subsection{Impacto no Tempo de execução}
 
-É possível observar que não houve uma mudança significativa no tempo de execução entre TMR e reexecução, isso é esperado pois não foi utilizado multi processamento simétrico na placa. Indicando que as diferenças possam ser variações parcialmente causadas pelas trocas de contexto e passagem nas filas.
+Injetando falhas nos filtros e no output como descrito no \autoref{cap:proj}, foi possível observar o comportamento das técnicas na presença de falhas que não envolvam corrupção de seu stack frame.
 
-| Injeção | Técnicas | Tempo de execução (total) | Tempo de execução Médio (ms/Linha) |
+\begin{quadro}[H]
+	\centering
+	\caption{Resultados com Injeção em variáveis fixas}
+	\begin{tabular}{|p{0.1\textwidth}|c|c|c|c|c|c|p{0.2\textwidth}|}
+		\hline
+		\rowcolor[HTML]{C0C0C0}
+		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{Detecção} & \textbf{Resultado} & \textbf{Observação} \\
+		\hline
+		
+		N/A & 1544ms & 12ms & 2768B & 374B & 0 & Corrupção & N/A  \\ \hline
+		CRC32 & 1565ms & 12ms & 2768B & 856B & 1 & OK & Corrupção detectada no output apenas \\ \hline
+		Reexec & 4634ms & 38ms & 2768B & 1074B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		Reexec + CRC32 & 4676ms & 38ms & 2768B & 1556B & 2 & OK & Corrupção mascarada e output recomputado \\ \hline
+		TMR & 4647ms & 38ms & 8336B & 1126B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		TMR + CRC32 & 4654ms & 38ms & 8336B & 1608B & 2 & OK & Corrupção mascarada e output recomputado \\ \hline
+		
 
-% TODO dados
-
-\subsection{Impacto no Uso de Memória RAM}
-
-O maior impacto na memória naturalmente será a presença de novas tasks, portanto a execução TMR gera o maior impacto. O impacto na memória das variáveis globais não possuiu muita variação
-
-| Injeção | Técnicas | Memória de Tarefa (pico) | Memória Compartilhada (pico) |
-% TODO dados
+	\end{tabular}
+	\label{tab:resInjecaoFixa}
+\end{quadro}
 
 
 % TODO botar isso num apendice?
