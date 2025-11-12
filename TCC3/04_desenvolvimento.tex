@@ -188,7 +188,7 @@ Apesar do alvo de compilação do projeto ser um microcontrolador com o FreeRTOS
 
 O programa de teste escolhido foi desenvolvido em 3 versões, o algoritmo de convolução é idêntico, tendo como alteração apenas o setup das tarefas adicionais (no caso de TMR) e a alocação inicial de memória.
 
-% TODO: Mostrar image da lena e da lena preta
+% TODO: foto do gato e do lado foto do gato sobel
 
 O fluxo do programa de teste pode ser generalizado da seguinte forma:
 
@@ -207,7 +207,68 @@ Foram selecionados os símbolos globais:
 
 Para os símbolos locais, é necessário identificar seu offset de pilha no momento da execução, para isso será feita inspeção ad-hoc no depurador. Os alvos escolhidos foram os filtros da imagem, pois possuem uma área maior e resultam em impacto significativo no output quando modificados.
 
-São sorteados 2 deslocamentos para as corrupções na pilha. É feito o flash do programa de teste na placa e inicia-se uma sessão de debugging no ST-Link. 
+São sorteados 2 deslocamentos para as corrupções na pilha. É feito o flash do programa de teste na placa e inicia-se uma sessão de debugging no ST-Link.
+
+\section{Verificação}
+
+Após a análise das técnicas, é possível verificar os requisitos funcionais na \autoref{tab:verirf} e não-funcionais no \autoref{tab:verirnf}.
+
+\begin{quadro}[H]
+	\centering
+	\caption{Requisitos funcionais}
+	\begin{tabular}{|p{0.125\textwidth}|p{0.4\textwidth}|p{0.4\textwidth}|}
+		\hline
+		\rowcolor[HTML]{C0C0C0}
+		\textbf{Requisito} & \textbf{Descrição} & \textbf{Validação} \\
+		\hline
+		
+		\textbf{RF01} & Implementação de todos os algoritmos descritos na \autoref{subsec:algoritmos} & TODO \\
+		\hline
+		
+		\textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa & TODO\\
+		\hline
+		
+		\textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas & Validado com os testes sem injeção de falha \\
+		\hline
+		
+		\textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas & O sistema foi capaz de mascarar algumas falhas e detectar outras. Portanto possui uma dependabilidade superior \\
+		\hline
+		
+		\textbf{RF05} & Monitoramento do número de falhas detectadas e violações de prazos & Implementado em \texttt{DeadlineWatcher} em conjunto com o IWDG. Foi capaz de detectar violações \\
+		\hline
+	\end{tabular}
+	\label{tab:verirf}
+\end{quadro}
+
+Os requisitos não funcionais também foram analisados conforme o \autoref{tab:verirnf}.
+
+\begin{quadro}[H]
+	\centering
+	\caption{Validação dos Requisitos não funcionais}
+	\begin{tabular}{|p{0.125\textwidth}|p{0.4\textwidth}|p{0.4\textwidth}|}
+		\hline
+		\rowcolor[HTML]{C0C0C0}
+		\textbf{Requisito} & \textbf{Descrição} & \textbf{Validação} \\
+		\hline
+		
+		\textbf{RNF01} & O consumo de memória deve ser pré determinado em tempo de compilação ou na inicialização do sistema & O pico de memória é estável e determinado no startup da aplicação \\
+		\hline
+		
+		\textbf{RNF02} & A interface deve ser construida sobre o escalonador preemptivo do FreeRTOS & Os mecanismos de tarefa são implementados sobre o escalonador \\
+		\hline
+		
+		\textbf{RNF03} & Deve ser compatível com arquitetura ARMv7M ou ARMv8M & O projeto compila e executa na arquitetura \\
+		\hline
+		
+		\textbf{RNF04} & Implementação realizada em C++ (versão 20 ou acima) & O projeto compila na versão C++20 com GCC e Clang\\
+		\hline
+		
+		\textbf{RNF05} & Código Fonte disponível sob licença permissíva & Validado parcialmente. O módulo de USB\_DEVICE não é compatível com uma licença BSD2 porém não é essencial apra a demonstração das técnicas. O resto do código cumpre este requisito. \\
+		\hline
+	\end{tabular}
+	\label{tab:verirnf}
+\end{quadro}
+
 
 \subsection{Demonstração do processo de Injeção}
 
