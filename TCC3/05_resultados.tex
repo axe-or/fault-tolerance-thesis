@@ -143,9 +143,49 @@ Após a inserção, é realizado a checagem dos valores CRC com suas linhas corr
 \end{figure}
 
 
-\section{Consenso em Detalhes}
+\section{Consenso (TMR) em Detalhes}
 
 Nas aplicações de reexecução e TMR é necessário aplicar um consenso majoritário dentre as 3 execuções, esta seção aborda o funcionamento do consenso em detalhes. Será utilizado TMR como um exemplo, pois é mais complexo e requer sincronização e o funcionamento do algoritmo majoritário é o mesmo aplicado na aplicação de Reexecução.
+
+Na \autoref{fig:tmrDemo1} é observado o estado inicial, as 3 tarefas replicadas são criadas e aguardam seus semáforos binários para iniciar um novo ciclo de trabalho.
+
+Uma corrupção de um NOT subtraído por 1 é realizada na segunda tarefa (índice 1), a discrepância entre o conteúdo das linhas das tarefas é demonstrado em \autoref{fig:tmrDemo2}.
+
+Na seguinte iteração (\autoref{fig:tmrDemo3}), a função de consenso detecta e mascara o erro, selecionado o resultado majoritário da terceira tarefa (índice 2) que está em concordância com a primeira.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Estado inicial - 3 tarefas}
+	\includegraphics[width=0.95\textwidth]{assets/tmr_demo_1.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:tmrDemo1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Upset inserido na segunda tarefa}
+	\includegraphics[width=0.95\textwidth]{assets/tmr_demo_2.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:tmrDemo2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Consenso majoritário seleciona opção que mascara o upset}
+	\includegraphics[width=0.95\textwidth]{assets/tmr_demo_3.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:tmrDemo3}
+\end{figure}
+
+O processo de consenso é idêntico para reexecução, porém ao invés de 3 estados provenientes de tarefas distintas que sincronizam, é realizado uma aplicação à um buffer com os resultados das 3 execuções sucessivas.
+
 
 \section{Dependabilidade e Performance}
 
