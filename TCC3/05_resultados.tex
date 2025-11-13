@@ -21,12 +21,12 @@ Para a fase de injeção com offsets do stack, foram sorteados uma variável loc
 
 \subsection{Demonstração do processo de Injeção}
 
-Com o microcontrolador conectado via ST-Link e com VirtualCOM por USB é inicializada uma sessão de debugging, o primeiro passo é inicializar a sessão com o breakpoint padrão na função \texttt{main} (\autoref{fig:injStartDebugger}) que é definida pelo código de plataforma da HAL fornecida pelo fabricante do microcontrolador. É inserido um breakpoint na função \texttt{entrypoint} que o ponto de entrada real da aplicação que ocorre após o setup de periféricos e do RTOS.
+Com o microcontrolador conectado via ST-Link e com VirtualCOM por USB é inicializada uma sessão de depuração, o primeiro passo é inicializar a sessão com o breakpoint padrão na função \texttt{main} (\autoref{fig:injStartDebugger}) que é definida pelo código de plataforma da HAL fornecida pelo fabricante do microcontrolador. É inserido um breakpoint na função \texttt{entrypoint} que o ponto de entrada real da aplicação que ocorre após o setup de periféricos e do RTOS.
 
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering}
-    \caption{Inicializar sessão de debugging no ST-Link}
+    \caption{Inicializar sessão de depuração no ST-Link}
     \includegraphics[width=0.7\textwidth]{assets/inj_start_debugger.png} \\
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
@@ -262,7 +262,7 @@ No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção d
 % TODO botar isso num apendice?
 \section{Impacto de falhas no Output}
 
-Foram selecionadas execuções que resultam em um output que possa ser visualizado para demonstrar o efeito dos upsets no resultado final. A  \autoref{fig:catSobel} demonstra o output desejado, com a imagem de um gato com um filtro Sobel aplicado. A \autoref{fig:catSobelKernelUpset} mostra o impacto de um upset causado no filtro (kernel) da convolução. Na \autoref{fig:catSobelSubtleUpset} a corrupção é bem mais sutil, manifestando-se como uma pequena horizontal clara na linha 6. Por fim, a figura \autoref{fig:catSobelInterrupted} demonstra o efeito da convolução sendo interrompida devido à um assert, deixando o resultado incompleto.
+Foram selecionadas execuções que resultam em um output que possa ser visualizado para demonstrar o efeito dos upsets no resultado final. A \autoref{fig:gatoNormalESobel} demonstra o output desejado, com a imagem de um gato com um filtro Sobel aplicado. A \autoref{fig:catSobelKernelUpset} mostra o impacto de um upset causado no filtro (kernel) da convolução. Na \autoref{fig:catSobelSubtleUpset} a corrupção é bem mais sutil, manifestando-se como uma pequena linha horizontal em $y = 6$. Por fim, a figura \autoref{fig:catSobelInterrupted} demonstra o efeito da convolução sendo interrompida devido à um assert, deixando o resultado incompleto.
 
 \begin{figure}[H]
 	\centering

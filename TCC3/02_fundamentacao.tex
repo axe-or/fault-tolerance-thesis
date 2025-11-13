@@ -236,9 +236,9 @@ Uma característica central para a utilidade de concorrência mesmo em situaçõ
     \label{fig:latencia}
 \end{figure}
 
-Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada, interrupções introduzem um fluxo de programa não local , violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada. Interrupções introduzem um fluxo de programa não local , violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
 
-É uma tendência atual aumentar o número de núcleos em dispositivos, com velocidades de relógio das CPUs possuindo ganhos marginais em relação ao impacto térmico, a maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de concorrência providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
+É uma tendência atual aumentar o número de núcleos em dispositivos devido à velocidades de relógio das CPUs possuirem ganhos marginais em relação ao impacto térmico. A maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de paralelismo providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
 
 \subsection{Execução de Tarefas na Presença de Falhas}
 
@@ -340,7 +340,7 @@ Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura
         \citefigure{ApplicationLevelFT} & BOSS & Máquinas PowerPC 823 e um PC x86\_64 não especificado & Simulada em Software & Redundância Modular, Deadlines, Rollback/Retry \\
         \hline
 
-        Este Trabalho & FreeRTOS & STM32 Bluepill & Lógica em Software e Hardware & Deadlines, Heartbeat, Asserts, Reexecução e Redundância de Tarefas \\
+        Este Trabalho & FreeRTOS & STM32 Blackpill & Lógica em Software e Hardware & Heartbeat/Deadline, Asserts, Reexecução e Redundância de Tarefas \\
         \hline
 
     \end{tabular}

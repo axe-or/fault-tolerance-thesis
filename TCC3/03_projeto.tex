@@ -149,9 +149,7 @@ Com o objetivo de promover a reutilização de código, será criada uma interfa
 
 \subsection{Interface} \label{subsec:interface}
 
-Para melhor generalizar o uso das técnicas, utiliza-se de uma abstração da estrutura de tarefa juntamente com um mecanismo de passagem de mensagens com detecção de erros.
-
-Uma mensagem envelopa um pacote de dados qualquer para que possa ser enviado de forma assíncrona entre tarefas. Neste caso, o ordenamento dos campos é importante: o pacote precisa ser o último membro para serialização de estruturas de tamanho arbitrário, a distribuição dos campos na memória é demonstrada na \autoref{fig:messageStruct}. 
+Para melhor generalizar o uso das técnicas, utiliza-se de uma abstração da estrutura de tarefa juntamente com um mecanismo de validação de payload via CRC32. A \autoref{fig:messageStruct} demonstra a estrutura de um envelope de dados que inclui um valor de checagem, note que bytes de enchimento necessitam ser ignorados.
 
 \begin{figure}[H]
     \centering
@@ -174,8 +172,6 @@ A tarefa é um objeto de interface que abstrai parte do estado utilizado pelo RT
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:bddTarefa}
 \end{figure}
-
-A \autoref{fig:bddTarefa} omite a replicação da V-Table por clareza visual, mas antes da invocação de qualquer método da V-Table, será feito uma comparação adicional com outras duas tabelas redundantes para detectar corrupções na própria tabela durante a indireção por ponteiro de função.
 
 \subsection{Algoritmos e Técnicas} \label{subsec:algoritmos}
 
