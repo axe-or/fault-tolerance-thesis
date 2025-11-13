@@ -95,7 +95,7 @@ Refazendo o processo acima com a saída redirecionada é possível observar o ou
 	\label{fig:gatoNormalESobel}
 \end{figure}
 
-\section{CRC em Detalhes}
+\subsection{CRC em Detalhes}
 
 Esta seção foca especificamente na aplicação do CRC. Para essa demonstração em particular não será utilizado Reexecução ou TMR.
 
@@ -143,7 +143,7 @@ Após a inserção, é realizado a checagem dos valores CRC com suas linhas corr
 \end{figure}
 
 
-\section{Consenso (TMR) em Detalhes}
+\subsection{Consenso (TMR) em Detalhes}
 
 Nas aplicações de reexecução e TMR é necessário aplicar um consenso majoritário dentre as 3 execuções, esta seção aborda o funcionamento do consenso em detalhes. Será utilizado TMR como um exemplo, pois é mais complexo e requer sincronização e o funcionamento do algoritmo majoritário é o mesmo aplicado na aplicação de Reexecução.
 
@@ -260,19 +260,40 @@ No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção d
 \end{quadro}
 
 % TODO botar isso num apendice?
-\subsection{Impacto no Output}
+\section{Impacto de falhas no Output}
 
-Foram selecionadas execuções que resultam em um output que possa ser visualizado para demonstrar o efeito dos upsetsno consigo
+Foram selecionadas execuções que resultam em um output que possa ser visualizado para demonstrar o efeito dos upsets no resultado final. A  \autoref{fig:catSobel} demonstra o output desejado, com a imagem de um gato com um filtro Sobel aplicado. A \autoref{fig:catSobelKernelUpset} mostra o impacto de um upset causado no filtro (kernel) da convolução. Na \autoref{fig:catSobelSubtleUpset} a corrupção é bem mais sutil, manifestando-se como uma pequena horizontal clara na linha 6. Por fim, a figura \autoref{fig:catSobelInterrupted} demonstra o efeito da convolução sendo interrompida devido à um assert, deixando o resultado incompleto.
 
-\textbf{[TROCAR FOTO DA LENA PELO GATO]}
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Imagem com o parâmetro de filtro corrompido}
+	\includegraphics[width=0.3\textwidth]{assets/cat_sobel_kernel_upset.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:catSobelKernelUpset}
+\end{figure}
 
-% TODO: Lena OG e Lena Filtrada (baseline)
-% TODO: Lena com kernel corrompido
-% TODO: Lena com tamanho corrompido (pular pedaço da imagem)
-% TODO: Lena interrompida, filtro parcial
-% TODO: Gato com upset sutil (2 pixel mudado)
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Imagem com Corrupção sutil}
+	\includegraphics[width=0.3\textwidth]{assets/cat_sobel_subtle_upset.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:catSobelSubtleUpset}
+\end{figure}
 
-% TODO: Link do github com historico LIMPO!
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering}
+	\caption{Imagem com filtro Sobel interrompido}
+	\includegraphics[width=0.3\textwidth]{assets/cat_sobel_interrupted.png} \\
+	\captionsetup{justification=raggedright}
+	\caption*{Fonte: Elaborada pelo autor}
+	\label{fig:catSobelInterrupted}
+\end{figure}
+
 
 \section{Verificação}
 
@@ -332,7 +353,7 @@ Os requisitos não funcionais também foram analisados conforme o \autoref{tab:v
 	\label{tab:verirnf}
 \end{quadro}
 
-\subsection{Discussão dos Resultados}
+\section{Discussão dos Resultados}
 
 A aplicação das técnicas resultou em um impacto positivo na dependabilidade do sistema, em particular técnicas de execução (TMR e Reexecução) em combinação com a checagem por CRC32 demonstraram a melhor dependabilidade.
 
