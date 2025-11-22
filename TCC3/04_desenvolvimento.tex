@@ -11,7 +11,7 @@ Com exceção de algumas alocações internas do FreeRTOS e da biblioteca do sis
 
 Pela estrutura do alocador ser simples, a coleta de métricas e injeção de falhas foi simplificada dado que é possível acessar a maioria dos componentes do sistema apenas em termos de seu deslocamenteo em relação à sua arena que é facilmente identificável no depurador ao pesquisar por seu símbolo.
 
-Cada arena serve para encapsular um lifetime conjunto de $N$ alocações, todas as alocações estão vivas, ou todas estão mortas. Para o gerenciamento de tarefas essa técnica mostrou-se satisfatória e fácil de utilizar, pois tarefas e seu estado local são inseparáveis no comportamento normal do sistema, também é possível facilmente recolher memória de tarefas replicadas canceladas durante a aplicação de técnicas de TMR e Reexecução. A estrutura de arena falha em ser adequada no geranciamento de múltiplos objetos com lifetimes distintos, o único caso que isso ocorre na aplicação é na alocação de observadores de deadline, onde o problema é mitigado com o uso de uma lista intrusiva.
+Cada arena serve para encapsular um tempo de vida conjunto de $N$ alocações, todas as alocações estão vivas, ou todas estão mortas. Para o gerenciamento de tarefas essa técnica mostrou-se satisfatória e fácil de utilizar, pois tarefas e seu estado local são inseparáveis no comportamento normal do sistema, também é possível facilmente recolher memória de tarefas replicadas canceladas durante a aplicação de técnicas de TMR e Reexecução. A estrutura de arena falha em ser adequada no geranciamento de múltiplos objetos com tempos de vida distintos, o único caso que isso ocorre na aplicação é na alocação de observadores de prazo, onde o problema é mitigado com o uso de uma lista intrusiva.
 
 \subsection{Tarefas}
 
@@ -52,7 +52,7 @@ struct RawTask {
 
 Os atributos centrais da classe demonstrados no Quadro \autoref{cod:rawTask} incluem o ponteiro para o corpo da tarefa (\texttt{func}) que é envelopado por uma função \texttt{task\_wrapper} para permitir a inicialização e saída adequada. Os argumentos da função (\texttt{args}), o tamanho da pilha (\texttt{stack\_size}) e o identificador único da tarefa (\texttt{id}). O macro \texttt{CALLER\_LOCATION} é apenas uma expansão para injetar a localização do código que chamou a função utilizando a funcionalidade de \texttt{std::source\_location} do C++ 20 para facilitar diagnóstico de problemas.
 
-O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback \texttt{on\_cancel} é uma rotina opcional que pode ser executada na deleção da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
+O atributo opcional \texttt{deadline} referencia um estrutura \texttt{DeadlineSlot} que serve como um handle para um monitor, a tarefa pode utilizar este monitor para validar seu prazo de execução que é monitorado externamente. Já o callback \texttt{on\_cancel} é uma rotina opcional que pode ser executada no cancelamento da tarefa, primariamente para garantir a limpeza de certos recursos mesmo no evento em que o cancelamento impeça a execução dos destrutores inseridos pelo compilador.
 
 O estado da tarefa é mantido através do atributo atômico \texttt{status} que indica o ponto geral de execução da tarefa (Não-Inicializado, Inicializado, Executando, Finalizada, Finalizada com Erro). A utilização de operações atômicas neste caso é essencial para execução em ambientes concorrentes e cuidado extra foi tomado na escolha do ordenamento de memória correto para evitar dupla desalocação de recursos. O mecanismo de alocação em arenas auxilia, já que liberação repetida de memória é idempotente.
 
@@ -120,9 +120,9 @@ printf("Sum = %d\n", sum);
 
 \subsection{Deadlines e Heartbeat}
 
-A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{cod:deadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado de deadlines ativas, também podendo ser utilizado como um sinal de heartbeat ao utilizar uma deadline deliberadamente mais lenta para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
+A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{cod:deadlineWatcher} implementa um vigilante responsável pelo gerenciamento centralizado prazos ativos, também podendo ser utilizado como um sinal de heartbeat ao utilizar um prazo deliberadamente mais lento para utilizar como uma flag de progresso períodico. Internamente, baseia-se em um vetor de descritores que mantém informações temporais de todas as tarefas sob monitoramento. Um spinlock é utilizado para sincronização pois as seções críticas são pequenas.
 
-É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-deadlines arbitrariamente aninhadas, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas \cite{MakingReliableDistSystems}.
+É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-prazos arbitrariamente aninhados, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas \cite{MakingReliableDistSystems}.
 
 \begin{quadro}[H]
     \centering
@@ -162,7 +162,7 @@ struct DeadlineSlot {
 
 Para a leitura e comparação de temporizadores, são utilizadas 2 funções específicas para cada plataforma: \texttt{tick\_now} para observar o estado temporal atual e \texttt{tick\_frequency} para ler a frequência do temporizador.
 
-A funcionalidade de \texttt{scan} é responsável por validar as deadlines e limpar descritores que foram encerrados, o seu retorno indica um estado de sucesso. No caso do uso do temporizador embutido da blackpill para watchdog independente (IWDG), é possível utilizar o output do monitor principal para decidir se o watchdog deve ser reiniciado ou não.
+A funcionalidade de \texttt{scan} é responsável por validar os prazos e limpar descritores que foram encerrados, o seu retorno indica um estado de sucesso. No caso do uso do temporizador embutido da blackpill para watchdog independente (IWDG), é possível utilizar o output do monitor principal para decidir se o watchdog deve ser reiniciado ou não.
 
 \subsection{CRC32}
 
@@ -178,7 +178,7 @@ Asserções locais são utilizadas para detectar a violação de invariantes den
 
 \subsection{Dependências Adicionais}
 
-A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (\texttt{base}) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extramemente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
+A camada de abstração de hardware é fornecida pela STMicroelectronics através de sua ferramenta de geração de código STMCubeMX. Para a comunicação VirtualCOM por USB foi utilizado o pacote de software USB\_DEVICE da STMicroelectronics. Uma biblioteca utilitária geral (\texttt{base}) que é compatível com alvos freestanding é fornecida pelo autor. A biblioteca de domínio público \texttt{stb\_sprintf} por Sean Barrett foi usada para permitir uma implementação consistente de formatação textual entre todas as plataformas, apesar de não ser parte análise do trabalho, foi extremamente útil para diagnosticar e reportar dados do sistema durante o desenvolvimento.
 
 \subsection{Compilação do Projeto}
 
@@ -186,4 +186,4 @@ Apesar do alvo de compilação do projeto ser um microcontrolador com o FreeRTOS
 
 \subsection{Programa de Teste}
 
-O programa de teste escolhido foi desenvolvido em 3 versões (Controle, TMR, Reexecução), o algoritmo de convolução é o mesmo como demonstrado no \autoref{cap:proj}, tendo como alteração apenas o setup das tarefas adicionais (no caso de TMR) e a alocação inicial de memória. Para carregar a armazenar a imagem embutida, foi escrito um pequeno carregador de imagem PGM do tipo binário (P5).
+O programa de teste escolhido foi desenvolvido em 3 versões (Controle, TMR, Reexecução), o algoritmo de convolução é o mesmo como demonstrado no \autoref{cap:proj}, tendo como alteração apenas o setup das tarefas adicionais (no caso de TMR) e a alocação inicial de memória. Para carregar e armazenar a imagem embutida, foi escrito um pequeno carregador de imagem PGM do tipo binário (P5).

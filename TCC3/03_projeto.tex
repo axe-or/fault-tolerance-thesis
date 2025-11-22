@@ -3,9 +3,9 @@
 
 \section{Visão Geral}
 
-Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base, as técnicas implementadas serão discutidas em maior detalhe na \autoref{subsec:algoritmos}. Para a coleta das métricas de eficácia e custo computacional será utilizado um cenário de injeção de falhas lógicas em hardware utilizando do depurador em chip ST-Link, os detalhes da campanha de injeção de falhas são abordados na \autoref{subsec:campanhaInjecao}.
+Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base, as técnicas implementadas serão discutidas em maior detalhe na \autoref{subsec:algoritmos}. Para a coleta das métricas de eficácia e custo computacional será utilizado um cenário de injeção de falhas lógicas em hardware utilizando do depurador em chip ST-Link, os detalhes da campanha de injeção de falhas serão abordados na \autoref{subsec:campanhaInjecao}.
 
-A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância são implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falha.
+A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância serão implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falha.
 
 \begin{figure}[H]
     \centering
@@ -220,7 +220,7 @@ Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina
     \label{fig:stateReexec}
 \end{figure}
 
-\subsubsection{Sinal Heartbeat / Deadline}
+\subsubsection{Sinal Heartbeat / Deadline Monitor}
 
 Para a implementação dos sinais de heartbeat será utilizado uma tarefa que servirá como um monitor que associa uma chave (como o ID da tarefa) a um prazo específico. Será utilizado uma escrita atômica de um número e o temporizador do sistema no momento da escrita, se houver uma violação do prazo combinado na criação da tarefa e o prazo apresentado, é considerado que ocorreu uma falha. Este fluxo é visualmente representado na \autoref{fig:heartbeatAdv}.
 
@@ -248,7 +248,7 @@ Como o produto final do trabalho requer uma análise de resiliência e do custo 
 
 \subsection{Programa de Teste}
 
-Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução, o resultado é salvo num arquivo após ser enviado via VirtualCOM. O output é construído linha por linha. Cada linha possui um prazo hard real-time de 125ms para ser computada.
+Para testar a viabilidade e o impacto das técnicas implementadas, será utilizado um programa de teste que lerá uma imagem e aplicará um filtro de detecção de bordas Sobel utilizando convolução. O resultado é salvo num arquivo após ser enviado via VirtualCOM. A saída é construída linha por linha. Cada linha possui um prazo hard real-time de 60ms para ser computada.
 
 O programa requer um uso de CPU alto e realiza uma grande quantidade de acessos à memória, o processo de convolução também necessita de valores estáveis de kernel e offsets para calcular o valor de cada pixel. A fundamentação teórica da aplicação destes algoritmos é primariamente extraídos de um livro de processamento digital de sinais por \citeindirect{GuideToDSP}.
 

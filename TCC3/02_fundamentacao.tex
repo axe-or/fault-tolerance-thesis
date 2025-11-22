@@ -147,7 +147,7 @@ Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antig
 
 Uma técnica de redundância comum é o uso de redundância modular, tipicamente com 3 instâncias replicadas (neste caso chamada de TMR ou "Triple Modular Redundancy"), a \autoref{fig:redundanciaTMR} ilustra a execução concorrente seguida de um votador.
 
-O uso de TMR para uma tarefa pode consistir na reexecução concorrente das três instâncias, tendo seus resultados decidos por um votador. No contexto de tempo-real é importante que caso alguma das tasks no processo de execução concorrente viole sua deadline, que o votador ainda escolha um resultado para garantir o critério de tempo-real. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar o custo em termos de memória e execução \cite{DependabilityInEmbeddedSystems}, e potencialmente necessitar de hardware mais poderoso para manter a mesma performance esperada.
+O uso de TMR para uma tarefa pode consistir na reexecução concorrente das três instâncias, tendo seus resultados decidos por um votador. No contexto de tempo-real é importante que caso alguma das tasks no processo de execução concorrente viole seu prazo, o votador ainda deve escolher um resultado para garantir o critério de tempo-real. O uso de TMR é elegante em sua simplicidade e consegue atingir um bom grau de resiliência, porém com o custo adicional de triplicar o custo em termos de memória e execução \cite{DependabilityInEmbeddedSystems}, e potencialmente necessitar de hardware mais poderoso para manter a mesma performance esperada.
 
 \begin{figure}[H]
     \centering
@@ -206,7 +206,7 @@ Um sistema operacional de tempo real (RTOS) é um tipo de sistema operacional ma
 
 Como sistemas que cumprem o critério Hard Real-Time também cumprem os requisitos Soft Real-Time, os sistemas operacionais de tempo real tipicamente tem sua arquitetura orientada a serem capazes de cumprir o critério Hard Real-Time  \cite{SchedAndOptOfDistributedFT}.
 
-Diferentemente de sistema operacionais focados em uso geral como Windows, Linux e OSX, os RTOSes não priorizam fornecer ao usuário uma sensação de fluidez e adaptabilidade. Devido à seus requisitos temporais rígidos, um RTOS é feito com um foco significativo em determinismo, confiabilidade e simplicidade, para garantir que tarefas sejam executadas com um respeito estrito de seus prazos \cite{OperatingSystemConcepts}. Exemplos de RTOS disponíveis no mercado incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
+Diferente de sistemas operacionais focados em uso geral como Windows, Linux e OSX, os RTOS não priorizam fornecer ao usuário uma sensação de fluidez e adaptabilidade. Devido à seus requisitos temporais rígidos, um RTOS é feito com um foco significativo em determinismo, confiabilidade e simplicidade, para garantir que tarefas sejam executadas com um respeito estrito de seus prazos \cite{OperatingSystemConcepts}. Exemplos de RTOS disponíveis no mercado incluem: FreeRTOS, VxWorks, Zephyr e LynxOS.
 
 \subsection{Escalonador}
 
@@ -236,7 +236,7 @@ Uma característica central para a utilidade de concorrência mesmo em situaçõ
     \label{fig:latencia}
 \end{figure}
 
-Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, um problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada. Interrupções introduzem um fluxo de programa não local , violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
+Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, o problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada. Interrupções introduzem um fluxo de programa não local , violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
 
 É uma tendência atual aumentar o número de núcleos em dispositivos devido à velocidades de relógio das CPUs possuirem ganhos marginais em relação ao impacto térmico. A maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de paralelismo providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
 
@@ -270,7 +270,7 @@ Ao incluir os diferentes desvios possíveis na presença de apenas uma falha, o 
     \label{fig:ftgExpandido}
 \end{figure}
 
-Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após sua deadline ter sido completa, o grafo na \autoref{fig:ftgTransparencia} demonstra a condição de transparência com um ícone retangular.
+Será introduzido transparência na tarefa $P_2$, isto é, será executada com redundância temporal ou modular de tal forma que as tarefas subsequentes pudessem assumir "como se" uma falha nunca tivesse acontecido em $P_2$ após seu prazo ter sido completo, o grafo na \autoref{fig:ftgTransparencia} demonstra a condição de transparência com um ícone retangular.
 
 \begin{figure}[H]
     \centering
@@ -286,7 +286,7 @@ Introduzindo apenas um ponto de transparência é possível reduzir significativ
 
 Este exemplo é simples e tolera apenas uma falha transiente, porém processos complexos com múltiplas mensagens entre si causam um aumento exponencial de complexidade, especialmente caso seja necessário tolerar até $k$ falhas transientes.
 
-Pode-se adicionar pontos de transparência através de reexecução ou redundância modular (se a deadline conjunta das $N$ tarefas for determinística) para aumentar a confiabilidade e previsibilidade do sistema. Essa transparência não é gratuita: há um troca entre maior confiabilidade no escalonador e menor imprevisibilidade na execução, com o custo de maior uso de CPU e memória. Todos os pontos precisam ser verificados, o que pode aumentar o tempo ocioso dos núcleos e exigir a extensão do prazo da tarefa para permitir reexecuções suficientes.
+Pode-se adicionar pontos de transparência através de reexecução ou redundância modular (se prazo conjunto das $N$ tarefas for determinística) para aumentar a confiabilidade e previsibilidade do sistema. Essa transparência não é gratuita: há um troca entre maior confiabilidade no escalonador e menor imprevisibilidade na execução, com o custo de maior uso de CPU e memória. Todos os pontos precisam ser verificados, o que pode aumentar o tempo ocioso dos núcleos e exigir a extensão do prazo da tarefa para permitir reexecuções suficientes.
 
 \section{Trabalhos relacionados} \label{sec:trabRel}
 
@@ -310,7 +310,7 @@ Uma outra observação foi que a memória foi duas ordens de magnitude maior em 
 
 \subsection{Técnica de confiabilidade em nível de sistema operacional para a arquitetura RISC-V}
 
-O trabalho de \citeindirect{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
+O trabalho de \citeindirect{TecnicaConfiabilidadeRISCV} aborda uma aplicação de TMR (Replicação com $N = 3$) dos processos em um microkernel para a arquitetura RISC-V, para a validação da implementação é utilizado injeção de falhas lógicas em software emuladas com o depurador GDB e o com QEMU como emulador, o sistema é escrito na linguagem Rust, que é capaz de fornecer garantias de segurança de acessos à memória. Foi observado um aumento de confiabilidade do sistema em troca de um custo adicional de memória e tempo de execução.
 
 \subsection{Application-Level Fault Tolerance in Real-Time Embedded System}
 
@@ -340,7 +340,7 @@ Após comparar os trabalhos, o de natureza mais similar em termos de arquitetura
         \citefigure{ApplicationLevelFT} & BOSS & Máquinas PowerPC 823 e um PC x86\_64 não especificado & Simulada em Software & Redundância Modular, Deadlines, Rollback/Retry \\
         \hline
 
-        Este Trabalho & FreeRTOS & STM32 Blackpill & Lógica em Software e Hardware & Heartbeat/Deadline, Asserts, Reexecução e Redundância de Tarefas \\
+        Este Trabalho & FreeRTOS & STM32 Blackpill & Lógica em Software e Hardware & Heartbeat / Deadline Monitor, Asserts, Reexecução e Redundância de Tarefas \\
         \hline
 
     \end{tabular}
