@@ -534,7 +534,6 @@ Resultados sem injeção de falhas
     [TMR + CRC32], [4654ms], [38ms], [8336B], [1608B], [2], [OK], [Corrupção mascarada e output recomputado],
 )
 
-
 = Resultados / Dependabilidade e Performance III
 #show table.cell: set text(size: 16pt)
 #table(
@@ -552,13 +551,54 @@ Resultados sem injeção de falhas
 )
 
 = Resultados / Impacto das falhas no Output
-// TODO 3 foto do gatinho :3
+
+Resultado correto (Input $->$ Output)
+#image("assets/cat_regular_to_sobel.png", height: 45%)
+
+
+= Resultados / Impacto das falhas no Output
+
+Exemplos do impacto no output quando nenhuma técnica foi aplicada
+
++ Corrupção no kernel do filtro Sobel
++ Corrupção sutil em uma linha
++ Corrupção causou interrupção na execução
+
+#align(center)[#grid(
+  columns: 3,
+  inset: 8pt,
+
+  image("assets/cat_sobel_kernel_upset.png", height: 45%),
+  image("assets/cat_sobel_subtle_upset.png", height: 45%),
+  image("assets/cat_sobel_interrupted.png", height: 45%),
+
+)]
+
+
 
 = Verificação 
 // TODO
 
 = Discussão dos Resultados
-// TODO
+- Impacto *positivo* na dependabilidade do sistema
+- Melhor combinação: TMR/Reexecução + CRC32
+
+== Custos das Técnicas
+- Custo de reexecução e TMR: ~3x mais lento (sem multiprocessamento)
+- Memória TMR: >3x overhead
+- CRC32 Adicionaram overhead moderado em troca de boa detecção
+
+== TMR vs Reexecução
+
+- TMR evitou erros fatais em injeções no stack frame
+- Redundância de estado adicional mascara padrões de falha complexos
+- Trabalhos futuros: avaliar TMR com multiprocessamento simétrico
+
+== Validação de Deadline
+
+- Pouco acionada durante testes (asserts e outros mecanismos interceptaram falhas primeiro)
+- Útil no desenvolvimento: detectou deadlock de sincronização
+- Necessita testes com maior sensibilidade temporal para evidenciar benefícios
 
 = Considerações Finais
 // TODO
