@@ -382,8 +382,8 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 )
 ]
 
+= Métodos
 // TODO: Metodos
-// = Métodos
 //
 // - Técnicas de detecção e tolerância baseadas em software.
 //
@@ -418,8 +418,6 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
     [*RF05*], [Monitoramento do número de falhas detectadas e violações de prazos],
   )
-
-= Requisitos Não-Funcionais
 
 = Algoritmos e Técnicas
 
@@ -472,10 +470,6 @@ Combinações de técnicas a serem usadas:
 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
 )
 
-
-= Desenvolvimento / Estratégia de Alocação
-// TODO
-
 = Desenvolvimento / Tarefas
 // TODO
 
@@ -490,18 +484,72 @@ Combinações de técnicas a serem usadas:
 
 = Desenvolvimento / Outros detalhes
 // TODO
+
 == Dependências Adicionais
-// TODO
+
+- `USB_DEVICE` do fabricante do hardware (para output VirtualCOM)
+- `stb_sprintf` de Sean Barrett para formatação consistente (Não essencial, usado para debug)
+- Utilitários `base` providos pelo autor
+
 == Build do Projeto
-// TODO
+
+- Build realizada com utilitário `build.lua` junto com o projeto (Flash + Injetar imagem no ELF final) e toolchain embarcada da ARM
 
 = Resultados / Execução
 // TODO: Falar do reexec+tmr e CRC em detalhes aqui? Provavelmente é uma boa
 
-= Resultados / Dependabilidade e Performance
-// TODO Resultados sem injeção
+= Resultados / Dependabilidade e Performance I
+
+Resultados sem injeção de falhas
+
+#table(
+    columns: 7,
+    inset: 8pt,
+
+    table.header([*Técnicas*], [*$T_"total"$*], [*$T_"linha"$*], [*$M_"task"$*], [*$M_"extra"$*], [*Detecção*], [*Resultado*]),
+    [N/A], [1542ms], [12ms], [2768B], [374B], [0], [OK],
+    [CRC32], [1549ms], [12ms], [2768B], [856B], [0], [OK],
+    [Reexec], [4631ms], [38ms], [2768B], [1074B], [0], [OK],
+    [Reexec + CRC32], [4635ms], [38ms], [2768B], [1556B], [0], [OK],
+    [TMR], [4644ms], [38ms], [8336B], [1126B], [0], [OK],
+    [TMR + CRC32], [4651ms], [38ms], [8336B], [1608B], [0], [OK],
+)
+
+
+= Resultados / Dependabilidade e Performance II
 // TODO Resultados com injeção fixa
-// TODO Resultados com injeção foda
+
+#show table.cell: set text(size: 18pt)
+#table(
+    columns: 8,
+    inset: 6pt,
+
+    table.header([*Técnicas*], [*$T_"total"$*], [*$T_"linha"$*], [*$M_"task"$*], [*$M_"extra"$*], [*Detecção*], [*Resultado*], [*Obs.*]),
+
+    [N/A], [1544ms], [12ms], [2768B], [374B], [0], [Corrupção], [N/A],
+    [CRC32], [1565ms], [12ms], [2768B], [856B], [1], [OK], [Corrupção detectada no output apenas],
+    [Reexec], [4634ms], [38ms], [2768B], [1074B], [1], [Corrupção], [Mascarou corrupção na linha, mas não no output],
+    [Reexec + CRC32], [4676ms], [38ms], [2768B], [1556B], [2], [OK], [Corrupção mascarada e output recomputado],
+    [TMR], [4647ms], [38ms], [8336B], [1126B], [1], [Corrupção], [Mascarou corrupção na linha, mas não no output],
+    [TMR + CRC32], [4654ms], [38ms], [8336B], [1608B], [2], [OK], [Corrupção mascarada e output recomputado],
+)
+
+
+= Resultados / Dependabilidade e Performance III
+#show table.cell: set text(size: 16pt)
+#table(
+    columns: 9,
+    inset: 6pt,
+
+    table.header([*Técnicas*], [*$T_"total"$*], [*$T_"linha"$*], [*$M_"task"$*], [*$M_"extra"$*], [*Detecção*], [*Resultado*], [*Obs.*], [*Var*]),
+    [N/A], [~1100ms], [60ms], [2768B], [374B], [1], [Erro], [Prazo de linha expirada], [row 0:8],
+    [CRC32], [~1100ms], [60ms], [2768B], [856B], [1], [Erro], [Prazo de linha expirada], [row 0:8],
+    [Reexec], [\<100ms], [0ms], [2768B], [1074B], [1], [Erro], [Assert: row.width != output.width], [output\_rows 4:12],
+    [Reexec + CRC32], [2265ms], [38ms], [2768B], [1556B], [1], [Erro], [Hard Fault do FreeRTOS], [output\_rows 4:12],
+    [TMR], [4625ms], [38ms], [8336B], [1126B], [0], [OK], [Evitou corrupção através de indireção], [tmr0 0:4],
+    [TMR + CRC32], [4628ms], [38ms], [8336B], [1608B], [0], [OK], [Evitou corrupção através de indireção], [tmr0 0:4],
+
+)
 
 = Resultados / Impacto das falhas no Output
 // TODO 3 foto do gatinho :3
