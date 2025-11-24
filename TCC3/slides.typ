@@ -204,14 +204,17 @@ Falhas podem ser classificadas em 3 grupos de acordo com seu padrão de ocorrên
 
 *Cyclic Redundancy Check*: Um valor de checagem é criado com base em um
 polinômio gerador e verificado, utilizado primariamente para verificar
-integridade dos dados. É importante que valores "lixo" como o enchimento para
-alinhamento de memória não sejam inclusos.
+integridade dos dados.
 
-// TODO: Incluir image do RCRC
+#image("assets/payload_layout.png", height: 72%)
+
 
 = Mecanismos de Detecção / Asserts
-  Asserts: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível, pode ser automaticamente inserido como pós e pré condição na chamada de funções
-// TODO: Incluir image do Assert
+*Asserts*: Checagem de uma condição invariante que dispara uma falha, simples e muito flexível, pode ser automaticamente inserido como pós e pré condição na chamada de funções
+
+#image("assets/assert_diagram.png", width: 70%)
+
+#center_sentence[ Asserts são uma forma rápida e simples de garantir pré e pós condições ]
 
 
 = Mecanismos de Detecção / Sinal Heartbeat ou Verificador de Deadline
@@ -250,12 +253,10 @@ versão que tolera até uma falha transiente.
 
 = Escalonamento Tolerante à Falhas / Condição de Transparência
 
-Com condição de transparência (através de reexecução) inserida.
-
 #image("assets/ftg_transparencia.png", height: 1fr)
 
 #center_sentence[
-    Inserir condições de transparência pode drasticamente reduzir a complexidade do grafo de execução.
+    Condições de transparência podem drasticamente reduzir a complexidade do grafo de execução.
 ]
 
 = Injeção de Falhas
@@ -433,7 +434,9 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 = Programa Teste
 
-// TODO
+Realiza convolução de uma imagem linha à linha, aplicando um filtro Sobel. Linhas com falhas detectadas são recomputadas mais uma vez.
+
+#image("assets/programa_teste.png")
 
 = Campanha de Injeção de Falhas
 
@@ -447,14 +450,8 @@ Combinações de técnicas a serem usadas:
 
 // TODO: Combinacoes
 #table(
-  columns: (auto, auto, auto, auto, auto, 1fr),
-  table.header([*Comb.*], [*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
-  // "1", "-","-","-","-","-",
-  // "2", "-","-","-","✓","✓",
-  // "3", "✓","-","-","✓","✓",
-  // "4", "✓","-","✓","✓","✓",
-  // "5", "-","✓","-","✓","✓",
-  // "6", "-","✓","✓","✓","✓",
+  columns: (auto, auto, auto, auto, 1fr),
+  table.header([*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
 )
 
 = Análise de Riscos
