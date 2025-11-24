@@ -448,10 +448,22 @@ Realiza convolução de uma imagem linha à linha, aplicando um filtro Sobel. Li
 
 Combinações de técnicas a serem usadas:
 
-// TODO: Combinacoes
 #table(
-  columns: (auto, auto, auto, auto, 1fr),
-  table.header([*Reexecução*], [*Redundância modular*], [*Heartbeat Signal*], [*CRC*], [*Asserts*]), 
+  columns: (18%,) * 5,
+
+  table.header([*Reexecução*], [*Redundância modular*], [*CRC*], [*Deadline/Heartbeat*], [*Asserts*]),
+
+  // Nothin'
+  [-], [-], [-], [X], [X],
+  [-], [-], [X], [X], [X],
+
+  // Reexec
+  [X], [-], [-], [X], [X],
+  [X], [-], [X], [X], [X],
+
+  // TMR
+  [-], [X], [-], [X], [X],
+  [-], [X], [X], [X], [X],
 )
 
 = Análise de Riscos
@@ -467,11 +479,137 @@ Combinações de técnicas a serem usadas:
 	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
 )
 
+#show raw.where(block:true): set text(size: 12.5pt)
+
 = Desenvolvimento / Tarefas
-// TODO
+
+#grid(
+    columns: (1fr,) * 2,
+    inset: 8pt,
+
+grid.vline(x: 1, stroke: 1pt + gray),
+
+[```cpp
+struct RawTask {
+    RawTaskFunc func;
+    Arena* arena;
+    void* args;
+    DeadlineSlot* deadline;
+    u32 stack_size;
+    u32 args_size;
+    u32 id{};
+    Atomic<TaskStatus> _status;
+    TaskCancelCallback on_cancel;
+    RawTaskPlatformSpecificData _specific;
+
+    TaskStatus status();
+
+    void join(CALLER_LOCATION);
+    void cancel(CALLER_LOCATION);
+
+    ~RawTask(){}
+
+    bool _platform_init(Arena* a, usize stack_size, RawTaskFunc func, void* args);
+    bool _platform_join();
+    bool _platform_cancel();
+};
+```],
+
+
+[```cpp
+template<
+  typename Output,
+  Callable<Output, TaskContext> TaskFunc,
+  Callable<void, TaskContext> OnCancel
+>
+struct BasicTask {
+  RawTask _task;
+  TaskFunc _func;
+  OnCancel _on_cancel;
+  Option<Output> _result;
+
+  Option<Output> result();
+  bool has_result() const;
+  TaskStatus status() const;
+  RawTask* raw_task();
+  u32 id();
+  void join();
+  void cancel();
+};
+```],
+
+)
+
+
+= Desenvolvimento / Tarefas
+
+```cpp
+auto numbers = Array<i32, 7>{-4, -2, 0, 6, 9, 2, 1};
+auto task = make_basic_task(&arena, [numbers](TaskContext* ctx) -> i32 {
+    i32 acc = 0;
+    for(i32 x : numbers){
+        acc += x;
+    }
+    return x;
+});
+
+task.join();
+auto sum = task.result().unwrap();
+printf("Sum = %d\n", sum);
+```
 
 = Desenvolvimento / Deadlines
-// TODO
+#grid(
+    columns: (1fr,) * 2,
+    inset: 8pt,
+
+grid.vline(x: 1, stroke: 1pt + gray),
+
+[```cpp
+struct DeadlineWatcher {
+  Slice<DeadlineSlot> slots;
+  Spinlock _lock{};
+  Atomic<u32> _count;
+  char name[12] = {};  
+
+  [[nodiscard]]
+  bool add(void* key,
+    SlotCancellationCallback cancel,
+    Duration limit
+  );
+
+  bool reset_deadline(void* key);
+
+  DeadlineSlot* get(void* key);
+
+  void remove(DeadlineSlot* node);
+
+  void remove_key(void* key);
+
+  void clear();
+
+  bool scan();
+};
+```],
+
+    
+[```cpp
+using SlotCancellationCallback =
+  void (*) (void* data);
+
+struct DeadlineSlot {
+  TimeTick last_tick;
+  Duration limit;
+  void* key;
+  SlotCancellationCallback cancel;
+  
+  void reset(){
+    last_tick = tick_now();
+  }
+};
+```],
+
+)
 
 = Desenvolvimento / CRC32
 // TODO

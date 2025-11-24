@@ -124,37 +124,38 @@ A classe \texttt{DeadlineWatcher} descrita no Quadro \autoref{cod:deadlineWatche
 
 É possível também disparar uma tarefa que executa um monitor que é monitorado por outro monitor, permitindo a criação de sub-prazos arbitrariamente aninhados, este padrão é uma versão rudimentar da técnica de Árvores de Supervisão que é comumente encontrada em sistemas distribuídos com tolerância à falhas \cite{MakingReliableDistSystems}.
 
+% TODO: Esse codigo esta errado, trocar pela versao com void* key
 \begin{quadro}[H]
     \centering
     \caption{Declaração da estrutura \texttt{DeadlineWatcher}}
 
     \begin{lstlisting}[language=C++]
+using SlotCancellationCallback = void (*) (void* data);
+struct DeadlineSlot {
+        TimeTick last_tick;
+        Duration limit;
+        void* key;
+        SlotCancellationCallback cancel;
+
+        void reset(){
+                last_tick = tick_now();
+        }
+};
+
 struct DeadlineWatcher {
     Slice<DeadlineSlot> slots;
     Spinlock _lock{};
     Atomic<u32> _count;
+    char name[12] = {};
 
-    usize count() const;
-
-    bool watch(RawTask* task, Duration limit);
-
+    [[nodiscard]]
+    bool add(void* key, SlotCancellationCallback cancel, Duration limit);
+    bool reset_deadline(void* key);
+    DeadlineSlot* get(void* key);
     void remove(DeadlineSlot* node);
-
+    void remove_key(void* key);
     void clear();
-
     bool scan();
-
-    auto lock_guard(){
-        return _lock.guard();
-    }
-};
-
-struct DeadlineSlot {
-    TimeTick last_tick;
-    Duration limit;
-    RawTask* task;
-
-    void reset(){ last_tick = tick_now(); }
 };
 \end{lstlisting}
 \label{cod:deadlineWatcher}
