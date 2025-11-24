@@ -601,5 +601,22 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 - Necessita testes com maior sensibilidade temporal para evidenciar benefícios
 
 = Considerações Finais
-// TODO
 
+== Trabalho Realizado
+
+Exploradas técnicas de execução, monitoramento e checagem de integridade
+Implementação em C++20 no STM32F411CEU6 com FreeRTOS
+Campanha de injeção de falhas transientes para análise de impacto
+
+== Resultados Obtidos
+
+Efeito positivo na dependabilidade com trade-offs distintos
+Reexecução/TMR: mascaramento de falhas em tempo real
+CRC32: recomputação de dados corrompidos
+Monitoramento de deadlines: detecção de violações temporais e auxílio no desenvolvimento
+
+== Trabalhos Futuros
+
+Avaliar técnicas em multiprocessamento simétrico (múltiplos núcleos)
+Expandir detecção com análise de fluxo de controle em nível de compilador
+Automatizar injeção de falhas (ex: PyOCD)
