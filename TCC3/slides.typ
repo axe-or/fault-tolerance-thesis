@@ -78,7 +78,7 @@
     #v(2fr)
     #align(center, text(weight: "bold", size: 28pt, upper(title)))
 
-    #line(length: 100%, stroke: colors.heading)
+    #line(length: 100%, stroke: 2pt + colors.heading)
 
     #align(center, university)
     #align(center, course)
@@ -167,9 +167,9 @@ Definições em português segundo a IEEE:
   columns: (1fr,) * 2,
   gutter: 8pt,
 
-  // align(horizon, image("assets/sdn_router.png")),
-  // image("assets/nf15b_plane.png"),
-  // image("assets/uc_keyboard.png"),
+  align(horizon, image("assets/sdn_router.png")),
+  image("assets/nf15b_plane.png"),
+  image("assets/uc_keyboard.png"),
   image("assets/abs.png"),
 )
 ]
@@ -384,22 +384,16 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 ]
 
 = Métodos
-// TODO: Metodos
-//
-// - Técnicas de detecção e tolerância baseadas em software.
-//
-// - Injeção lógica em software durante desenvolvimento.
-//
-// - Injeção lógica em hardware para teste final com depurador de hardware.
-//
-// - Métricas coletadas com o profiler do FreeRTOS e mecanismos de código (contadores)
-//
-// - Interface de tarefa com fortificação em sua V-Table
-//
-// - Arquitetura orientada à passagem de mensagens
-//
-// - Serão desenvolvidos dois programas de teste simples, para servir de exemplo
-//   para a coleta das métricas.
+
+- Técnicas de detecção e tolerância baseadas em software
+
+- Injeção lógica em software durante desenvolvimento
+
+- Injeção lógica em hardware para teste final com depurador de hardware
+
+- Medição de memória e tempo de CPU
+
+- Programa de teste que incorpore as técnicas
 
 = Requisitos Funcionais
 
@@ -420,7 +414,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     [*RF05*], [Monitoramento do número de falhas detectadas e violações de prazos],
   )
 
-= Algoritmos e Técnicas
+= Algoritmos e Técnicas Explorados
 
 - CRC
 
@@ -612,10 +606,51 @@ struct DeadlineSlot {
 )
 
 = Desenvolvimento / CRC32
-// TODO
+
+- Baseado em lookup table (gerado pelo script de build para o polinômio)
+- Concept `CRC_Checkable` restringe aplicação apenas para tipos compatíveis
+
+```cpp
+template<typename T>
+struct CRC32 {
+  u32 get(T const& data) = delete;
+};
+
+template<>
+struct CRC32<Slice<u8>> {
+  u32 get(Slice<u8> data); // Base specialization
+};
+
+template<typename T>
+concept CRC32_Checkable = requires(T const& obj) {
+  { CRC32<T>{}.get(obj) } -> SameAs<u32>;
+};
+```
 
 = Desenvolvimento / Asserts
-// TODO
+
+- Asserts globais
+
+```cpp
+static inline
+void ensure(bool pred, char const* msg, CALLER_LOCATION){
+  ensure_ex(pred, msg, caller_location.file_name(), caller_location.line());
+}
+```
+
+- Asserts locais que cancelam tasks
+```cpp
+void TaskConext::ensure(bool pred, cstring msg, CALLER_LOCATION){
+  if(!pred){
+    error_printf(caller_location.file_name(), caller_location.line(),
+      "[Task %d] Assertion failed: %s\r\n",
+      int(task->id), msg
+    );
+    task->cancel();
+  }
+}
+```
+
 
 = Desenvolvimento / Outros detalhes
 // TODO
@@ -631,7 +666,26 @@ struct DeadlineSlot {
 - Build realizada com utilitário `build.lua` junto com o projeto (Flash + Injetar imagem no ELF final) e toolchain embarcada da ARM
 
 = Resultados / Execução
-// TODO: Falar do reexec+tmr e CRC em detalhes aqui? Provavelmente é uma boa
+#grid(
+  columns: (1fr, 1.2fr),
+  inset: 8pt,
+  align: center + horizon,
+
+  grid.vline(x: 1, stroke: 1pt + gray),
+
+  [
+    #image("assets/inj_start_debugger.png")
+    #image("assets/inj_connect_com.png")
+  ],
+  image("assets/inj_cond_breakpoint.png"),
+)
+
+= Resultados / Execução
+
+#image("assets/inj_cause_upset.png", width: 60%)
+
+#image("assets/inj_resultado_virtualcom.png")
+
 
 = Resultados / Dependabilidade e Performance I
 
@@ -650,9 +704,14 @@ Resultados sem injeção de falhas
     [TMR + CRC32], [4651ms], [38ms], [8336B], [1608B], [0], [OK],
 )
 
+== Legenda
+/ $T_"total"$: Tempo total de execução
+/ $T_"linha"$:  Tempo execução médio por linha da imagem
+/ $M_"task"$: Pico de alocação na arena de tasks
+/ $M_"extra"$: Pico de alocação na arena de memória extra
+
 
 = Resultados / Dependabilidade e Performance II
-// TODO Resultados com injeção fixa
 
 #show table.cell: set text(size: 18pt)
 #table(
@@ -709,10 +768,22 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 
 )]
 
-
-
 = Verificação 
-// TODO
+#table(
+  columns: 3,
+  table.header([*Requisito*], [*Descrição*], [*Validação*]),
+  align: left,
+
+  [*RF01*], [Implementação de todos os algoritmos descritos na seção de projeto], [Os algoritmos foram implementados e utilizados],
+
+  [*RF02*], [Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa], [A configuração do mecanismo é feita de forma imperativa, já o prazo, prioridade e tamanho da pilha são feitos declarativamente no momento de instanciação da tarefa],
+
+  [*RF03*], [Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas], [Validado com os testes sem injeção de falha],
+
+  [*RF04*], [Dependabilidade superior à versão do sistema sem técnicas], [O sistema foi capaz de mascarar algumas falhas e detectar outras. Portanto possui uma dependabilidade superior],
+
+  [*RF05*], [Monitoramento do número de falhas detectadas e violações de prazos], [Implementado em `DeadlineWatcher`. Foi capaz de detectar violações],
+)
 
 = Discussão dos Resultados
 - Impacto *positivo* na dependabilidade do sistema
@@ -739,19 +810,18 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 
 == Trabalho Realizado
 
-Exploradas técnicas de execução, monitoramento e checagem de integridade
-Implementação em C++20 no STM32F411CEU6 com FreeRTOS
-Campanha de injeção de falhas transientes para análise de impacto
+- Exploradas técnicas de execução, monitoramento e checagem de integridade
+- Implementação em C++20 no STM32F411CEU6 com FreeRTOS
+- Campanha de injeção de falhas transientes para análise de impacto
 
 == Resultados Obtidos
 
-Efeito positivo na dependabilidade com trade-offs distintos
-Reexecução/TMR: mascaramento de falhas em tempo real
-CRC32: recomputação de dados corrompidos
-Monitoramento de deadlines: detecção de violações temporais e auxílio no desenvolvimento
+- Reexecução/TMR: Mascarou falhas dentro do critério de tempo real
+- CRC32: recomputação de dados corrompidos
+- Monitoramento de deadlines: detecção de violações temporais e auxílio no desenvolvimento
 
 == Trabalhos Futuros
 
-Avaliar técnicas em multiprocessamento simétrico (múltiplos núcleos)
-Expandir detecção com análise de fluxo de controle em nível de compilador
-Automatizar injeção de falhas (ex: PyOCD)
+- Avaliar técnicas em multiprocessamento simétrico (múltiplos núcleos)
+- Expandir detecção com análise de fluxo de controle em nível de compilador
+- Automatizar injeção de falhas (ex: PyOCD)
