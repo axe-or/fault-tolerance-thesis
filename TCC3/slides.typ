@@ -87,13 +87,15 @@
     #v(2fr)
 ]
 
-= Introdução
+= Introdução / Contexto
 
 - Sistemas embarcados estão presentes diveras áreas, tipicamente utilizando de
   um sistema operacional de tempo real
 
 - É provável que a adoção destes sistemas, particularmente sistemas COTS
   continue a crescer
+
+= Introdução / Problematização
 
 == Problematização
 
@@ -466,22 +468,9 @@ Combinações de técnicas a serem usadas:
   - Injeção fixa em variáveis conhecidas: Linha computada e kernel do filtro
   - Injeção aleatória no stack frame(variável sorteada + offset aleatório entre 0 e 16)
 
-= Análise de Riscos
-
-#table(
-	columns: (auto,) * 5,
-
-	table.header([*Risco*], [*Probabilidade*], [*Impacto*], [*Gatilho*], [*Contingência*]),
-	[Funcionalidades e API do RTOS é incompatível com a interface proposta pelo trabalho.], [Baixo], [Alto], [Implementar interface no RTOS], [Utilizar outro RTOS, modificar o FreeRTOS, adaptar a interface],
-
-	[Problemas para injetar falhas com depurador em hardware], [Baixa], [Alto], [Realizar injeção no microcontrolador], [Utilizar de outro depurador, depender de falhas lógicas em software como última alternativa],
-
-	[Não conseguir coletar métricas de performance com profiler do FreeRTOS], [Baixa], [Médio], [Teste em microcontrolador ou ambiente virtualizado], [Inserir pontos de medição manualmente],
-)
+= Desenvolvimento / Tarefas
 
 #show raw.where(block:true): set text(size: 12.5pt)
-
-= Desenvolvimento / Tarefas
 
 #grid(
     columns: (1fr,) * 2,
@@ -698,7 +687,7 @@ void TaskConext::ensure(bool pred, cstring msg, CALLER_LOCATION){
 #image("assets/crc_demo_4.png")
 
 
-= Resultados / Dependabilidade e Performance I
+= Resultados / Confiabilidade e Desempenho I
 
 Resultados sem injeção de falhas
 
@@ -722,7 +711,7 @@ Resultados sem injeção de falhas
 / $M_"extra"$: Pico de alocação na arena de memória extra
 
 
-= Resultados / Dependabilidade e Performance II
+= Resultados / Confiabilidade e Desempenho II
 
 #show table.cell: set text(size: 18pt)
 #table(
@@ -739,7 +728,7 @@ Resultados sem injeção de falhas
     [TMR + CRC32], [4654ms], [38ms], [8336B], [1608B], [2], [OK], [Corrupção mascarada e output recomputado],
 )
 
-= Resultados / Dependabilidade e Performance III
+= Resultados / Confiabilidade e Desempenho III
 #show table.cell: set text(size: 16pt)
 #table(
     columns: 9,
@@ -796,14 +785,18 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
   [*RF05*], [Monitoramento do número de falhas detectadas e violações de prazos], [Implementado em `DeadlineWatcher`. Foi capaz de detectar violações],
 )
 
-= Discussão dos Resultados
-- Impacto *positivo* na dependabilidade do sistema
+= Resultados
+== Confiabilidade
+
+- Impacto *positivo* na confiabilidade do sistema
 - Melhor combinação: TMR/Reexecução + CRC32
 
 == Custos das Técnicas
 - Custo de reexecução e TMR: ~3x mais lento (sem multiprocessamento)
 - Memória TMR: >3x overhead
 - CRC32 Adicionaram overhead moderado em troca de boa detecção
+
+= Resultados
 
 == TMR vs Reexecução
 
@@ -817,7 +810,7 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 - Útil no desenvolvimento: detectou deadlock de sincronização
 - Necessita testes com maior sensibilidade temporal para evidenciar benefícios
 
-= Considerações Finais
+= Conclusões
 
 == Trabalho Realizado
 
@@ -840,6 +833,3 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 
 // TODO:
 // - Colocar nome dos trabalhos relacionados pra nao confundir tanto
-// - Incluir funcionamento do TMR no desenv
-// - Nao demorar demais na explicacao da taxonomia das falhas
-// - Elaborar nas 2 "rodadas" de injecao
