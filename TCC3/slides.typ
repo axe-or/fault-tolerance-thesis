@@ -395,6 +395,8 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
 
 - Programa de teste que incorpore as técnicas
 
+- Estratégia de alocação em arena
+
 = Requisitos Funcionais
 
 #table(
@@ -414,7 +416,7 @@ Tipos de injeção e suas desvantagens (Mamone, 2018)
     [*RF05*], [Monitoramento do número de falhas detectadas e violações de prazos],
   )
 
-= Algoritmos e Técnicas Explorados
+= Algoritmos e Técnicas
 
 - CRC
 
@@ -434,7 +436,7 @@ Realiza convolução de uma imagem linha à linha, aplicando um filtro Sobel. Li
 
 = Campanha de Injeção de Falhas
 
-- Sujeitos à falhas: Maioria da memória
+- Sujeitos à falhas: Maioria da memória RAM
 
 - Falhas injetadas: Bit flips com XOR, números aleatórios.
 
@@ -459,6 +461,10 @@ Combinações de técnicas a serem usadas:
   [-], [X], [-], [X], [X],
   [-], [X], [X], [X], [X],
 )
+
+- 2 "Rodadas" de injeção
+  - Injeção fixa em variáveis conhecidas: Linha computada e kernel do filtro
+  - Injeção aleatória no stack frame(variável sorteada + offset aleatório entre 0 e 16)
 
 = Análise de Riscos
 
@@ -653,7 +659,6 @@ void TaskConext::ensure(bool pred, cstring msg, CALLER_LOCATION){
 
 
 = Desenvolvimento / Outros detalhes
-// TODO
 
 == Dependências Adicionais
 
@@ -685,6 +690,12 @@ void TaskConext::ensure(bool pred, cstring msg, CALLER_LOCATION){
 #image("assets/inj_cause_upset.png", width: 60%)
 
 #image("assets/inj_resultado_virtualcom.png")
+
+= Resultados / CRC32
+
+#image("assets/crc_demo_2.png")
+#image("assets/crc_demo_3.png")
+#image("assets/crc_demo_4.png")
 
 
 = Resultados / Dependabilidade e Performance I
@@ -825,3 +836,10 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 - Avaliar técnicas em multiprocessamento simétrico (múltiplos núcleos)
 - Expandir detecção com análise de fluxo de controle em nível de compilador
 - Automatizar injeção de falhas (ex: PyOCD)
+
+
+// TODO:
+// - Colocar nome dos trabalhos relacionados pra nao confundir tanto
+// - Incluir funcionamento do TMR no desenv
+// - Nao demorar demais na explicacao da taxonomia das falhas
+// - Elaborar nas 2 "rodadas" de injecao
