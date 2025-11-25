@@ -830,6 +830,16 @@ Exemplos do impacto no output quando nenhuma técnica foi aplicada
 - Expandir detecção com análise de fluxo de controle em nível de compilador
 - Automatizar injeção de falhas (ex: PyOCD)
 
+#pagebreak()
+#[
+    #v(2fr)
+    #align(center, text(weight: "bold", size: 28pt, upper(title)))
 
-// TODO:
-// - Colocar nome dos trabalhos relacionados pra nao confundir tanto
+    #line(length: 100%, stroke: 2pt + colors.heading)
+
+    #align(center, university)
+    #align(center, course)
+    #v(1.5fr)
+    #align(right)[Aluno: #author #linebreak() Orientador: #supervisor]
+    #v(2fr)
+]
