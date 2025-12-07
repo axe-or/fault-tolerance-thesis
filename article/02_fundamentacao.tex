@@ -1,20 +1,11 @@
 \chapter{Fundamentação Teórica}
 \label{cap:fund}
 
+Este capítulo apresenta os conceitos fundamentais necessários para a compreensão do trabalho. Inicialmente são definidos termos essenciais. Em seguida, são exploradas as técnicas de tolerância à falhas em nível conceitual. Por fim, são abordados aspectos de sistemas embarcados e sistemas operacionais de tempo real e quais critérios se desejam dos mesmos.
+
 \section{Definições Principais}
 
 Para melhor esclarecer os assuntos abordados, é importante que seja primeiramente definido alguns dos termos centrais para a fundamentação do trabalho.
-
-\subsection{Qualidade de Serviço}
-
-Qualidade de serviço é uma métrica sistêmica que sumariza o quão bem o sistema provisiona suas funcionalidades em um determinado momento. É possível definir e modelar essa métrica de diversas maneiras, mas para os propósitos deste trabalho, será utilizada uma definição simples que resume a funcionalidade geral numa escala de 0 a 1.
-
-A qualidade de serviço $Q$ do sistema pode ser aproximada pela média ponderada de seus serviços $S_0 ... S_n$ com os pesos de seus fatores de contribuição para a qualidade total $q_0 ... q_n$ \cite{SchedAndOptOfDistributedFT}.
-
-\begin{equation}
-    Q = \frac{ \sum^{i = 0}_{n} S_i q_i }{ \sum^{i = 0}_{n} q_i}
-\end{equation}
-\addEquacao{Qualidade de Serviço}{1}
 
 \subsection{Falhas}
 
@@ -22,7 +13,7 @@ De acordo com a definição de anormalidades de software da IEEE: um erro (\text
 
 Neste trabalho, o termo "falha" será utilizado de forma mais geral, representando um estado ou evento no sistema que cause uma degradação na sua qualidade de serviço.
 
-\subsubsection{Padrões de Ocorrência}
+\subsection{Padrões de Ocorrência}
 
 Falhas podem ser classificadas em 3 grupos principais quanto ao seu padrão de ocorrência \cite{FaultTolerantSystems}.
 
@@ -40,7 +31,7 @@ Será utilizado o termo dependabilidade como uma propriedade que sumariza os atr
 
 A tolerância à falhas impacta positivamente os critérios confiabilidade e disponibilidade, e pode em alguns casos melhorar a capacidade de manutenção, portanto a tolerância à falhas é um aspecto importante para sistemas com dependabilidade.
 
-\subsubsection{Confiabilidade}
+\subsection{Confiabilidade}
 
 Confiabilidade (\textit{Reliability}), é a probabilidade de um sistema executar corretamente no período $[t_0, t]$. Para modelar essa métrica é necessário um modelo estatístico que é particular da aplicação. A confiabilidade $R$ é uma função do tempo $t$, a taxa de falhas $\lambda$ e quaisquer sejam os outros parâmetros do modelo \cite{FaultInjectionTechniques}.
 
@@ -49,7 +40,7 @@ Confiabilidade (\textit{Reliability}), é a probabilidade de um sistema executar
 \end{equation}
 \addEquacao{Confiabilidade}{2}
 
-\subsubsection{Disponibilidade}
+\subsection{Disponibilidade}
 
 Disponibilidade (\textit{Availability}) é a razão entre o tempo em que o sistema não consegue prover seu serviço (\textit{downtime}) e o e seu tempo total de operação \cite{FaultInjectionTechniques}. A disponibilidade $A$ pode ser modelada em termos do tempo disponível $t_{up}$ e do tempo indisponível $t_{down}$:
 
@@ -58,7 +49,7 @@ Disponibilidade (\textit{Availability}) é a razão entre o tempo em que o siste
 \end{equation}
 \addEquacao{Disponibilidade}{3}
 
-\subsubsection{Capacidade de manutenção}
+\subsection{Capacidade de manutenção}
 
 Capacidade de manutenção (\textit{Maintainability}) é a probabilidade de um sistema em um estado inválido ser reparado com sucesso antes de um tempo $t$ \cite{FaultInjectionTechniques}.
 
@@ -69,7 +60,7 @@ A modelagem deste atributo necessita de conhecimento particular sobre a aplicaç
 \end{equation}
 \addEquacao{Capacidade de Manutenção}{4}
 
-\subsubsection{Segurança}
+\subsection{Segurança}
 
 Segurança (\textit{Safety}) é a probabilidade do sistema não causar danos à integridade humana ou à outros patrimônios, independentemente da presença falhas. Por ser um critério muito particular da natureza da aplicação e seu contexto de operação, uma estimativa analítica necessita de um modelo estatístico que não é facilmente sumarizado com apenas uma equação \cite{FaultInjectionTechniques}.
 
@@ -79,13 +70,13 @@ Segurança (\textit{Safety}) é a probabilidade do sistema não causar danos à 
 
 Mecanismos de detecção são responsáveis por identificar a presença de uma falha no sistema, um bom mecanismo de detecção deve ser capaz de detectar uma classe grande de falhas sem introduzir uma penalidade grande ao tempo de execução do sistema. Dentre as possíveis escolhas de mecanismos, os subsequentes são utilizados neste trabalho.
 
-\subsubsection{CRC (Cyclic Redundancy Check)}
+\subsection{CRC (Cyclic Redundancy Check)}
 
 Os CRCs são códigos de detecção de erro comumente utilizados em redes de computador e armazenamento não volátil. Para cada segmento de dado é concatenado um valor de checagem que é calculado com base no resto da divisão com um polinômio gerador pré definido \cite{FaultTolerantSystems}.
 
 CRCs são comumente utilizados devido à serem simples de implementar, ocuparem pouco espaço adicional no segmento de dados e serem resilientes à erros em rápida sucessão, falhas transientes que alteram uma região de bits próximos.
 
-\subsubsection{Heartbeat signals}
+\subsection{Heartbeat signals}
 
 Os \textit{heartbeat signals} (sinais de batimento cardíaco) são sinais periódicos para garantir a atividade de um nó computacional com o recebimento de uma resposta, são também chamados de \textit{watchdog timers} \cite{DependabilityInEmbeddedSystems}. Uma das aplicações desta técnica em conjunto com reexecução ou replicação é a possibilidade de detectar uma demora excessiva e preventivamente cancelar uma das unidades de execução.
 
@@ -101,7 +92,7 @@ Os \textit{heartbeat signals} (sinais de batimento cardíaco) são sinais perió
 
 Na \autoref{fig:heartbeatSignal}, é utilizado a resposta tardia para deduzir a presença de uma falha na tarefa ou no canal de transmissão. Estes sinais também podem ser utilizados no contexto de tempo real para a validação de um prazo ou sub prazo da tarefa \cite{FaultTolerantSystems}.
 
-\subsubsection{Asserts}
+\subsection{Asserts}
 
 Asserts são mecanismos simples e flexíveis para a detecção de falhas, consistindo na verificação de uma condição que, durante uma execução normal do programa, deve permanecer invariavelmente verdadeira (denominada "invariante"). Caso a invariante seja falsa, detecta-se a presença de uma falha. A \autoref{fig:assert} ilustra o fluxo de um assert.
 
@@ -123,7 +114,7 @@ Durante a execução de um sistema tolerante à falhas, asserts servem como uma 
 
 Uma vez que uma falha tenha sido detectada o sistema precisa tratar a falha o mais rápido possível para manter a qualidade de serviço, alguns mecanismos de detecção também fornecem a possibilidade de correção dos dados, como é o caso dos códigos Reed-Solomon, nestes casos, fica à critério da aplicação se a correção deve ser tentada ou outro tratamento deve ser usado.
 
-\subsubsection{Re-execução}
+\subsection{Re-execução}
 
 Re-executar uma tarefa é uma outra forma simples de recuperar-se de uma falha, a probabilidade de $k$ falhas intermitentes ocorrem em sequência é menor do que a probabilidade de apenas ocorrer $k - 1$ vezes no intervalo de execução. Ao re-executar, espera-se que a falha não ocorra novamente na N-ésima tentativa \cite{DependabilityInEmbeddedSystems} \cite{SchedAndOptOfDistributedFT}.
 
@@ -141,7 +132,7 @@ Portanto, é sacrificado um tempo maior de execução caso a falha ocorra, em tr
 
 Na \autoref{fig:redundanciaReexec} é possível observar a reexecução de uma tarefa em duas modalidades: Na primeira é realizado um consenso entre os resultados das execuções, e na segunda a tarefa é apenas reexecutada até $N$ vezes (podendo então tolerar até $N$ falhas transientes), encerrando sua execução caso nenhuma falha seja detectada. A segunda modalidade é particularmente útil para a implementação de condições de transparência \cite{SchedAndOptOfDistributedFT} que serão abordadas posteriormente.
 
-\subsubsection{Redundância}
+\subsection{Redundância}
 
 Adicionar redundância ao sistema é uma das formas mais intuitivas e mais antigas de aumentar a tolerância à falhas, a probabilidade de $N$ falhas transientes ocorrendo simultaneamente em um sistema é mais baixa do que a probabilidade de apenas 1 falha \cite{SchedAndOptOfDistributedFT}.
 
@@ -161,7 +152,7 @@ O uso de TMR para uma tarefa pode consistir na reexecução concorrente das trê
 
 Sistemas distribuídos, sejam estes embarcados ou não, também podem aproveitar de sua redundância natural para ter maior dependabilidade \cite{MakingReliableDistSystems}. Falhas em um nó podem ser propagadas e no caso de falhas permanentes em um nó, os outros podem suplantar a execução de suas tarefas mantendo a qualidade média de serviço \cite{MakingReliableDistSystems} \cite{SchedAndOptOfDistributedFT}, o uso de sistemas capazes de auto reparo é vital para a existência de telecomunicação em larga escala e computação em nuvem.
 
-\subsubsection{Loop Unrolling e Function Inlining}
+\subsection{Loop Unrolling e Function Inlining}
 
 Uma otimização comum que compiladores realizam é desenrolar laços de repetição (Loop Unrolling) com a finalidade de reduzir erros no preditor de desvios da CPU, no contexto de tolerância à falhas, é possível utilizar dessa otimização como uma forma de redundância espacial, ao reduzir a possibilidade de pulos dependentes de um valor, torna-se menos provável um salto baseado em uma versão corrompida do mesmo. O desenrolamento pode também ser feito caso exista um limite superior conhecido no laço durante a compilação. \cite{LoopUnrollingARM}.
 
@@ -239,6 +230,15 @@ Uma característica central para a utilidade de concorrência mesmo em situaçõ
 Implementar os mecanismos de concorrência adequados também permite lidar com interrupções de forma mais estruturada, o problema clássico de lidar com uma interrupção é restaurar a memória de pilha e registradores de forma adequada. Interrupções introduzem um fluxo de programa não local , violando as garantias fortes de escopo e ponto de entrada fornecidas por funções.
 
 É uma tendência atual aumentar o número de núcleos em dispositivos devido à velocidades de relógio das CPUs possuirem ganhos marginais em relação ao impacto térmico. A maioria dos computadores de propósito geral (smartphones, tablets, desktops) tipicamente possuem 2 núcleos ou mais \cite{ComputerOrganizationAndDesign}. Essa tendência não se restringe apenas à computadores gerais, sistemas embarcados comerciais também podem se beneficiar tremendamente das possibilidades de paralelismo providas por mais de um núcleo, porém, é importante ressaltar que o uso de estado compartilhado se torna muito mais sensível à erros em um ambiente com múltiplos fluxos de execução, e medidas devem ser tomadas para evitar condições de corridas e deadlocks \cite{OperatingSystemConcepts}.
+
+
+\subsection{Alocadores Arena}
+
+Alocadores arena são uma técnica de gerenciamento de memória simples. Este tipo de alocador opera através de um princípio simples: um ponteiro avança linearmente através de um bloco contíguo de memória pré-alocado, marcando a fronteira entre memória utilizada e memória disponível \cite{ArenaAllocation}. Fundamentalmente, um alocador arena pode ser visto como um tipo de espaço de pilha alternativo, ambos são alocados e desalocados com apenas a mudança de um contador, e ambos possuem uma ordem rigidamente FIFO no padrão de alocação válido.
+
+Devido à sua alta velocidade e determinismo, este tipo de alocador pode ser de grande utilidade no desenvolvimento de sistemas embarcados.
+
+Para os propósitos deste trabalho, alocadores arena são particularmente adequados pois o ciclo de vida das tarefas e seus dados associados são intrinsecamente acoplados. Quando uma tarefa é criada, toda sua memória de trabalho pode ser alocada de uma arena, ao final da tarefa a memória pode ser rapidamente recuperada.
 
 \subsection{Execução de Tarefas na Presença de Falhas}
 

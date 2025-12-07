@@ -1,6 +1,8 @@
 \chapter{Projeto}
 \label{cap:proj}
 
+Este capítulo detalha o projeto desenvolvido para análise das técnicas de tolerância à falhas. São apresentados a visão geral da solução, as premissas adotadas, a metodologia utilizada, requisitos e seu plano de verificação. Também são detalhados os materiais e combinações de técnicas que serão aplicadas.
+
 \section{Visão Geral}
 
 Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base, as técnicas implementadas serão discutidas em maior detalhe na \autoref{subsec:algoritmos}. Para a coleta das métricas de eficácia e custo computacional será utilizado um cenário de injeção de falhas lógicas em hardware utilizando do depurador em chip ST-Link, os detalhes da campanha de injeção de falhas serão abordados na \autoref{subsec:campanhaInjecao}.
@@ -11,7 +13,7 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
     \centering
     \captionsetup{justification=centering}
     \caption{Principais componentes do projeto}
-    \includegraphics[width=0.97\textwidth]{assets/visao_geral.png}
+    \includegraphics[width=1.0\textwidth]{assets/visao_geral.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:visaoGeral}

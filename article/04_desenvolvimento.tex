@@ -1,11 +1,13 @@
 \chapter{Desenvolvimento}
 \label{cap:desenvolvimento}
 
+Este capítulo apresenta os aspectos técnicos da implementação das técnicas de tolerância à falhas. São descritas as estruturas de dados principais, as estratégias de alocação de memória, a interface de tarefas e os algoritmos implementados. O capítulo também aborda dependências adicionais, o processo de compilação e o programa de teste desenvolvido para validação.
+
+
 \section{Estrutura da Implementação}
 Esta seção aborda os detalhes técnicos mais importantes para a implementação das técnicas de tolerância à falhas
 
 \subsection{Estratégia de Alocação}
-
 
 Com exceção de algumas alocações internas do FreeRTOS e da biblioteca do sistema, a maioria das alocações dinâmicas realizadas é feita com o uso de alocadores do tipo arena de memória. Este padrão de alocador comporta-se similarmente à uma pilha, o incremento e decremento de um ponteiro determina a barreira entre memória disponível e alocada. Portanto alocações são rápidas e simples, assim como liberação total ou reset para um estado anterior, a principal desvantagem destes alocadores é não serem capazes de expressar ordems de alocação e liberação granulares muito distintas \cite{ArenaAllocation}.
 
