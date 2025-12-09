@@ -9,6 +9,8 @@ Este capítulo apresenta os resultados obtidos através da campanha de injeção
 
 O projeto é compilado com o compilador GCC da toolchain oficial para embarcados da ARM (\texttt{arm-eabi-none}). O script \texttt{build.lua} provê uma interface CLI simples para compilar o projeto para a plataforma escolhida.
 
+Para a compilação dos dos resultados seguintes % TODO
+
 \subsection{Injeção de falhas}
 Após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para realizar a injeção. Para a fase de injeção em locais conhecidos, os símbolos escolhidos foram:
 
@@ -300,9 +302,11 @@ Foram selecionadas execuções que resultam em um output que possa ser visualiza
 
 \section{Verificação}
 
+No \autoref{tab:verif} são verificados os requisitos funcionais estabelecidos na análise de requisitos da \autoref{sec:req}. A validação de cada requisito foi realizada através de métodos específicos: \textbf{RF01} através da execução dos experimentos, \textbf{RF02} pela interface de configuração desenvolvida, \textbf{RF03} pelos testes sem injeção de falhas, \textbf{RF04} pela comparação de dependabilidade entre técnicas, e \textbf{RF05} pela implementação do sistema de monitoramento. Todos os requisitos funcionais foram satisfatoriamente atendidos.
+
 \begin{quadro}[H]
 	\centering
-	\caption{Requisitos funcionais}
+	\caption{Validação dos Requisitos funcionais}
 	\begin{tabular}{|p{0.08\textwidth}|p{0.40\textwidth}|p{0.45\textwidth}|}
 		\hline
 		\rowcolor[HTML]{C0C0C0}
@@ -327,7 +331,7 @@ Foram selecionadas execuções que resultam em um output que possa ser visualiza
 	\label{tab:verif}
 \end{quadro}
 
-Os requisitos não funcionais também foram analisados conforme o \autoref{tab:verirnf}.
+Os requisitos não funcionais também foram analisados conforme o \autoref{tab:verirnf}. E foram em sua maioria satisfeitos, com ressalvas apenas no \textbf{RNF05} devido à uma incompatibilidade de licença da biblioteca fornecida pelo fabricante.
 
 \begin{quadro}[H]
 	\centering
