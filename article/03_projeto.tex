@@ -13,7 +13,8 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
     \centering
     \captionsetup{justification=centering}
     \caption{Principais componentes do projeto}
-	\fbox{\includegraphics[width=1.0\textwidth]{assets/visao_geral.png}}
+	% \figuraborda{width=1.0\textwidth}{assets/visao_geral.png}
+	\includegraphics[width=1.0\textwidth]{assets/visao_geral.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:visaoGeral}
@@ -21,7 +22,7 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
 
 \section{Premissas}
 
-Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau grande de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}.
+Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau grande de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}. Logo, a \textbf{memória} será o foco do trabalho em termos de injeção.
 
 Durante os testes, será assumido um critério Hard Real-Time sem presença de falhas, isto é, não é aceitável o descumprimento do prazo de execução quando não houver falhas. Na presença de falhas, o prazo também deve ser mantido porém será considerado preferível que falhas sejam detectadas e causem um atraso ao invés de causar uma corrupção silenciosa.
 
@@ -41,7 +42,7 @@ Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principa
     \centering
     \captionsetup{justification=centering}
     \caption{Diagrama da STM32F411CEU6 ("BlackPill")}
-	\fbox{\includegraphics[width=0.80\textwidth]{assets/stm32_blackpill.png}}
+	\figuraborda{width=0.80\textwidth}{assets/stm32_blackpill.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: \citefigure{STMBoardProductPage}}
     \label{fig:stm32Blackpill}
@@ -53,7 +54,7 @@ Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma f
     \centering
     \captionsetup{justification=centering}
     \caption{ST-LINK/V2}
-	\fbox{\includegraphics[width=0.40\textwidth]{assets/st_link.png}}
+	\figuraborda{width=0.40\textwidth}{assets/st_link.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: \citefigure{STLinkProductPage}}
     \label{fig:stLink}
@@ -63,7 +64,7 @@ Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma f
     \centering
     \captionsetup{justification=centering}
     \caption{STMCubeIDE}
-	\fbox{\includegraphics[width=0.65\textwidth]{assets/stmcube_ide.png}}
+	\figuraborda{width=0.65\textwidth}{assets/stmcube_ide.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: \citefigure{STMCubeProductPage}}
     \label{fig:stmCubeIDE}
@@ -83,7 +84,7 @@ Para a criação da análise, serão realizados testes com injeção lógica em 
    \centering
    \captionsetup{justification=centering}
    \caption{Injeção lógica em hardware}
-   \fbox{\includegraphics[width=0.85\textwidth]{assets/injecao_hardware.png}}
+   \figuraborda{width=0.85\textwidth}{assets/injecao_hardware.png}
    \captionsetup{justification=raggedright}
   \caption*{Fonte: Elaborada pelo autor}
    \label{fig:injecaoHardwareLogica}
@@ -157,7 +158,7 @@ Para melhor generalizar o uso das técnicas, utiliza-se de uma abstração da es
     \centering
     \captionsetup{justification=centering}
     \caption{Layout de uma mensagem}
-	\fbox{\includegraphics[width=0.50\textwidth]{assets/payload_layout.png}}
+	\figuraborda{width=0.50\textwidth}{assets/payload_layout.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:messageStruct}
@@ -169,7 +170,7 @@ A tarefa é um objeto de interface que abstrai parte do estado utilizado pelo RT
     \centering
     \captionsetup{justification=centering}
     \caption{Objeto que implementa a interface de Tarefa}
-	\fbox{\includegraphics[width=0.90\textwidth]{assets/task_bdd.png}}
+	\figuraborda{width=0.90\textwidth}{assets/task_bdd.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:bddTarefa}
@@ -200,7 +201,7 @@ Para a aplicação da redundância modular, neste caso a redundância modular tr
     \centering
     \captionsetup{justification=centering}
     \caption{Diagrama de bloco de Redundância modular}
-	\fbox{\includegraphics[width=0.950\textwidth]{assets/tmr_bdd.png}}
+	\figuraborda{width=0.950\textwidth}{assets/tmr_bdd.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:bddTMR}
@@ -216,7 +217,7 @@ Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina
     \centering
     \captionsetup{justification=centering}
     \caption{Estados de uma reexecução}
-	\fbox{\includegraphics[width=0.925\textwidth]{assets/state_reexec.png}}
+	\figuraborda{width=0.925\textwidth}{assets/state_reexec.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:stateReexec}
@@ -230,7 +231,7 @@ Para a implementação dos sinais de heartbeat será utilizado uma tarefa que se
     \centering
     \captionsetup{justification=centering}
     \caption{Sinal Heartbeat}
-	\fbox{\includegraphics[width=0.95\textwidth]{assets/heartbeat_signal.png}}
+	\figuraborda{width=0.95\textwidth}{assets/heartbeat_signal.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:heartbeatAdv}
@@ -260,7 +261,7 @@ A estrutura do programa com CRC é demonstrada na figura \autoref{fig:programaTe
     \centering
     \captionsetup{justification=centering}
     \caption{Fluxo do programa de exemplo}
-	\fbox{\includegraphics[width=0.90\textwidth]{assets/programa_teste.png}}
+	\figuraborda{width=0.90\textwidth}{assets/programa_teste.png}
     \captionsetup{justification=raggedright}
     \caption*{Fonte: Elaborada pelo autor}
     \label{fig:programaTeste}

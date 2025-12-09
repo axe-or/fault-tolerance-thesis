@@ -46,6 +46,9 @@
 
 \usepackage{caption}
 \usepackage{textcomp}
+\usepackage{adjustbox}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,6 +97,13 @@
 
 \usepackage{tcc_univali}
 
+\newcommand{\figuraborda}[2]{%
+	\setlength{\fboxsep}{0pt}%
+	\setlength{\fboxrule}{0.5pt}%
+	\fbox{\includegraphics[width=\dimexpr\textwidth-2\fboxrule\relax,#1]{#2}}%
+}
+
+
 \begin{document}
 \newcounter{equationCounter}
 
@@ -124,27 +134,25 @@
 % - Fontes em diagramas: algumas não possuem "quem elaborou" <-- Genuinamente nao entendi
 % - Trocar falha por falta
 
-% - Premissas: dizer que focou em memória
-% - Resultados: quantidade de memória sem técnica e com técnica não é exatamente 3x, pode normalizar e retirar 374B de cada um
 
-% - conclusões: Faltou uma descrição que cumpriu os objetivos.
 
 % Thiago:
-
-
-
 % - Requisitos parecem muito com tarefas
-% - Botar moldura nas imagens
+
 
 % DONE:
+% - Resultados: quantidade de memória sem técnica e com técnica não é exatamente 3x, pode normalizar e retirar 374B de cada um
 % - Resultados não reflete o que foi feito, parece testes unitários, mas a realidade é outra. Descrever melhor o fluxo e percalços para testar e também que não houve variações.
 % - Trocar subsubsections por apenas subsections
 % - Descrever que o FreeRTOS é bem deterministico, já que não variou durante a execução dos testes.
 % - Abstract e resumo devem ser revisados para refletir melhor o seu trabalho.
+% - Premissas: dizer que focou em memória
 % - Trocar Curso para CC 
+% - Botar moldura nas imagens
 % - Riscos ser excluido do texto
 % - Cronogramas serem eliminados
 % - Tabela de verificação: faltou descritivo
+% - Conclusões: Faltou uma descrição que cumpriu os objetivos.
 % - Poucos preâmbulos
 % - Trocar data da capa
 % - QoS sobrando no texto - pode retirar
