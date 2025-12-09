@@ -9,7 +9,14 @@ Este capítulo apresenta os resultados obtidos através da campanha de injeção
 
 O projeto é compilado com o compilador GCC da toolchain oficial para embarcados da ARM (\texttt{arm-eabi-none}). O script \texttt{build.lua} provê uma interface CLI simples para compilar o projeto para a plataforma escolhida.
 
-Para a compilação dos dos resultados seguintes % TODO
+\subsection{Metodologia de Testes e Validação}
+
+O processo de validação das técnicas implementadas foi conduzido em duas fases distintas. Durante o desenvolvimento foram realizados diversos testes individuais de maneira \textit{ad-hoc} para validar a execução correta de cada técnica de forma isolada. Estes testes preliminares permitiram realizar uma pré-estimativa dos custos computacionais e identificar problemas de implementação. As execuções individuais não foram catalogadas de forma sistemática, pois partiram de pontos distintos do desenvolvimento e utilizaram configurações variadas. Apesar disso, os resultados da versão final apresentados neste capítulo estão alinhados com as tendências observadas durante os testes preliminares.
+
+Um aspecto importante observado ao longo do desenvolvimento foi a consistência temporal das execuções. Ao repetir múltiplas vezes a execução de uma mesma técnica sob condições idênticas houve pouca variação nos tempos de execução (inferior a $100 \mu s$) no comportamento geral do sistema. Esta característica demonstra uma das propriedades positivas do FreeRTOS: um alto grau de determinismo no escalonamento e execução de tarefas. As técnicas de tolerância à falhas implementadas não causaram interferência significativa nesta propriedade, mantendo o comportamento determinístico mesmo com a adição de mecanismos de detecção e tratamento de falhas.
+
+Os testes finais, cujos resultados são apresentados nas seções seguintes, foram realizados em um contexto limpo, com o sistema compilado em sua versão final com otimização para tamanho de executável. Para a campanha de injeção de falhas, foi desenvolvido um pequeno programa em Python responsável por gerar os parâmetros de injeção (endereços, offsets e tamanhos de corrupção) de forma aleatória seguindo uma distribuição uniforme. O processo de injeção lógica em hardware ainda foi realizado de forma manual no depurador, mas utilizando os valores gerados previamente.
+
 
 \subsection{Injeção de falhas}
 Após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para realizar a injeção. Para a fase de injeção em locais conhecidos, os símbolos escolhidos foram:
@@ -194,7 +201,7 @@ O processo de consenso é idêntico para reexecução, porém ao invés de 3 est
 
 \section{Dependabilidade e Performance}
 
-Após repetir o processo de injeção da \autoref{sec:execucao} para as combinações de técnicas, foi possível coletar os dados representados no \autoref{tab:resSemInj}. O pico de memória da arena para o armazenamento das tarefas é denominado $M_{task}$, o pico da arena de memória adicional é denominado $M_{extra}$. As variáveis $T_{total}$ e $T_{linha}$ representam o tempo total de execução e o tempo médio por linha, respectivamente. A variável $D$ indica o número de detecções de erros bem-sucedidas.
+Após repetir o processo de injeção da \autoref{sec:execucao} para as combinações de técnicas, foi possível coletar os dados representados no \autoref{tab:resSemInj}. O pico de memória da arena para o armazenamento das tarefas é denominado $M_{task}$, o pico da arena de memória adicional é denominado $M_{extra}$. As variáveis $T_{total}$ e $T_{linha}$ representam o tempo total de execução e o tempo médio por linha, respectivamente. A variável $D$ indica o número de detecções de erros bem-sucedidas. Os valores da execução sem técnicas serão utilizados como base e os outros valores serão expressos em termos de múltiplos, demonstrando o overhead adicionado.
 
 \begin{quadro}[H]
 	\centering
@@ -204,12 +211,20 @@ Após repetir o processo de injeção da \autoref{sec:execucao} para as combina�
 		\rowcolor[HTML]{C0C0C0}
 		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{Detecção} & \textbf{Resultado} \\
 		\hline
-		N/A & 1542ms & 12ms & 2768B & 374B & 0 & OK \\
-		CRC32 & 1549ms & 12ms & 2768B & 856B & 0 & OK \\ \hline
-		Reexec & 4631ms & 38ms & 2768B & 1074B & 0 & OK \\ \hline
-		Reexec + CRC32 & 4635ms & 38ms & 2768B & 1556B & 0 & OK \\ \hline
-		TMR & 4644ms & 38ms & 8336B & 1126B & 0 & OK \\ \hline
-		TMR + CRC32 & 4651ms & 38ms & 8336B & 1608B & 0 & OK \\ \hline
+		
+		N/A & 1542ms & 12ms & 2768B & 374B & 0 & OK \\ \hline
+		CRC32 & 1.005 & 1.0 & 1.0 & 2.289 & 0 & OK \\ \hline
+		Reexec & 3.003 & 3.167 & 1.0 & 2.872 & 0 & OK \\ \hline
+		Reexec + CRC32 & 3.006 & 3.167 & 1.0 & 4.16 & 0 & OK \\ \hline
+		TMR & 3.012 & 3.167 & 3.012 & 3.011 & 0 & OK \\ \hline
+		TMR + CRC32 & 3.016 & 3.167 & 3.012 & 4.299 & 0 & OK \\ \hline
+		
+		% N/A            & 1542ms & 12ms & 2768B & 374B  & 0 & OK \\
+		% CRC32          & 1549ms & 12ms & 2768B & 856B  & 0 & OK \\ \hline
+		% Reexec         & 4631ms & 38ms & 2768B & 1074B & 0 & OK \\ \hline
+		% Reexec + CRC32 & 4635ms & 38ms & 2768B & 1556B & 0 & OK \\ \hline
+		% TMR            & 4644ms & 38ms & 8336B & 1126B & 0 & OK \\ \hline
+		% TMR + CRC32    & 4651ms & 38ms & 8336B & 1608B & 0 & OK \\ \hline
 \end{tabular}
 \label{tab:resSemInj}
 \end{quadro}
@@ -229,36 +244,50 @@ Injetando falhas nos filtros e no output como descrito no \autoref{cap:proj}, fo
 		\rowcolor[HTML]{C0C0C0}
 		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{$D$} & \textbf{Resultado} & \textbf{Observação} \\
 		\hline
+
+		N/A            & 1544ms & 12ms  & 2768B & 374B  & 0 & Corrupção & N/A \\ \hline
+		CRC32          & 1.014  & 1.0   & 1.0   & 2.289 & 1 & OK        & Corrupção detectada no output apenas \\ \hline
+		Reexec         & 3.001  & 3.167 & 1.0   & 2.872 & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		Reexec + CRC32 & 3.028  & 3.167 & 1.0   & 4.16  & 2 & OK        & Corrupção mascarada e output recomputado \\ \hline
+		TMR            & 3.01   & 3.167 & 3.012 & 3.011 & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		TMR + CRC32    & 3.014  & 3.167 & 3.012 & 4.299 & 2 & OK        & Corrupção mascarada e output recomputado \\ \hline
 		
-		N/A & 1544ms & 12ms & 2768B & 374B & 0 & Corrupção & N/A  \\ \hline
-		CRC32 & 1565ms & 12ms & 2768B & 856B & 1 & OK & Corrupção detectada no output apenas \\ \hline
-		Reexec & 4634ms & 38ms & 2768B & 1074B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
-		Reexec + CRC32 & 4676ms & 38ms & 2768B & 1556B & 2 & OK & Corrupção mascarada e output recomputado \\ \hline
-		TMR & 4647ms & 38ms & 8336B & 1126B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
-		TMR + CRC32 & 4654ms & 38ms & 8336B & 1608B & 2 & OK & Corrupção mascarada e output recomputado \\ \hline
+		% N/A            & 1544ms & 12ms & 2768B & 374B  & 0 & Corrupção & N/A \\ \hline
+		% CRC32          & 1565ms & 12ms & 2768B & 856B  & 1 & OK        & Corrupção detectada no output apenas \\ \hline
+		% Reexec         & 4634ms & 38ms & 2768B & 1074B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		% Reexec + CRC32 & 4676ms & 38ms & 2768B & 1556B & 2 & OK        & Corrupção mascarada e output recomputado \\ \hline
+		% TMR            & 4647ms & 38ms & 8336B & 1126B & 1 & Corrupção & Mascarou corrupção na linha, mas não no output \\ \hline
+		% TMR + CRC32    & 4654ms & 38ms & 8336B & 1608B & 2 & OK        & Corrupção mascarada e output recomputado \\ \hline
 		
 
 	\end{tabular}
 	\label{tab:resInjecaoFixa}
 \end{quadro}
 
-No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falha local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. Para cada técnica foi escolhida uma variável do stack frame e aplicado um upset a partir de um offset e um tamanho. A notação $V+O:N$ indica que foi aplicado uma corrupção de tamanho $N$ a partir do endereço da variável $V$ deslocado por $O$ bytes.
+No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falha local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. Para cada técnica foi escolhida uma variável do stack frame e aplicado um upset a partir de um offset e um tamanho. A notação $V+O:N$ indica que foi aplicado uma corrupção de tamanho $N$ a partir do endereço da variável $V$ deslocado por $O$ bytes. Unidades absolutas foram utilizadas para os casos em que a não foi possível alcançar um valor base.
 
 \begin{quadro}[H]
 	\centering
 	\caption{Resultados com Injeção no Stack Frame}
-	\begin{tabular}{|p{0.09\textwidth}|c|c|c|c|c|c|p{0.175\textwidth}|p{0.05\textwidth}|}
+	\begin{tabular}{|p{0.09\textwidth}|c|c|c|c|c|c|p{0.175\textwidth}|p{0.055\textwidth}|}
 		\hline
 		\rowcolor[HTML]{C0C0C0}
 		\textbf{Técnicas} & \textbf{$T_{total}$} & \textbf{$T_{linha}$} & \textbf{$M_{task}$} & \textbf{$M_{extra}$} & \textbf{$D$} & \textbf{Resultado} & \textbf{Observação} & \textbf{Var} \\
 		\hline
 
-		N/A	& ~1100ms & 60ms & 2768B & 374B & 1 & Erro & Prazo de linha expirada & row 0:8 \\ \hline
-		CRC32 & ~1100ms & 60ms & 2768B & 856B & 1 & Erro & Prazo de linha expirada & row 0:8 \\ \hline
-		Reexec & <100ms & 0ms & 2768B & 1074B & 1 & Erro & Assert: row.width != output.width & output\_rows 4:12 \\ \hline
-		Reexec + CRC32 & 2265ms & 38ms & 2768B & 1556B & 1 & Erro & Hard Fault do FreeRTOS & output\_rows 4:12 \\ \hline
-		TMR & 4625ms & 38ms & 8336B & 1126B & 0 & OK & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
-		TMR + CRC32 & 4628ms & 38ms & 8336B & 1608B & 0 & OK & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
+		N/A            & >1100ms & 60ms & 1.0   & 1.0   & 1 & Erro & Prazo de linha expirada               & row 0:8 \\ \hline
+		CRC32          & >1100ms & 60ms & 1.0   & 2.289 & 1 & Erro & Prazo de linha expirada               & row 0:8 \\ \hline
+		Reexec         & <100ms  & 0ms  & 1.0   & 2.872 & 1 & Erro & Assert: row.width != output.width     & output rows 4:12 \\ \hline
+		Reexec + CRC32 & 2265ms  & 38ms & 1.0   & 4.16  & 1 & Erro & Hard Fault do FreeRTOS                & output rows 4:12 \\ \hline
+		TMR            & 4625ms  & 38ms & 3.012 & 3.011 & 0 & OK   & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
+		TMR + CRC32    & 4628ms  & 38ms & 3.012 & 4.299 & 0 & OK   & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
+
+		% N/A	         & ~1100ms & 60ms & 2768B & 374B  & 1 & Erro & Prazo de linha expirada               & row 0:8 \\ \hline
+		% CRC32          & ~1100ms & 60ms & 2768B & 856B  & 1 & Erro & Prazo de linha expirada               & row 0:8 \\ \hline
+		% Reexec         & <100ms  & 0ms  & 2768B & 1074B & 1 & Erro & Assert: row.width != output.width     & output\_rows 4:12 \\ \hline
+		% Reexec + CRC32 & 2265ms  & 38ms & 2768B & 1556B & 1 & Erro & Hard Fault do FreeRTOS                & output\_rows 4:12 \\ \hline
+		% TMR            & 4625ms  & 38ms & 8336B & 1126B & 0 & OK   & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
+		% TMR + CRC32    & 4628ms  & 38ms & 8336B & 1608B & 0 & OK   & Evitou corrupção através de indireção & tmr0 0:4 \\ \hline
 
 	\end{tabular}
 	\label{tab:resInjecaoStackFrame}
