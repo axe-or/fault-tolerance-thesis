@@ -1,13 +1,13 @@
 \chapter{Projeto}
 \label{cap:proj}
 
-Este capítulo detalha o projeto desenvolvido para análise das técnicas de tolerância à falhas. São apresentados a visão geral da solução, as premissas adotadas, a metodologia utilizada, requisitos e seu plano de verificação. Também são detalhados os materiais e combinações de técnicas que serão aplicadas.
+Este capítulo detalha o projeto desenvolvido para análise das técnicas de tolerância à faltas. São apresentados a visão geral da solução, as premissas adotadas, a metodologia utilizada, requisitos e seu plano de verificação. Também são detalhados os materiais e combinações de técnicas que serão aplicadas.
 
 \section{Visão Geral}
 
-Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base, as técnicas implementadas serão discutidas em maior detalhe na \autoref{subsec:algoritmos}. Para a coleta das métricas de eficácia e custo computacional será utilizado um cenário de injeção de falhas lógicas em hardware utilizando do depurador em chip ST-Link, os detalhes da campanha de injeção de falhas serão abordados na \autoref{subsec:campanhaInjecao}.
+Serão implementados mecanismos de tolerância utilizando do FreeRTOS como base, as técnicas implementadas serão discutidas em maior detalhe na \autoref{subsec:algoritmos}. Para a coleta das métricas de eficácia e custo computacional será utilizado um cenário de injeção de faltas lógicas em hardware utilizando do depurador em chip ST-Link, os detalhes da campanha de injeção de faltas serão abordados na \autoref{subsec:campanhaInjecao}.
 
-A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância serão implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falha.
+A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes, as técnicas de tolerância serão implementadas como complementos ao FreeRTOS e o processo de injeção é controlado por um computador externo que envia comandos para o depurador em chip com o propósito de simular uma falta.
 
 \begin{figure}[H]
     \centering
@@ -22,15 +22,15 @@ A \autoref{fig:visaoGeral} sumariza a relação entre os principais componentes,
 
 \section{Premissas}
 
-Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar falhas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau grande de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}. Logo, a \textbf{memória} será o foco do trabalho em termos de injeção.
+Será partido do ponto que ao menos o processador que executa o escalonador terá registradores de controle (ponteiro de pilha, contador de programa, endereço de retorno) que sejam capazes de mascarar faltas. Apesar de ser possível executar os algoritmos reforçados com análise de fluxo do programa e adicionar redundância aos registradores, isso adiciona um grau grande de complexidade que foge do escopo do trabalho. Como mencionado na \autoref{sec:trabRel}, a memória fora do banco de registradores pode ser duas ordens de magnitude mais sensível à eventos disruptivos \cite{ReliabilityArmCortexUnderHeavyIons}. Logo, a \textbf{memória} será o foco do trabalho em termos de injeção.
 
-Durante os testes, será assumido um critério Hard Real-Time sem presença de falhas, isto é, não é aceitável o descumprimento do prazo de execução quando não houver falhas. Na presença de falhas, o prazo também deve ser mantido porém será considerado preferível que falhas sejam detectadas e causem um atraso ao invés de causar uma corrupção silenciosa.
+Durante os testes, será assumido um critério Hard Real-Time sem presença de faltas, isto é, não é aceitável o descumprimento do prazo de execução quando não houver faltas. Na presença de faltas, o prazo também deve ser mantido porém será considerado preferível que faltas sejam detectadas e causem um atraso ao invés de causar uma corrupção silenciosa.
 
-Com o fim de reduzir o tamanho do executável e manter o fluxo de mais previsível não serão utilizados mecanismos de exceção com desenrolamento (unwinding) da pilha. Também não será utilizado de RTTI (Runtime Type Information). Todos os erros devem portanto ser tratados como valores ou como falhas lógicas.
+Com o fim de reduzir o tamanho do executável e manter o fluxo de mais previsível não serão utilizados mecanismos de exceção com desenrolamento (unwinding) da pilha. Também não será utilizado de RTTI (Runtime Type Information). Todos os erros devem portanto ser tratados como valores ou como faltas lógicas.
 
-Necessariamente, é preciso também presumir que testes sintéticos possam ao menos aproximar a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de falhas pode ser utilizada para verificar as tendências e custos relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
+Necessariamente, é preciso também presumir que testes sintéticos possam ao menos aproximar a performance do mundo real, ou ao menos prever o pior caso possível com grau razoável de acurácia. O uso de testes sintéticos não deve ser um substituto para a medição em uma aplicação real, porém, uma bateria de testes com injeção artificial de faltas pode ser utilizada para verificar as tendências e custos relativos introduzidos, mesmo que não necessariamente reflitam as medidas absolutas do produto final.
 
-Portanto, será assumido que os resultados extraídos de injeção de falhas artificiais, apesar de menos condizentes com os valores absolutos de uma aplicação e não sendo substitutos adequados na fase de aprovação de um produto real, são ao menos capazes para realizar uma análise quanto ao custo proporcional introduzido, e devido à sua facilidade de realização e profundidade de inspeção possível, serão priorizados inicialmente neste projeto.
+Portanto, será assumido que os resultados extraídos de injeção de faltas artificiais, apesar de menos condizentes com os valores absolutos de uma aplicação e não sendo substitutos adequados na fase de aprovação de um produto real, são ao menos capazes para realizar uma análise quanto ao custo proporcional introduzido, e devido à sua facilidade de realização e profundidade de inspeção possível, serão priorizados inicialmente neste projeto.
 
 \section{Metodologia}
 
@@ -48,7 +48,7 @@ Será utilizada a linguagem C++ com o compilador GCC (ou Clang), o alvo principa
     \label{fig:stm32Blackpill}
 \end{figure}
 
-Para a injeção de falhas será utilizado o depurador GDB em conjunto com uma ferramenta de depuração de hardware ST-LINK (\autoref{fig:stLink}), a comunicação do ST-LINK é feita via USB com o computador e via JTAG com o microcontrolador alvo, também será usado em conjunto ferramentas do fabricante como o CubeIDE, CubeMX e CubeCLT.
+Para a injeção de faltas será utilizado o depurador GDB em conjunto com uma ferramenta de depuração de hardware ST-LINK (\autoref{fig:stLink}), a comunicação do ST-LINK é feita via USB com o computador e via JTAG com o microcontrolador alvo, também será usado em conjunto ferramentas do fabricante como o CubeIDE, CubeMX e CubeCLT.
 
 \begin{figure}[H]
     \centering
@@ -76,9 +76,9 @@ O sistema operacional de tempo real escolhido foi o FreeRTOS, por ser extensivam
 
 \subsection{Métodos}
 
-Serão utilizadas as seguintes técnicas de tolerância à falhas implementadas em software: CRCs para dados, redundância modular, reexecução, sinal heartbeat e asserts. O detalhamento específico de cada técnica é abordado em maior detalhe na \autoref{subsec:algoritmos}.
+Serão utilizadas as seguintes técnicas de tolerância à faltas implementadas em software: CRCs para dados, redundância modular, reexecução, sinal heartbeat e asserts. O detalhamento específico de cada técnica é abordado em maior detalhe na \autoref{subsec:algoritmos}.
 
-Para a criação da análise, serão realizados testes com injeção lógica em hardware utilizando-se do ST-Link em combinação com um computador que emitirá os comandos para injeção via depurador, as falhas serão de natureza transiente e afetarão valores na memória (corrupção silenciosa). A \autoref{fig:injecaoHardwareLogica} detalha de forma mais específica o fluxo de gerar uma falha. As combinações específicas de falhas e técnicas escolhidas são abordadas na \autoref{subsec:campanhaInjecao}.
+Para a criação da análise, serão realizados testes com injeção lógica em hardware utilizando-se do ST-Link em combinação com um computador que emitirá os comandos para injeção via depurador, as faltas serão de natureza transiente e afetarão valores na memória (corrupção silenciosa). A \autoref{fig:injecaoHardwareLogica} detalha de forma mais específica o fluxo de gerar uma falta. As combinações específicas de faltas e técnicas escolhidas são abordadas na \autoref{subsec:campanhaInjecao}.
 
 \begin{figure}[H]
    \centering
@@ -90,7 +90,7 @@ Para a criação da análise, serão realizados testes com injeção lógica em 
    \label{fig:injecaoHardwareLogica}
 \end{figure}
 
-A coleta de métricas será realizada com os contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de falhas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de falhas. Ao fim da execução, será utilizado o depurador para ler estes valores.
+A coleta de métricas será realizada com os contadores de incremento atômico, o tempo de execução das tarefas, seu espaço de memória utilizado e o número de faltas detectadas será armazenado em uma estrutura que residirá em um segmento de memória que é deliberadamente isento de faltas. Ao fim da execução, será utilizado o depurador para ler estes valores.
 
 Com o objetivo de promover a reutilização de código, será criada uma interface que abstrai noções comuns de tarefa. A interação da interface com o resto do sistema é abordada em maior detalhe na \autoref{subsec:interface}.
 
@@ -112,13 +112,13 @@ Com o objetivo de promover a reutilização de código, será criada uma interfa
         \textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa \\
         \hline
 
-        \textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas \\
+        \textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de faltas \\
         \hline
 
         \textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas \\
         \hline
         
-        \textbf{RF05} & Monitoramento do número de falhas detectadas e violações de prazos  \\
+        \textbf{RF05} & Monitoramento do número de faltas detectadas e violações de prazos  \\
         \hline
     \end{tabular}
     \label{tab:rf}
@@ -178,7 +178,7 @@ A tarefa é um objeto de interface que abstrai parte do estado utilizado pelo RT
 
 \subsection{Algoritmos e Técnicas} \label{subsec:algoritmos}
 
-Para a implementação da funcionalidade de tolerância à falhas, algumas das técnicas abordadas no \autoref{cap:fund} serão utilizadas. O detalhamento sobre a implementação será abordado nesta seção.
+Para a implementação da funcionalidade de tolerância à faltas, algumas das técnicas abordadas no \autoref{cap:fund} serão utilizadas. O detalhamento sobre a implementação será abordado nesta seção.
 
 \subsubsection{CRC: Cyclic Redundancy Check}
 
@@ -209,7 +209,7 @@ Para a aplicação da redundância modular, neste caso a redundância modular tr
 
 \subsubsection{Reexecução}
 
-A implementação de tarefas com reexecução é baseada no uso de execuções consecutivas que reutilizam do mesmo espaço de pilha, uma tarefa pode ser sempre reexecutada $N$ vezes, servindo um propósito similar à técnica de redundância, ou executada \textit{até} $N$ vezes, encerrando a execução imediatamente após não encontrar nenhuma falha. Para os propósitos deste trabalho, será utilizada a segunda técnica, pois permite mais oportunidade para o escalonador encaixar trabalho no tempo ocioso, e também por ser um exemplo mais bem estudado na fundamentação teórica deste trabalho por Isosimov et. al.
+A implementação de tarefas com reexecução é baseada no uso de execuções consecutivas que reutilizam do mesmo espaço de pilha, uma tarefa pode ser sempre reexecutada $N$ vezes, servindo um propósito similar à técnica de redundância, ou executada \textit{até} $N$ vezes, encerrando a execução imediatamente após não encontrar nenhuma falta. Para os propósitos deste trabalho, será utilizada a segunda técnica, pois permite mais oportunidade para o escalonador encaixar trabalho no tempo ocioso, e também por ser um exemplo mais bem estudado na fundamentação teórica deste trabalho por Isosimov et. al.
 
 Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina de estado finito para a execução de uma tarefa com reexecução, espera-se que o caso médio seja a execução diretamente para um estado correto. Para a criação de uma condição de transparência, o prazo da tarefa deve ser o pior caso possível de $N$ execuções.
 
@@ -225,7 +225,7 @@ Assumindo $N = 3$, o diagrama na \autoref{fig:stateReexec} descreve uma máquina
 
 \subsubsection{Sinal Heartbeat / Deadline Monitor}
 
-Para a implementação dos sinais de heartbeat será utilizado uma tarefa que servirá como um monitor que associa uma chave (como o ID da tarefa) a um prazo específico. Será utilizado uma escrita atômica de um número e o temporizador do sistema no momento da escrita, se houver uma violação do prazo combinado na criação da tarefa e o prazo apresentado, é considerado que ocorreu uma falha. Este fluxo é visualmente representado na \autoref{fig:heartbeatAdv}.
+Para a implementação dos sinais de heartbeat será utilizado uma tarefa que servirá como um monitor que associa uma chave (como o ID da tarefa) a um prazo específico. Será utilizado uma escrita atômica de um número e o temporizador do sistema no momento da escrita, se houver uma violação do prazo combinado na criação da tarefa e o prazo apresentado, é considerado que ocorreu uma falta. Este fluxo é visualmente representado na \autoref{fig:heartbeatAdv}.
 
 \begin{figure}[H]
     \centering
@@ -239,13 +239,13 @@ Para a implementação dos sinais de heartbeat será utilizado uma tarefa que se
 
 \subsubsection{Asserts}
 
-Asserts serão utilizados para verificar invariantes, qualquer quebra de contrato de função ou invariante que é coberta com um assert deve resultar em uma falha.
+Asserts serão utilizados para verificar invariantes, qualquer quebra de contrato de função ou invariante que é coberta com um assert deve resultar em uma falta.
 
 \section{Plano de Verificação}
 
 Para a validação dos algoritmos e técnicas utilizadas(\textbf{RF01}, \textbf{RF02}) serão feitos testes unitários das técnicas isoladas.
 
-A validação da detecção de falhas e vencimento de prazos (\textbf{RF04}, \textbf{RF05}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
+A validação da detecção de faltas e vencimento de prazos (\textbf{RF04}, \textbf{RF05}) serão preliminarmente testadas com injeção lógica em software e será validado definitivamente durante o teste com injeção lógica em hardware. Importante notar que a priorização de tarefas e parte dos algoritmos de comunicação entre tarefas já são implementados no FreeRTOS.
 
 Como o produto final do trabalho requer uma análise de resiliência e do custo das técnicas, a seção seguinte aborda a campanha de injeção utilizada, que será aplicada com método lógico em hardware para a análise final.
 
@@ -267,13 +267,13 @@ A estrutura do programa com CRC é demonstrada na figura \autoref{fig:programaTe
     \label{fig:programaTeste}
 \end{figure}
 
-\subsection{Campanha de Injeção de Falhas} \label{subsec:campanhaInjecao}
+\subsection{Campanha de Injeção de Faltas} \label{subsec:campanhaInjecao}
 
-Para testar a injeção de falhas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As falhas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
+Para testar a injeção de faltas serão utilizados mecanismos lógicos em software e em hardware com com o auxílio do depurador ST-Link. As faltas serão de natureza transiente e focarão no segmento de memória com leitura e escrita.
 
-A primeira rodada de injeção consiste em em símbolos conhecidos do programa de exemplo (linha do output e imagem resultado) com o objetivo de demonstrar as técnicas em uma situação de falha previsível, onde o valor e posição exata do upset não são conhecidos, mas não ocorre corrupção direta do estado do stack frame.
+A primeira rodada de injeção consiste em em símbolos conhecidos do programa de exemplo (linha do output e imagem resultado) com o objetivo de demonstrar as técnicas em uma situação de falta previsível, onde o valor e posição exata do upset não são conhecidos, mas não ocorre corrupção direta do estado do stack frame.
 
-A segunda rodada consiste em  em execução e causar um upset de $N$ bytes a partir do endereço de uma variável local. O objetivo deste teste é avaliar como as tarefas irão se comportar na presença de uma falha que diretamente corrompe seu stack frame.
+A segunda rodada consiste em  em execução e causar um upset de $N$ bytes a partir do endereço de uma variável local. O objetivo deste teste é avaliar como as tarefas irão se comportar na presença de uma falta que diretamente corrompe seu stack frame.
 
 As combinações listadas no \autoref{tab:combinacoesTecnicas} visam observar o impacto das duas técnicas que causam alteração significativa no fluxo de execução (TMR e Reexecução) e da técnica de detecção de corrupção CRC. Todos os testes terão acompanhamento de sinal Heartbeat no início e no final para monitorar cumprimento do prazo de execução global assim como uma instância local.
 

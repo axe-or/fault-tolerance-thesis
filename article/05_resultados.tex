@@ -1,7 +1,7 @@
 \chapter{Resultados}
 \label{cap:resultados}
 
-Este capítulo apresenta os resultados obtidos através da campanha de injeção de falhas. São demonstrados o processo de execução dos testes, exemplos detalhados da aplicação das técnicas de CRC e consenso majoritário, análises de confiabilidade e desempenho. Por fim, é realizada a verificação dos requisitos e uma discussão dos resultados.
+Este capítulo apresenta os resultados obtidos através da campanha de injeção de faltas. São demonstrados o processo de execução dos testes, exemplos detalhados da aplicação das técnicas de CRC e consenso majoritário, análises de confiabilidade e desempenho. Por fim, é realizada a verificação dos requisitos e uma discussão dos resultados.
 
 
 \section{Execução}
@@ -13,12 +13,12 @@ O projeto é compilado com o compilador GCC da toolchain oficial para embarcados
 
 O processo de validação das técnicas implementadas foi conduzido em duas fases distintas. Durante o desenvolvimento foram realizados diversos testes individuais de maneira \textit{ad-hoc} para validar a execução correta de cada técnica de forma isolada. Estes testes preliminares permitiram realizar uma pré-estimativa dos custos computacionais e identificar problemas de implementação. As execuções individuais não foram catalogadas de forma sistemática, pois partiram de pontos distintos do desenvolvimento e utilizaram configurações variadas. Apesar disso, os resultados da versão final apresentados neste capítulo estão alinhados com as tendências observadas durante os testes preliminares.
 
-Um aspecto importante observado ao longo do desenvolvimento foi a consistência temporal das execuções. Ao repetir múltiplas vezes a execução de uma mesma técnica sob condições idênticas houve pouca variação nos tempos de execução (inferior a $100 \mu s$) no comportamento geral do sistema. Esta característica demonstra uma das propriedades positivas do FreeRTOS: um alto grau de determinismo no escalonamento e execução de tarefas. As técnicas de tolerância à falhas implementadas não causaram interferência significativa nesta propriedade, mantendo o comportamento determinístico mesmo com a adição de mecanismos de detecção e tratamento de falhas.
+Um aspecto importante observado ao longo do desenvolvimento foi a consistência temporal das execuções. Ao repetir múltiplas vezes a execução de uma mesma técnica sob condições idênticas houve pouca variação nos tempos de execução (inferior a $100 \mu s$) no comportamento geral do sistema. Esta característica demonstra uma das propriedades positivas do FreeRTOS: um alto grau de determinismo no escalonamento e execução de tarefas. As técnicas de tolerância à faltas implementadas não causaram interferência significativa nesta propriedade, mantendo o comportamento determinístico mesmo com a adição de mecanismos de detecção e tratamento de faltas.
 
-Os testes finais, cujos resultados são apresentados nas seções seguintes, foram realizados em um contexto limpo, com o sistema compilado em sua versão final com otimização para tamanho de executável. Para a campanha de injeção de falhas, foi desenvolvido um pequeno programa em Python responsável por gerar os parâmetros de injeção (endereços, offsets e tamanhos de corrupção) de forma aleatória seguindo uma distribuição uniforme. O processo de injeção lógica em hardware ainda foi realizado de forma manual no depurador, mas utilizando os valores gerados previamente.
+Os testes finais, cujos resultados são apresentados nas seções seguintes, foram realizados em um contexto limpo, com o sistema compilado em sua versão final com otimização para tamanho de executável. Para a campanha de injeção de faltas, foi desenvolvido um pequeno programa em Python responsável por gerar os parâmetros de injeção (endereços, offsets e tamanhos de corrupção) de forma aleatória seguindo uma distribuição uniforme. O processo de injeção lógica em hardware ainda foi realizado de forma manual no depurador, mas utilizando os valores gerados previamente.
 
 
-\subsection{Injeção de falhas}
+\subsection{Injeção de faltas}
 Após compilar o projeto em um arquivo ELF com informação de debug é encontrar quais os símbolos seus endereços para realizar a injeção. Para a fase de injeção em locais conhecidos, os símbolos escolhidos foram:
 
 \begin{itemize}
@@ -234,7 +234,7 @@ Os resultados neste caso servem para estabelcer uma linha base das latências en
 As técnicas de reexecução e TMR possuem um grande impacto no tempo de execução de aproxiamente 3.02x, já a técnica de TMR em particular necessita do triplo de memória de tarefas para manter o stack de todas suas sub-tarefas assim como triplo de memória de trabalho para garantir o isolamento entre as sub-tarefas. O tempo de execução entre a Reexecução e TMR não é muito grande, o sistema foi executado sem multiprocessamento simétrico, portanto não foi possível observar as vantagems potenciais causadas pelo uso de paralelismo. O custo das trocas de contexto do kernel e das sincronizações pode ser observado no valor das tarefas TMR serem tipicamente apenas alguns millisegundos mais lentas que as versões de reexecução.
 
 
-Injetando falhas nos filtros e no output como descrito no \autoref{cap:proj}, foi possível observar o comportamento das técnicas na presença de falhas que não envolvam corrupção de seu stack frame.
+Injetando faltas nos filtros e no output como descrito no \autoref{cap:proj}, foi possível observar o comportamento das técnicas na presença de faltas que não envolvam corrupção de seu stack frame.
 
 \begin{quadro}[H]
 	\centering
@@ -264,7 +264,7 @@ Injetando falhas nos filtros e no output como descrito no \autoref{cap:proj}, fo
 	\label{tab:resInjecaoFixa}
 \end{quadro}
 
-No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falha local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. Para cada técnica foi escolhida uma variável do stack frame e aplicado um upset a partir de um offset e um tamanho. A notação $V+O:N$ indica que foi aplicado uma corrupção de tamanho $N$ a partir do endereço da variável $V$ deslocado por $O$ bytes. Unidades absolutas foram utilizadas para os casos em que a não foi possível alcançar um valor base.
+No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção de erro ao final (output) só pode ser concluída no casos em que se possui a presença de um algoritmo de checagem, as técnicas de TMR e Reexecução conseguiram com sucesso mascarar a falta local de uma linha da corrupção com um uma função de consenso majoritário simples, porém uma vez que o valor já tenha sido calculado não é mais possível validar sua integridade. Para cada técnica foi escolhida uma variável do stack frame e aplicado um upset a partir de um offset e um tamanho. A notação $V+O:N$ indica que foi aplicado uma corrupção de tamanho $N$ a partir do endereço da variável $V$ deslocado por $O$ bytes. Unidades absolutas foram utilizadas para os casos em que a não foi possível alcançar um valor base.
 
 \begin{quadro}[H]
 	\centering
@@ -294,7 +294,7 @@ No \autoref{tab:resInjecaoFixa} é possível observar um padrão, a correção d
 \end{quadro}
 
 % TODO botar isso num apendice?
-\section{Impacto de falhas no Output}
+\section{Impacto de faltas no Output}
 
 Foram selecionadas execuções que resultam em um output que possa ser visualizado para demonstrar o efeito dos upsets no resultado final. A \autoref{fig:gatoNormalESobel} demonstra o output desejado, com a imagem de um gato com um filtro Sobel aplicado. A \autoref{fig:catSobelKernelUpset} mostra o impacto de um upset causado no filtro (kernel) da convolução. Na \autoref{fig:catSobelSubtleUpset} a corrupção é bem mais sutil, manifestando-se como uma pequena linha horizontal em $y = 6$. Por fim, a figura \autoref{fig:catSobelInterrupted} demonstra o efeito da convolução sendo interrompida devido à um assert, deixando o resultado incompleto.
 
@@ -331,7 +331,7 @@ Foram selecionadas execuções que resultam em um output que possa ser visualiza
 
 \section{Verificação}
 
-No \autoref{tab:verif} são verificados os requisitos funcionais estabelecidos na análise de requisitos da \autoref{sec:req}. A validação de cada requisito foi realizada através de métodos específicos: \textbf{RF01} através da execução dos experimentos, \textbf{RF02} pela interface de configuração desenvolvida, \textbf{RF03} pelos testes sem injeção de falhas, \textbf{RF04} pela comparação de dependabilidade entre técnicas, e \textbf{RF05} pela implementação do sistema de monitoramento. Todos os requisitos funcionais foram satisfatoriamente atendidos.
+No \autoref{tab:verif} são verificados os requisitos funcionais estabelecidos na análise de requisitos da \autoref{sec:req}. A validação de cada requisito foi realizada através de métodos específicos: \textbf{RF01} através da execução dos experimentos, \textbf{RF02} pela interface de configuração desenvolvida, \textbf{RF03} pelos testes sem injeção de faltas, \textbf{RF04} pela comparação de dependabilidade entre técnicas, e \textbf{RF05} pela implementação do sistema de monitoramento. Todos os requisitos funcionais foram satisfatoriamente atendidos.
 
 \begin{quadro}[H]
 	\centering
@@ -348,13 +348,13 @@ No \autoref{tab:verif} são verificados os requisitos funcionais estabelecidos n
 		\textbf{RF02} & Configuração do mecanismo de tolerância, prioridade e prazo de execução da tarefa & A configuração do mecanismo é feita de forma imperativa, já o prazo, prioridade e tamanho da pilha são feitos declarativamente no momento de instanciação da tarefa \\
 		\hline
 		
-		\textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de falhas & Validado com os testes sem injeção de falha \\
+		\textbf{RF03} & Cumprimento do prazo estipulado no momento de criação da tarefa caso não exista presença de faltas & Validado com os testes sem injeção de falta \\
 		\hline
 		
-		\textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas & O sistema foi capaz de mascarar algumas falhas e detectar outras. Portanto possui uma dependabilidade superior \\
+		\textbf{RF04} & Dependabilidade superior à versão do sistema sem técnicas & O sistema foi capaz de mascarar algumas faltas e detectar outras. Portanto possui uma dependabilidade superior \\
 		\hline
 		
-		\textbf{RF05} & Monitoramento do número de falhas detectadas e violações de prazos & Implementado em \texttt{DeadlineWatcher} em conjunto com o IWDG. Foi capaz de detectar violações \\
+		\textbf{RF05} & Monitoramento do número de faltas detectadas e violações de prazos & Implementado em \texttt{DeadlineWatcher} em conjunto com o IWDG. Foi capaz de detectar violações \\
 		\hline
 	\end{tabular}
 	\label{tab:verif}
@@ -395,7 +395,7 @@ A aplicação das técnicas resultou em um impacto positivo na dependabilidade d
 
 O custo das técnicas de execução é significativo, triplicando o tempo computacional no caso de um sistema sem multi processamento simétrico e adicionando um overhead de memória alto (mais de 3x) no caso da aplicação de TMR. Para o sistema apresentado, a reexecução em combinação com o CRC32 possui bons resultados dado seu consumo menor de memória quando comparado à técnica de TMR. 
 
-Durante injeções aleatórias no stack frame, a redundância de estado adicional do TMR contribuiu para evitar um erro fatal, indicando que talvez outros padrões de falha sejam melhor capturados e mascarados pela técnica de TMR, justificando seu custo adicional de memória. É também interessante que trabalhos futuros avaliem a técnica de TMR no contexto de multiprocessamento simétrico para analisar o potencial impacto positivo da execução paralela, dado que a técnica de TMR possui uma grande vantagem ao prover maior isolamento de estado mutável.
+Durante injeções aleatórias no stack frame, a redundância de estado adicional do TMR contribuiu para evitar um erro fatal, indicando que talvez outros padrões de falta sejam melhor capturados e mascarados pela técnica de TMR, justificando seu custo adicional de memória. É também interessante que trabalhos futuros avaliem a técnica de TMR no contexto de multiprocessamento simétrico para analisar o potencial impacto positivo da execução paralela, dado que a técnica de TMR possui uma grande vantagem ao prover maior isolamento de estado mutável.
 
-A validação de deadline não foi ativa com frequência durante os testes, mesmo nos casos de injeções aleatórias um erro fatal via assert foi capaz de interromper a execução primeiro. Isso não significa que os testes de deadline não possuiram nenhum impacto positivo, pois foi possível detectar um deadlock de sincronização durante o desenvolvimento mais cedo graças a um disparo prematuro, porém os resultados apresentados não foram capazes de causar uma mudança significativa no tempo de execução que ativasse o monitor. Injeções de falhas que alterem mais o fluxo de controle, ou a aplicação de um programa de teste com características temporais mais sensíveis à upsets de memória talvez seja capaz de gerar mais oportunidades para a contribuição desta técnica.
+A validação de deadline não foi ativa com frequência durante os testes, mesmo nos casos de injeções aleatórias um erro fatal via assert foi capaz de interromper a execução primeiro. Isso não significa que os testes de deadline não possuiram nenhum impacto positivo, pois foi possível detectar um deadlock de sincronização durante o desenvolvimento mais cedo graças a um disparo prematuro, porém os resultados apresentados não foram capazes de causar uma mudança significativa no tempo de execução que ativasse o monitor. Injeções de faltas que alterem mais o fluxo de controle, ou a aplicação de um programa de teste com características temporais mais sensíveis à upsets de memória talvez seja capaz de gerar mais oportunidades para a contribuição desta técnica.
 
